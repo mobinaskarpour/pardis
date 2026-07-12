@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { spring, cardHover, cardTap, breathe } from "@/lib/motion";
+import { spring, cardTap, breathe, loopTween } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/components/motion";
 
@@ -50,13 +50,13 @@ export function AICore({ onClick, className }: AICoreProps) {
       <motion.div
         className="absolute h-[160px] w-[160px] rounded-full border border-border-strong bg-bg-elevated/50"
         animate={reduced ? {} : { scale: [1, 1.02, 1] }}
-        transition={{ ...spring.hero, duration: 4, repeat: Infinity, delay: 0.5 }}
+        transition={{ ...loopTween, delay: 0.5 }}
       />
 
       <motion.div
         className="relative h-[120px] w-[120px] rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-bg-elevated border border-border-hover"
         animate={reduced ? {} : { scale: [1, 1.035, 1] }}
-        transition={{ ...spring.hero, duration: 4, repeat: Infinity }}
+        transition={loopTween}
       >
         {!reduced && <div className="absolute inset-0 rounded-full bg-primary/5 animate-breathe" />}
         <div className="absolute inset-[30%] rounded-full bg-primary/30 blur-sm" />

@@ -29,12 +29,12 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           <motion.div
             className="absolute inset-0 rounded-full bg-primary/10 blur-2xl"
             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ type: "tween", duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
             className="relative flex h-16 w-16 items-center justify-center rounded-full border border-border-strong bg-bg-elevated"
             animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ type: "tween", duration: 2, repeat: Infinity, ease: "easeInOut" }}
           >
             <div className="h-6 w-6 rounded-full bg-primary/80 animate-pulse-soft" />
           </motion.div>

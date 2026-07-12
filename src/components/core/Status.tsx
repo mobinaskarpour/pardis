@@ -93,7 +93,7 @@ export function Status({
           <motion.span
             className={cn("absolute inset-0 rounded-full opacity-40", config.dot)}
             animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ type: "tween", duration: 2, repeat: Infinity, ease: "easeInOut" }}
           />
         )}
       </span>

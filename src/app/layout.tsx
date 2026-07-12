@@ -23,6 +23,7 @@ export default function RootLayout({
     <html
       lang="fa"
       dir="rtl"
+      data-scroll-behavior="smooth"
       className={`${vazirmatn.variable} h-full antialiased`}
     >
       <body className="min-h-full">

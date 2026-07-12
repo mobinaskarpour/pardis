@@ -49,7 +49,7 @@ export function AIButton({
         className="absolute inset-0 border border-primary/20"
         style={{ borderRadius: "inherit" }}
         animate={{ scale: [1, 1.08, 1], opacity: [0.4, 0, 0.4] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ type: "tween", duration: 3, repeat: Infinity, ease: "easeInOut" }}
         aria-hidden
       />
       <Sparkles size={iconSize[size]} strokeWidth={1.75} />

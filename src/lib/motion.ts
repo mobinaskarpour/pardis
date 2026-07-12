@@ -138,17 +138,21 @@ export const chartForm = (delay = 0): Transition => ({
   duration: timing.hero,
 });
 
+/** Multi-keyframe loops — must use tween, not spring (FM 12 limit) */
+export const loopTween = {
+  type: "tween" as const,
+  duration: 4,
+  repeat: Infinity,
+  ease: [0.45, 0, 0.55, 1] as const,
+};
+
 /** AI Core idle breathe keyframes */
 export const breathe = {
   animate: {
     scale: [1, 1.03, 1],
     opacity: [0.85, 1, 0.85],
   },
-  transition: {
-    duration: 4,
-    repeat: Infinity,
-    ease: [0.45, 0, 0.55, 1] as const,
-  },
+  transition: loopTween,
 };
 
 /** Theme switch ~300ms */
@@ -159,7 +163,7 @@ export const themeSwitch = {
 /** Success — brief, no popup */
 export const successPulse = {
   scale: [1, 1.02, 1],
-  transition: { ...spring.snappy, duration: timing.click },
+  transition: { type: "tween" as const, duration: timing.click, ease: "easeOut" },
 };
 
 /** Error — calm, no shake */
