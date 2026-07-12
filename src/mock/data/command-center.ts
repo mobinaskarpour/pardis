@@ -1,0 +1,197 @@
+export const user = {
+  name: "دکتر اخلاق‌پور",
+  role: "مدیر مرکز",
+  initials: "ا",
+};
+
+export const aiSummary = {
+  greeting: "صبح بخیر دکتر اخلاق‌پور.",
+  lines: [
+    "امروز ۳۴ بیمار مراجعه کرده‌اند.",
+    "سه گزارش نیاز به بررسی فوری دارند.",
+    "دستگاه MRI شماره ۲ امروز بیشترین استفاده را داشته است.",
+  ],
+};
+
+export const floatingMetrics = [
+  {
+    id: "patients",
+    label: "بیماران امروز",
+    value: "۲۴",
+    numeric: 24,
+    story: "۸ نفر منتظر تأیید پزشک",
+    angle: -90,
+    distance: 180,
+  },
+  {
+    id: "revenue",
+    label: "درآمد",
+    value: "۴۸.۲M",
+    story: "۱۲٪ بیشتر از دیروز",
+    angle: -45,
+    distance: 200,
+  },
+  {
+    id: "mri",
+    label: "MRI",
+    value: "۱۶",
+    numeric: 16,
+    story: "دستگاه ۲ — پرکاربردترین",
+    angle: 0,
+    distance: 190,
+  },
+  {
+    id: "doctors",
+    label: "پزشکان",
+    value: "۱۲",
+    numeric: 12,
+    story: "۲ نفر برنامه فشرده",
+    angle: 45,
+    distance: 200,
+  },
+  {
+    id: "cases",
+    label: "پرونده‌های باز",
+    value: "۷",
+    numeric: 7,
+    story: "۳ مورد نیاز به پیگیری",
+    angle: 90,
+    distance: 180,
+  },
+  {
+    id: "alerts",
+    label: "هشدارها",
+    value: "۲",
+    numeric: 2,
+    story: "۱ مورد فوری",
+    angle: 135,
+    distance: 195,
+  },
+  {
+    id: "workflow",
+    label: "Workflow",
+    value: "۵",
+    story: "۲ پیشنهاد AI جدید",
+    angle: 180,
+    distance: 185,
+  },
+  {
+    id: "suggestion",
+    label: "AI Suggestion",
+    value: "۳",
+    story: "پرونده ۲۱۴ را بررسی کنید",
+    angle: -135,
+    distance: 195,
+  },
+];
+
+export const quickActions = [
+  { id: "patient", label: "ثبت بیمار", icon: "user-plus" },
+  { id: "report", label: "گزارش جدید", icon: "file-plus" },
+  { id: "chat", label: "شروع گفتگوی AI", icon: "sparkles", href: "/chat" },
+  { id: "mri", label: "ثبت MRI", icon: "scan" },
+  { id: "ct", label: "ثبت CT", icon: "layers" },
+  { id: "search", label: "جستجوی پرونده", icon: "search" },
+];
+
+export const timelineEvents = [
+  {
+    id: "1",
+    time: "09:15",
+    title: "MRI ثبت شد",
+    detail: "پرونده احمدی — دستگاه ۲",
+    type: "imaging" as const,
+  },
+  {
+    id: "2",
+    time: "09:22",
+    title: "پزشک گزارش را تأیید کرد",
+    detail: "دکتر رضایی — CT شکم",
+    type: "doctor" as const,
+  },
+  {
+    id: "3",
+    time: "09:35",
+    title: "بیمار پیامک دریافت کرد",
+    detail: "نوبت فردا — ۱۰:۳۰",
+    type: "notification" as const,
+  },
+  {
+    id: "4",
+    time: "09:42",
+    title: "AI پیشنهاد Workflow جدید داد",
+    detail: "اتوماسیون پیگیری MRI",
+    type: "ai" as const,
+  },
+  {
+    id: "5",
+    time: "09:58",
+    title: "پرونده جدید ثبت شد",
+    detail: "مریم کریمی — سونوگرافی",
+    type: "patient" as const,
+  },
+  {
+    id: "6",
+    time: "10:05",
+    title: "گزارش آماده بررسی",
+    detail: "MRI مغز — پرونده ۲۱۴",
+    type: "report" as const,
+  },
+];
+
+export const aiSuggestions = [
+  {
+    id: "1",
+    text: "پیشنهاد می‌کنم پرونده شماره ۲۱۴ را بررسی کنید.",
+    priority: "high" as const,
+  },
+  {
+    id: "2",
+    text: "امروز درآمد نسبت به هفته گذشته ۸٪ کمتر است.",
+    priority: "medium" as const,
+  },
+  {
+    id: "3",
+    text: "دو پزشک امروز برنامه بسیار فشرده دارند.",
+    priority: "medium" as const,
+  },
+];
+
+export const integrations = [
+  { id: "whatsapp", name: "WhatsApp", status: "connected" as const },
+  { id: "email", name: "Email", status: "connected" as const },
+  { id: "pacs", name: "PACS", status: "connected" as const },
+  { id: "crm", name: "CRM", status: "connected" as const },
+  { id: "cloud", name: "Cloud Backup", status: "connected" as const },
+];
+
+export const aiThinkingStates = [
+  "Analyzing today's activities...",
+  "Finding anomalies...",
+  "Preparing insights...",
+];
+
+export const commandPaletteItems = [
+  { id: "1", category: "بیمار", title: "احمدی، محمد", subtitle: "پرونده ۲۱۴" },
+  { id: "2", category: "پزشک", title: "دکتر رضایی", subtitle: "رادیولوژی" },
+  { id: "3", category: "تصویر", title: "MRI مغز", subtitle: "امروز — ۰۹:۱۵" },
+  { id: "4", category: "گزارش", title: "گزارش ماهانه", subtitle: "آماده بررسی" },
+  { id: "5", category: "AI", title: "پرونده احمدی", subtitle: "دستور AI" },
+  { id: "6", category: "Workflow", title: "پیگیری MRI", subtitle: "پیشنهاد AI" },
+];
+
+export const dockItems = [
+  { id: "home", label: "مرکز فرمان", href: "/", icon: "home" },
+  { id: "patients", label: "بیماران", href: "/patients", icon: "users" },
+  { id: "doctors", label: "پزشکان", href: "/doctors", icon: "stethoscope" },
+  { id: "imaging", label: "تصویربرداری", href: "/imaging", icon: "scan" },
+  { id: "appointments", label: "نوبت‌ها", href: "/appointments", icon: "calendar" },
+  { id: "reports", label: "گزارش‌ها", href: "/reports", icon: "file-text" },
+  { id: "analytics", label: "هوش پزشکی", href: "/analytics", icon: "activity" },
+  { id: "knowledge", label: "دانش", href: "/knowledge", icon: "book" },
+  { id: "workflows", label: "گردش‌کار", href: "/workflows", icon: "git-branch" },
+  { id: "automation", label: "اتوماسیون", href: "/automation", icon: "zap" },
+  { id: "financial", label: "مالی", href: "/financial", icon: "wallet" },
+  { id: "chat", label: "فضای کار هوش مصنوعی", href: "/chat", icon: "sparkles" },
+  { id: "settings", label: "تنظیمات", href: "/settings", icon: "settings" },
+];

@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+:root {
+  /* Backgrounds — no pure white/black */
+  --bg: #f7f8f9;
+  --bg-elevated: #ffffff;
+  --bg-subtle: #eef0f2;
+  --bg-dark: #141618;
+  --bg-dark-elevated: #1c1e21;
+
+  /* Text */
+  --text-primary: #1a1d21;
+  --text-secondary: #5c6370;
+  --text-tertiary: #8b919a;
+  --text-inverse: #f0f1f3;
+
+  /* Primary — modern medical blue */
+  --primary: #3d6b8c;
+  --primary-soft: #3d6b8c14;
+  --primary-muted: #5a8499;
+
+  /* Accents — guidance only */
+  --accent-turquoise: #5eb8b8;
+  --accent-indigo: #6366b1;
+  --accent-cyan: #6bb5c9;
+
+  /* Semantic */
+  --success: #6b9e78;
+  --warning: #c9a227;
+  --error: #c17b7b;
+
+  /* Borders — low contrast */
+  --border: #1a1d210f;
+  --border-strong: #1a1d211a;
+  --border-hover: #3d6b8c33;
+
+  /* Shadows — barely visible */
+  --shadow-sm: 0 1px 2px #1a1d2106;
+  --shadow-md: 0 2px 8px #1a1d210a;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  /* Radius — only allowed values */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-2xl: 24px;
+
+  /* Motion */
+  --duration-hover: 120ms;
+  --duration-button: 180ms;
+  --duration-modal: 280ms;
+  --duration-page: 450ms;
+  --duration-hero: 700ms;
+
+  /* Typography */
+  --text-xs: 13px;
+  --text-body: 15px;
+  --text-body-lg: 16px;
+  --text-heading: 28px;
+  --text-heading-lg: 36px;
+  --text-hero: 48px;
+}
+
+.dark {
+  --bg: #141618;
+  --bg-elevated: #1c1e21;
+  --bg-subtle: #252830;
+  --text-primary: #f0f1f3;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  --border: #ffffff0d;
+  --border-strong: #ffffff14;
+  --border-hover: #5a849933;
+  --shadow-sm: 0 1px 2px #00000020;
+  --shadow-md: 0 2px 8px #00000030;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-muted: var(--primary-muted);
+  --color-accent-turquoise: var(--accent-turquoise);
+  --color-accent-indigo: var(--accent-indigo);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-hover: var(--border-hover);
+  --font-sans: var(--font-vazirmatn);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.dark,
+html.light {
+  transition:
+    background-color var(--theme-transition, 300ms) ease,
+    color var(--theme-transition, 300ms) ease;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-vazirmatn), system-ui, sans-serif;
+  font-size: var(--text-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary-muted);
+  outline-offset: 2px;
+}
+
+/* Subtle background texture */
+.bg-texture {
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    var(--primary-soft) 0%,
+    transparent 70%
+  );
+}
+
+/* Shimmer for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--bg-subtle) 0%,
+    var(--bg-elevated) 50%,
+    var(--bg-subtle) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+/* Breathing animation for AI Core */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+.animate-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Pulse for splash */
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-breathe,
+  .animate-pulse-soft,
+  .shimmer {
+    animation: none !important;
+  }
+}
