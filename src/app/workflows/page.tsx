@@ -1,5 +1,5 @@
-import { ModuleScaffold } from "@/components/modules/shared/ModuleScaffold";
+import { WorkflowsPage } from "@/components/modules/workflows/WorkflowsPage";
 
 export default function Page() {
-  return <ModuleScaffold moduleId="workflows" />;
+  return <WorkflowsPage />;
 }

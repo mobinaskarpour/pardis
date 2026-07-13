@@ -104,6 +104,34 @@ export function processAIQuery(input: string): AIResponse {
   const specialized = trySpecialized(query);
   if (specialized) return specialized;
 
+  if (matchInput(query, ["دوز", "فیزیک بهداشت"])) {
+    return {
+      content:
+        "گزارش دوز امروز بخش سی‌تی تهیه شد: ۲۸ اسکن، دوز میانگین ۸.۴ mSv، بدون مورد خارج از محدوده — و برای واحد فیزیک بهداشت ارسال شد.",
+      canvas: "report",
+      conversationTitle: "گزارش دوز CT",
+      category: "reports",
+      reasoning: [
+        "استخراج دوز از کنسول دستگاه‌ها",
+        "مقایسه با سطوح مرجع تشخیصی",
+        "ارسال به فیزیک بهداشت",
+      ],
+      citations: [
+        { id: "cd1", source: "ct", label: "کنسول CT — دستگاه ۱ و ۲" },
+        { id: "cd2", source: "report", label: "سطوح مرجع تشخیصی (DRL)" },
+      ],
+      suggestedQuestions: [
+        "موارد دوز بالا این هفته",
+        "مقایسه دوز دو دستگاه",
+        "گزارش دوز هفتگی",
+      ],
+      actions: [
+        { id: "pdf", label: "تبدیل به PDF" },
+        { id: "share", label: "اشتراک‌گذاری" },
+      ],
+    };
+  }
+
   if (
     matchInput(query, [
       "احمدی",

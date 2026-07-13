@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { spring } from "@/lib/motion";
@@ -13,6 +14,7 @@ import { getCategoryLabel } from "@/lib/ai-engine";
 import { cn } from "@/lib/utils";
 import { ThinkingState } from "./ThinkingState";
 import { StreamingText } from "./StreamingText";
+import { WorkflowSuggestionCard } from "./WorkflowSuggestionCard";
 
 interface ConversationPanelProps {
   conversations: Conversation[];
@@ -26,6 +28,8 @@ interface ConversationPanelProps {
   onCategoryChange: (category: HistoryCategory | "all") => void;
   onSuggestionClick: (question: string) => void;
   onThinkingComplete: () => void;
+  onAcceptWorkflowSuggestion: (messageId: string, workflowId: string) => void;
+  onDismissWorkflowSuggestion: (messageId: string) => void;
 }
 
 export function ConversationPanel({
@@ -40,11 +44,20 @@ export function ConversationPanel({
   onCategoryChange,
   onSuggestionClick,
   onThinkingComplete,
+  onAcceptWorkflowSuggestion,
+  onDismissWorkflowSuggestion,
 }: ConversationPanelProps) {
   const filtered =
     activeCategory === "all"
       ? conversations
       : conversations.filter((c) => c.category === activeCategory);
+
+  // Keep the compact message thread pinned to the latest message
+  const messagesRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = messagesRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [messages, thinking, streamingMessageId]);
 
   const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
 
@@ -129,7 +142,10 @@ export function ConversationPanel({
       </div>
 
       {/* Active conversation messages (compact) */}
-      <div className="border-t border-border p-3 max-h-[40%] overflow-y-auto min-h-[120px]">
+      <div
+        ref={messagesRef}
+        className="border-t border-border p-3 max-h-[40%] overflow-y-auto min-h-[120px]"
+      >
         {messages.length === 0 && !thinking && (
           <p className="text-[13px] text-text-tertiary text-center py-4">
             گفتگوی جدید
@@ -157,6 +173,21 @@ export function ConversationPanel({
               <p className="text-[13px] text-text-secondary leading-relaxed">
                 {msg.content}
               </p>
+            )}
+
+            {msg.workflowSuggestion && streamingMessageId !== msg.id && (
+              <div className="mt-2">
+                <WorkflowSuggestionCard
+                  suggestion={msg.workflowSuggestion}
+                  onAccept={() =>
+                    onAcceptWorkflowSuggestion(
+                      msg.id,
+                      msg.workflowSuggestion!.workflowId
+                    )
+                  }
+                  onDismiss={() => onDismissWorkflowSuggestion(msg.id)}
+                />
+              </div>
             )}
           </motion.div>
         ))}

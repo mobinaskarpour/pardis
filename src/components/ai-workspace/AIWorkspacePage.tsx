@@ -9,13 +9,19 @@ import { defaultCommandSuggestions } from "@/mock/data/command-suggestions";
 import { LivingCore } from "@/components/command-center/LivingCore";
 import { AIThinking } from "@/components/core/AIThinking";
 import { StreamingText } from "./StreamingText";
+import { WorkflowSuggestionCard } from "./WorkflowSuggestionCard";
 import { useAIWorkspace } from "@/hooks/useAIWorkspace";
 import { pageLabels } from "@/config/labels";
 import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { Plus, MessageSquare } from "lucide-react";
 
-export function AIWorkspacePage() {
+interface AIWorkspacePageProps {
+  /** Query handed off from the dashboard chat box — submitted on mount */
+  initialQuery?: string;
+}
+
+export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
   const {
     conversations,
     activeId,
@@ -28,7 +34,9 @@ export function AIWorkspacePage() {
     selectConversation,
     newConversation,
     onThinkingComplete,
-  } = useAIWorkspace();
+    acceptWorkflowSuggestion,
+    dismissWorkflowSuggestion,
+  } = useAIWorkspace(initialQuery);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -115,6 +123,22 @@ export function AIWorkspacePage() {
                             </p>
                           )}
                         </div>
+
+                        {msg.workflowSuggestion &&
+                          streamingMessageId !== msg.id && (
+                            <WorkflowSuggestionCard
+                              suggestion={msg.workflowSuggestion}
+                              onAccept={() =>
+                                acceptWorkflowSuggestion(
+                                  msg.id,
+                                  msg.workflowSuggestion!.workflowId
+                                )
+                              }
+                              onDismiss={() =>
+                                dismissWorkflowSuggestion(msg.id)
+                              }
+                            />
+                          )}
 
                         {msg.canvas && msg.canvas !== "welcome" && (
                           <motion.div

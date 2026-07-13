@@ -1,6 +1,6 @@
 export const user = {
   name: "دکتر اخلاق‌پور",
-  role: "مدیر مرکز",
+  role: "مدیر بخش سی‌تی اسکن",
   initials: "ا",
 };
 
