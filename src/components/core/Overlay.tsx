@@ -117,6 +117,7 @@ export function Toast({ message, visible, className }: ToastProps) {
 
 interface AvatarProps {
   name: string;
+  src?: string;
   status?: "online" | "busy" | "offline";
   size?: "sm" | "md" | "lg";
   className?: string;
@@ -125,17 +126,25 @@ interface AvatarProps {
 const avatarSizes = { sm: "h-8 w-8 text-[13px]", md: "h-10 w-10 text-[15px]", lg: "h-14 w-14 text-[20px]" };
 const statusColors = { online: "bg-success", busy: "bg-warning", offline: "bg-text-tertiary" };
 
-export function Avatar({ name, status, size = "md", className }: AvatarProps) {
+export function Avatar({ name, src, status, size = "md", className }: AvatarProps) {
   return (
     <div className={cn("relative inline-flex", className)}>
-      <div
-        className={cn(
-          "flex items-center justify-center rounded-[10px] bg-primary/10 font-semibold text-primary",
-          avatarSizes[size]
-        )}
-      >
-        {name.charAt(0)}
-      </div>
+      {src ? (
+        <img
+          src={src}
+          alt={name}
+          className={cn("rounded-[10px] object-cover", avatarSizes[size])}
+        />
+      ) : (
+        <div
+          className={cn(
+            "flex items-center justify-center rounded-[10px] bg-primary/10 font-semibold text-primary",
+            avatarSizes[size]
+          )}
+        >
+          {name.charAt(0)}
+        </div>
+      )}
       {status && (
         <span
           className={cn(

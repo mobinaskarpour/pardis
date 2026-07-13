@@ -1,12 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { spring, stagger } from "@/lib/motion";
-import { patientAhmadi } from "@/lib/ai-workspace-data";
+import { findPatientById } from "@/mock/data/patients";
+import { MediaPreview } from "@/components/core/MediaPreview";
 import { cn } from "@/lib/utils";
 
 export function PatientCanvas() {
-  const patient = patientAhmadi;
+  const patient = findPatientById("214");
+  if (!patient) return null;
 
   return (
     <motion.div
@@ -22,9 +25,17 @@ export function PatientCanvas() {
         className="rounded-[14px] border border-border bg-bg-elevated p-6"
       >
         <div className="flex items-start gap-5">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[14px] bg-primary/10 text-[24px] font-semibold text-primary">
-            {patient.name.charAt(0)}
-          </div>
+          {patient.avatarUrl ? (
+            <img
+              src={patient.avatarUrl}
+              alt={patient.name}
+              className="h-16 w-16 shrink-0 rounded-[var(--radius-lg)] object-cover"
+            />
+          ) : (
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[14px] bg-primary/10 text-[24px] font-semibold text-primary">
+              {patient.name.charAt(0)}
+            </div>
+          )}
           <div className="flex-1 min-w-0">
             <h2 className="text-[28px] font-semibold text-text-primary">
               {patient.name}
@@ -96,35 +107,36 @@ export function PatientCanvas() {
             {patient.mri.map((scan) => (
               <div
                 key={scan.date + scan.type}
-                className="flex items-center justify-between rounded-[10px] border border-border p-3"
+                className="rounded-[var(--radius-lg)] border border-border overflow-hidden"
               >
-                <div>
-                  <p className="text-[15px] font-medium text-text-primary">
-                    {scan.type}
-                  </p>
-                  <p className="text-[13px] text-text-tertiary">
-                    {scan.date} · {scan.device}
-                  </p>
+                <MediaPreview
+                  src={scan.previewUrl ?? scan.thumbnailUrl ?? "/media/imaging/mri-brain.svg"}
+                  alt={scan.type}
+                  videoUrl={scan.videoUrl}
+                  aspect="scan"
+                />
+                <div className="flex items-center justify-between p-3">
+                  <div>
+                    <p className="text-[15px] font-medium text-text-primary">
+                      {scan.type}
+                    </p>
+                    <p className="text-[13px] text-text-tertiary">
+                      {scan.date} · {scan.device}
+                    </p>
+                  </div>
+                  <span
+                    className={cn(
+                      "text-[13px] rounded-[6px] px-2 py-0.5",
+                      scan.status === "نیاز به بررسی"
+                        ? "bg-warning/10 text-warning"
+                        : "bg-success/10 text-success"
+                    )}
+                  >
+                    {scan.status}
+                  </span>
                 </div>
-                <span
-                  className={cn(
-                    "text-[13px] rounded-[6px] px-2 py-0.5",
-                    scan.status === "نیاز به بررسی"
-                      ? "bg-warning/10 text-warning"
-                      : "bg-success/10 text-success"
-                  )}
-                >
-                  {scan.status}
-                </span>
               </div>
             ))}
-          </div>
-          {/* MRI visual placeholder */}
-          <div className="mt-4 aspect-video rounded-[10px] bg-bg-subtle border border-border flex items-center justify-center">
-            <div className="text-center">
-              <div className="mx-auto h-20 w-20 rounded-full border border-border-strong bg-gradient-to-br from-primary/5 to-primary/15" />
-              <p className="mt-3 text-[13px] text-text-tertiary">MRI مغز — Preview</p>
-            </div>
           </div>
         </motion.div>
       </div>

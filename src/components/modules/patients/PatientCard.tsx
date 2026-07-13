@@ -39,7 +39,7 @@ export function PatientCard({ patient, index = 0 }: PatientCardProps) {
           transition={{ delay: 0.05 * index, ...spring.soft }}
         >
           <div className="flex items-center gap-3 mb-3">
-            <Avatar name={patient.name} size="md" status="online" />
+            <Avatar name={patient.name} src={patient.avatarUrl} size="md" status="online" />
             <div className="text-[13px] text-text-secondary">
               <p>{patient.doctor}</p>
               <p className="text-text-tertiary">{patient.specialty}</p>

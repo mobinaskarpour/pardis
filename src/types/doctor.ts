@@ -11,4 +11,8 @@ export interface Doctor {
   workload: WorkloadLevel;
   schedule: string;
   aiInsight: string;
+  avatarUrl?: string;
+  coverImageUrl?: string;
+  videoIntroUrl?: string;
+  recentPatients?: string[];
 }

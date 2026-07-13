@@ -44,7 +44,10 @@ export function Dock() {
 
   return (
     <nav
-      className="flex flex-col items-center gap-1 py-4 px-2 overflow-y-auto max-h-screen"
+      className={cn(
+        "glass flex flex-col items-center gap-0.5 rounded-[var(--radius-2xl)] p-2",
+        "scrollbar-none max-h-[calc(100vh-48px)] overflow-y-auto"
+      )}
       aria-label="ناوبری اصلی"
     >
       {dockItems.map((item) => {
@@ -57,28 +60,45 @@ export function Dock() {
           <Link
             key={item.id}
             href={item.href}
-            className="group relative flex flex-col items-center shrink-0"
+            className="group relative flex items-center justify-center"
             aria-current={isActive ? "page" : undefined}
+            title={item.label}
           >
             <motion.div
-              whileHover={{ y: -2, transition: spring.gentle }}
+              whileHover={{ scale: 1.06, transition: spring.gentle }}
+              whileTap={{ scale: 0.94, transition: spring.snappy }}
               className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-[10px]",
-                "border transition-colors duration-[120ms]",
+                "relative flex h-11 w-11 items-center justify-center rounded-[var(--radius-lg)]",
+                "transition-colors duration-[140ms]",
                 isActive
-                  ? "border-border-hover bg-bg-elevated text-primary"
-                  : "border-transparent text-text-tertiary hover:border-border hover:bg-bg-elevated/60 hover:text-text-secondary"
+                  ? "bg-primary/12 text-primary"
+                  : "text-text-tertiary hover:bg-bg-subtle/80 hover:text-text-secondary"
               )}
             >
-              {Icon && <Icon size={20} strokeWidth={1.75} />}
+              {isActive && (
+                <motion.div
+                  layoutId="dock-active"
+                  className="absolute inset-0 rounded-[var(--radius-lg)] bg-primary/10"
+                  transition={spring.soft}
+                />
+              )}
+              {Icon && (
+                <Icon
+                  size={20}
+                  strokeWidth={1.75}
+                  className="relative z-10"
+                />
+              )}
             </motion.div>
 
+            {/* Tooltip on hover */}
             <span
               className={cn(
-                "mt-1 text-[11px] font-medium translate-y-0.5 opacity-0",
-                "transition-all duration-[120ms] delay-[40ms]",
-                "group-hover:opacity-100 group-hover:translate-y-0",
-                isActive ? "text-primary opacity-100 translate-y-0" : "text-text-tertiary"
+                "pointer-events-none absolute left-full mr-3 whitespace-nowrap",
+                "rounded-[var(--radius-md)] glass-subtle px-3 py-1.5",
+                "text-[var(--text-sm)] font-medium text-text-primary",
+                "opacity-0 translate-x-2 transition-all duration-[180ms]",
+                "group-hover:opacity-100 group-hover:translate-x-0"
               )}
             >
               {item.label}

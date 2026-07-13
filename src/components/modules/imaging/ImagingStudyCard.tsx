@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Scan, Clock, User } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Card, Status } from "@/components/core";
 import type { ImagingStudy } from "@/types/imaging";
@@ -51,10 +52,22 @@ export function ImagingStudyCard({
         variant="medical"
         hover={false}
         className={cn(
-          "transition-colors duration-[120ms]",
+          "transition-colors duration-[120ms] overflow-hidden",
           selected ? "border-border-hover bg-bg-elevated" : ""
         )}
       >
+        {study.thumbnailUrl && (
+          <div className="relative h-24 -mx-5 -mt-5 mb-4 overflow-hidden">
+            <Image
+              src={study.thumbnailUrl}
+              alt={study.bodyPart}
+              fill
+              className="object-cover opacity-90"
+              sizes="300px"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-bg-elevated to-transparent" />
+          </div>
+        )}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">

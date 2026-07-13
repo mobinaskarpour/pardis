@@ -4,4 +4,6 @@ export * from "./data/doctors";
 export * from "./data/modules";
 export * from "./data/command-center";
 export * from "./data/ai-workspace";
+export * from "./data/command-suggestions";
+export * from "./data/media";
 export * from "./data/user";

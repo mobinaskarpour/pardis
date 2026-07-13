@@ -11,26 +11,33 @@ interface AppShellProps {
   children: React.ReactNode;
   pageTitle?: string;
   hideFloatingAI?: boolean;
+  immersive?: boolean;
 }
 
 export function AppShell({
   children,
   pageTitle,
   hideFloatingAI,
+  immersive,
 }: AppShellProps) {
   const { open, openPalette, closePalette } = useCommandPalette();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-bg bg-texture">
-      {/* OS-style Dock */}
-      <aside className="hidden md:flex flex-col w-[72px] shrink-0 border-l border-border bg-bg-elevated/40 backdrop-blur-sm">
+    <div className="relative min-h-screen bg-machine">
+      <div className="bg-noise fixed inset-0 pointer-events-none" aria-hidden />
+
+      {/* Floating dock */}
+      <aside className="fixed top-1/2 right-4 z-40 hidden md:block -translate-y-1/2">
         <Dock />
       </aside>
 
-      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-        <Topbar onSearchOpen={openPalette} pageTitle={pageTitle} />
-        <main className="flex-1 min-h-0 overflow-hidden">
-          <PageTransition className="h-full">{children}</PageTransition>
+      <div className="relative flex min-h-screen flex-col md:pr-[88px]">
+        {!immersive && (
+          <Topbar onSearchOpen={openPalette} pageTitle={pageTitle} />
+        )}
+
+        <main className="flex-1">
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
 

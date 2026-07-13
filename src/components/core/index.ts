@@ -16,3 +16,4 @@ export { EmptyState } from "./EmptyState";
 export { Skeleton, SkeletonGroup } from "./Skeleton";
 export { StoryMetric } from "./StoryMetric";
 export { Drawer, FloatingPanel, Toast, Avatar } from "./Overlay";
+export { MediaPreview } from "./MediaPreview";

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ZoomIn, ZoomOut, RotateCcw, Layers } from "lucide-react";
 import type { ImagingStudy } from "@/types/imaging";
@@ -44,12 +45,21 @@ export function ImagingViewer({ study }: ImagingViewerProps) {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_120px]">
         {/* Viewport */}
         <div className="relative aspect-[4/3] bg-[#080a0c]">
+          {study.previewUrl && (
+            <Image
+              src={study.previewUrl}
+              alt={`${study.modality} ${study.bodyPart}`}
+              fill
+              className="object-cover opacity-90"
+              sizes="800px"
+            />
+          )}
           <motion.div
             key={`${study.id}-${activeSeries}-${slice}`}
             initial={{ opacity: 0.5, filter: "blur(3px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={chartForm(0.1)}
-            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_70%_at_50%_45%,#3d4f5c_0%,#1a2228_45%,#080a0c_100%)]"
+            className="absolute inset-0 bg-[radial-gradient(ellipse_60%_70%_at_50%_45%,#3d4f5c44_0%,#1a222888_45%,#080a0ccc_100%)]"
           />
           {/* Crosshair */}
           <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -91,7 +101,19 @@ export function ImagingViewer({ study }: ImagingViewerProps) {
                   : "border-border-strong hover:border-border-hover"
               )}
             >
-              <div className="aspect-square rounded-[4px] bg-[radial-gradient(circle_at_center,#2a3540,#0a0c0e)] mb-1" />
+              <div className="aspect-square rounded-[4px] bg-[#0a0c0e] mb-1 overflow-hidden relative">
+                {series.thumbnailUrl ? (
+                  <Image
+                    src={series.thumbnailUrl}
+                    alt={series.label}
+                    fill
+                    className="object-cover opacity-80"
+                    sizes="80px"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,#2a3540,#0a0c0e)]" />
+                )}
+              </div>
               <p className="text-[10px] text-text-tertiary truncate">{series.label}</p>
               <p className="text-[10px] text-text-tertiary">
                 {toPersianDigits(series.sliceCount)} برش

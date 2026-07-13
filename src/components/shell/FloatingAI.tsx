@@ -5,6 +5,6 @@ import { usePathname } from "next/navigation";
 
 export function FloatingAI() {
   const pathname = usePathname();
-  if (pathname === "/chat") return null;
+  if (pathname === "/chat" || pathname === "/") return null;
   return <AIButton />;
 }

@@ -101,6 +101,7 @@ export const timelineEvents = [
     title: "MRI ثبت شد",
     detail: "پرونده احمدی — دستگاه ۲",
     type: "imaging" as const,
+    imageUrl: "/media/imaging/mri-brain.svg",
   },
   {
     id: "2",
@@ -108,6 +109,7 @@ export const timelineEvents = [
     title: "پزشک گزارش را تأیید کرد",
     detail: "دکتر رضایی — CT شکم",
     type: "doctor" as const,
+    imageUrl: "/media/doctors/dr-rezaei.jpg",
   },
   {
     id: "3",
@@ -129,6 +131,7 @@ export const timelineEvents = [
     title: "پرونده جدید ثبت شد",
     detail: "مریم کریمی — سونوگرافی",
     type: "patient" as const,
+    imageUrl: "/media/avatars/patient-198.jpg",
   },
   {
     id: "6",
@@ -136,6 +139,39 @@ export const timelineEvents = [
     title: "گزارش آماده بررسی",
     detail: "MRI مغز — پرونده ۲۱۴",
     type: "report" as const,
+    imageUrl: "/media/imaging/mri-brain-photo.jpg",
+  },
+  {
+    id: "7",
+    time: "10:18",
+    title: "سونوگرافی بارداری",
+    detail: "سارا احمدی — هفته ۲۴",
+    type: "imaging" as const,
+    imageUrl: "/media/imaging/ultrasound-ob.svg",
+  },
+  {
+    id: "8",
+    time: "10:32",
+    title: "MRI زانو آماده",
+    detail: "رضا موسوی — پرونده ۲۰۳",
+    type: "imaging" as const,
+    imageUrl: "/media/imaging/mri-knee.svg",
+  },
+  {
+    id: "9",
+    time: "10:45",
+    title: "ماموگرافی تأیید شد",
+    detail: "فاطمه رضایی — BI-RADS 1",
+    type: "report" as const,
+    imageUrl: "/media/imaging/mammography.svg",
+  },
+  {
+    id: "10",
+    time: "11:00",
+    title: "CT سینه تکمیل شد",
+    detail: "زهرا صادقی — دکتر اکبری",
+    type: "imaging" as const,
+    imageUrl: "/media/imaging/ct-scan-photo.jpg",
   },
 ];
 
@@ -172,12 +208,16 @@ export const aiThinkingStates = [
 ];
 
 export const commandPaletteItems = [
-  { id: "1", category: "بیمار", title: "احمدی، محمد", subtitle: "پرونده ۲۱۴" },
-  { id: "2", category: "پزشک", title: "دکتر رضایی", subtitle: "رادیولوژی" },
-  { id: "3", category: "تصویر", title: "MRI مغز", subtitle: "امروز — ۰۹:۱۵" },
+  { id: "1", category: "بیمار", title: "احمدی، محمد", subtitle: "پرونده ۲۱۴", imageUrl: "/media/avatars/patient-214.jpg" },
+  { id: "2", category: "پزشک", title: "دکتر رضایی", subtitle: "رادیولوژی", imageUrl: "/media/doctors/dr-rezaei.jpg" },
+  { id: "3", category: "تصویر", title: "MRI مغز", subtitle: "امروز — ۰۹:۱۵", imageUrl: "/media/imaging/mri-brain.svg" },
   { id: "4", category: "گزارش", title: "گزارش ماهانه", subtitle: "آماده بررسی" },
   { id: "5", category: "AI", title: "پرونده احمدی", subtitle: "دستور AI" },
   { id: "6", category: "Workflow", title: "پیگیری MRI", subtitle: "پیشنهاد AI" },
+  { id: "7", category: "بیمار", title: "کریمی، مریم", subtitle: "پرونده ۱۹۸", imageUrl: "/media/avatars/patient-198.jpg" },
+  { id: "8", category: "تصویر", title: "MRI زانو", subtitle: "رضا موسوی", imageUrl: "/media/imaging/mri-knee.svg" },
+  { id: "9", category: "پزشک", title: "دکتر کریمی", subtitle: "MRI", imageUrl: "/media/doctors/dr-karimi.jpg" },
+  { id: "10", category: "بیمار", title: "صادقی، زهرا", subtitle: "CT سینه", imageUrl: "/media/avatars/patient-189.jpg" },
 ];
 
 export const dockItems = [

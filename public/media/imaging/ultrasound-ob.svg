@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="#0c0a0e"/>
+  <ellipse cx="200" cy="220" rx="80" ry="60" fill="#1a2028" stroke="#3d4a5c" stroke-width="1"/>
+  <circle cx="200" cy="210" r="12" fill="#4da8a8" opacity="0.5"/>
+  <path d="M160 200 Q200 180 240 200" stroke="#5aabbf" stroke-width="0.8" opacity="0.4"/>
+  <text x="200" y="380" text-anchor="middle" fill="#5a6070" font-size="11" font-family="monospace">OBSTETRIC  WEEK 24</text>
+</svg>

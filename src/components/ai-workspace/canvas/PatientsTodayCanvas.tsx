@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { spring, stagger } from "@/lib/motion";
 import { patientsToday } from "@/lib/ai-workspace-data";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const statusStyles: Record<string, string> = {
   "در انتظار": "bg-warning/10 text-warning",
@@ -18,64 +19,70 @@ export function PatientsTodayCanvas() {
       variants={stagger.container}
       initial="initial"
       animate="animate"
-      className="space-y-6"
+      className="space-y-5"
     >
+      {/* Narrative header — not KPI */}
       <motion.div
         variants={stagger.item}
         transition={spring.soft}
-        className="rounded-[14px] border border-border bg-bg-elevated p-6"
+        className="rounded-[var(--radius-xl)] glass-subtle p-6"
       >
-        <p className="text-[13px] font-medium text-text-tertiary">بیماران امروز</p>
-        <div className="mt-2 flex items-end gap-4">
-          <span className="text-[40px] font-semibold leading-none text-text-primary">
-            ۲۴
-          </span>
-          <div className="mb-1 space-y-0.5">
-            <p className="text-[13px] text-text-secondary">۵ نفر در انتظار</p>
-            <p className="text-[13px] text-text-secondary">۸ نفر منتظر تأیید</p>
-          </div>
-        </div>
+        <p className="text-[var(--text-xs)] font-medium uppercase tracking-wider text-text-muted mb-2">
+          امروز
+        </p>
+        <p className="text-[var(--text-body-lg)] font-medium text-text-primary leading-relaxed">
+          ۲۴ بیمار مراجعه کرده‌اند. ۵ نفر در انتظار و ۸ نفر منتظر تأیید پزشک
+          هستند.
+        </p>
       </motion.div>
 
-      <motion.div
-        variants={stagger.item}
-        transition={spring.soft}
-        className="rounded-[14px] border border-border bg-bg-elevated p-4"
-      >
-        <p className="text-[13px] font-medium text-text-tertiary mb-4 px-2">
-          Patient Explorer
+      {/* Patient journey list */}
+      <motion.div variants={stagger.item} transition={spring.soft}>
+        <p className="text-[var(--text-sm)] font-medium text-text-muted mb-3 px-1">
+          مسیر بیماران
         </p>
         <div className="space-y-2">
           {patientsToday.map((patient, i) => (
             <motion.div
               key={patient.id}
-              initial={{ opacity: 0, x: -8 }}
+              initial={{ opacity: 0, x: -12 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.1 + i * 0.06, ...spring.gentle }}
-              whileHover={{ x: -2, transition: spring.gentle }}
-              className="flex items-center justify-between rounded-[10px] border border-border p-4 transition-colors duration-[120ms] hover:border-border-hover cursor-default"
+              transition={{ delay: 0.1 + i * 0.05, ...spring.gentle }}
             >
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-primary/10 text-[15px] font-medium text-primary">
-                  {patient.name.charAt(0)}
-                </div>
-                <div>
-                  <p className="text-[15px] font-medium text-text-primary">
-                    {patient.name}
-                  </p>
-                  <p className="text-[13px] text-text-tertiary">
-                    {patient.time} · {patient.type}
-                  </p>
-                </div>
-              </div>
-              <span
-                className={cn(
-                  "text-[13px] rounded-[6px] px-2 py-0.5",
-                  statusStyles[patient.status] ?? "bg-bg-subtle text-text-secondary"
-                )}
+              <Link
+                href={`/patients/${patient.id}`}
+                className="flex items-center justify-between rounded-[var(--radius-lg)] glass-subtle p-4 transition-all hover:shadow-[var(--shadow-sm)] group"
               >
-                {patient.status}
-              </span>
+                <div className="flex items-center gap-3">
+                  {"thumbnailUrl" in patient && patient.thumbnailUrl ? (
+                    <img
+                      src={patient.thumbnailUrl as string}
+                      alt=""
+                      className="h-11 w-11 rounded-[var(--radius-md)] object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-11 w-11 items-center justify-center rounded-[var(--radius-md)] bg-primary/10 text-[var(--text-body)] font-medium text-primary">
+                      {patient.name.charAt(0)}
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-[var(--text-body)] font-medium text-text-primary group-hover:text-primary transition-colors">
+                      {patient.name}
+                    </p>
+                    <p className="text-[var(--text-sm)] text-text-tertiary">
+                      {patient.time} · {patient.type}
+                    </p>
+                  </div>
+                </div>
+                <span
+                  className={cn(
+                    "text-[var(--text-xs)] rounded-full px-2.5 py-1",
+                    statusStyles[patient.status] ?? "bg-bg-subtle text-text-secondary"
+                  )}
+                >
+                  {patient.status}
+                </span>
+              </Link>
             </motion.div>
           ))}
         </div>

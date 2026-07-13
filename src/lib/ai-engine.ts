@@ -1,12 +1,108 @@
 import type { AIResponse, CanvasType, HistoryCategory } from "./ai-workspace-data";
+import {
+  findSuggestionByQuery,
+  specializedCommandResults,
+  defaultCommandSuggestions,
+} from "@/mock/data/command-suggestions";
 
 function matchInput(input: string, patterns: string[]): boolean {
   const normalized = input.trim().toLowerCase();
   return patterns.some((p) => normalized.includes(p));
 }
 
+function specializedResponse(
+  suggestionId: string,
+  base: Partial<Omit<AIResponse, "content">> & { content?: string }
+): AIResponse | null {
+  const mock = specializedCommandResults[suggestionId];
+  if (!mock) return null;
+  return {
+    content: base.content ?? `${mock.preview}\n\n${mock.detail}`,
+    canvas: base.canvas ?? "welcome",
+    conversationTitle: base.conversationTitle ?? mock.preview,
+    category: base.category ?? "sessions",
+    reasoning: base.reasoning ?? ["تحلیل تخصصی AI", "پایگاه داده پزشکی"],
+    citations: base.citations ?? [
+      { id: "cs1", source: "ai", label: "THE MACHINE AI Engine" },
+    ],
+    suggestedQuestions: base.suggestedQuestions ?? [
+      "تحلیل عمیق‌تر",
+      "مقایسه با موارد مشابه",
+      "ساخت گزارش",
+    ],
+    actions: base.actions ?? [
+      { id: "report", label: "ساخت گزارش" },
+      { id: "save", label: "ذخیره تحلیل" },
+    ],
+  };
+}
+
+function trySpecialized(query: string): AIResponse | null {
+  const suggestion = findSuggestionByQuery(query);
+  if (!suggestion) {
+    const byPartial = defaultCommandSuggestions.find(
+      (s) =>
+        query.includes(s.label) ||
+        s.label.includes(query) ||
+        query.includes(s.query.slice(0, 12))
+    );
+    if (byPartial && specializedCommandResults[byPartial.id]) {
+      return specializedResponse(byPartial.id, {
+        canvas: mapCategoryToCanvas(byPartial.category, byPartial.id),
+        conversationTitle: byPartial.label,
+        category: mapCategoryToHistory(byPartial.category),
+      });
+    }
+    return null;
+  }
+  if (!specializedCommandResults[suggestion.id]) return null;
+  return specializedResponse(suggestion.id, {
+    canvas: mapCategoryToCanvas(suggestion.category, suggestion.id),
+    conversationTitle: suggestion.label,
+    category: mapCategoryToHistory(suggestion.category),
+  });
+}
+
+function mapCategoryToCanvas(
+  category: string,
+  id: string
+): CanvasType {
+  if (id.includes("mri") || id.includes("scan") || id.includes("pacs") || id.includes("urgent"))
+    return "mri-ready";
+  if (id.includes("patient") || id.includes("ahmadi") || id.includes("waiting") || id.includes("follow"))
+    return "patients-today";
+  if (id.includes("revenue") || id.includes("insurance") || id.includes("financial"))
+    return "revenue";
+  if (id.includes("workflow") || id.includes("device") || id.includes("sms"))
+    return "workflow";
+  if (id.includes("report") || id.includes("open"))
+    return "report";
+  if (id.includes("ai-lesion") || id.includes("compare") || id.includes("cdss"))
+    return "patient";
+  if (category === "ai") return "patient";
+  if (category === "clinical") return "patients-today";
+  if (category === "imaging") return "mri-ready";
+  if (category === "financial") return "revenue";
+  if (category === "operations") return "workflow";
+  return "welcome";
+}
+
+function mapCategoryToHistory(category: string): HistoryCategory {
+  const map: Record<string, HistoryCategory> = {
+    clinical: "patients",
+    imaging: "reports",
+    ai: "reports",
+    operations: "workflow",
+    financial: "financial",
+  };
+  return map[category] ?? "sessions";
+}
+
 export function processAIQuery(input: string): AIResponse {
   const query = input.trim();
+
+  const specialized = trySpecialized(query);
+  if (specialized) return specialized;
 
   if (
     matchInput(query, [
@@ -202,12 +298,10 @@ export function processAIQuery(input: string): AIResponse {
     category: "sessions",
     reasoning: ["تحلیل درخواست", "جستجو در پایگاه دانش"],
     citations: [{ id: "c0", source: "knowledge", label: "پایگاه دانش" }],
-    suggestedQuestions: [
-      "پرونده بیمار احمدی",
-      "درآمد این ماه",
-      "بیماران امروز",
-      "MRIهای آماده",
-    ],
+    suggestedQuestions: defaultCommandSuggestions
+      .filter((s) => s.category === "ai" || s.category === "imaging")
+      .slice(0, 6)
+      .map((s) => s.query),
     actions: [{ id: "save", label: "ذخیره" }],
   };
 }

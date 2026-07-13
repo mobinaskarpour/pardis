@@ -123,13 +123,26 @@ function ResultRow({
       onClick={onSelect}
       className="flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-right transition-colors duration-[120ms] hover:bg-bg-subtle cursor-pointer"
     >
-      <span className="shrink-0 rounded-[6px] bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
-        {item.category}
-      </span>
+      {"imageUrl" in item && item.imageUrl ? (
+        <img
+          src={item.imageUrl as string}
+          alt=""
+          className="h-9 w-9 shrink-0 rounded-[8px] object-cover"
+        />
+      ) : (
+        <span className="shrink-0 rounded-[6px] bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+          {item.category}
+        </span>
+      )}
       <div className="flex-1 min-w-0">
         <p className="text-[15px] text-text-primary truncate">{item.title}</p>
         <p className="text-[13px] text-text-tertiary truncate">{item.subtitle}</p>
       </div>
+      {!item.imageUrl && (
+        <span className="shrink-0 rounded-[6px] bg-bg-subtle px-2 py-0.5 text-[10px] text-text-muted">
+          {item.category}
+        </span>
+      )}
     </button>
   );
 }

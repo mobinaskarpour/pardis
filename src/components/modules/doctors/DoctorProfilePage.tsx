@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Sparkles, ChevronLeft } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
 import { AIDock } from "@/components/modules/shared/ModuleShell";
+import { MediaPreview } from "@/components/core/MediaPreview";
 import type { Doctor } from "@/types";
 import { spring } from "@/lib/motion";
 import { pageLabels, uiLabels } from "@/config/labels";
@@ -17,11 +18,21 @@ export function DoctorProfilePage({ doctor }: DoctorProfilePageProps) {
   return (
     <AppShell pageTitle={doctor.name}>
       <div className="h-full overflow-y-auto">
+        {doctor.coverImageUrl && (
+          <div className="relative h-48 md:h-56 overflow-hidden">
+            <img
+              src={doctor.coverImageUrl}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/40 to-transparent" />
+          </div>
+        )}
         <motion.section
           initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={spring.soft}
-          className="border-b border-border px-6 py-10 md:px-10"
+          className="border-b border-border px-6 py-10 md:px-10 -mt-16 relative"
         >
           <Link
             href="/doctors"
@@ -31,13 +42,33 @@ export function DoctorProfilePage({ doctor }: DoctorProfilePageProps) {
             {pageLabels.doctors}
           </Link>
 
-          <h1 className="text-[36px] font-semibold text-text-primary">{doctor.name}</h1>
-          <p className="text-[16px] text-text-secondary mt-1">{doctor.specialty}</p>
-          <p className="text-[13px] text-text-tertiary mt-2">{doctor.schedule}</p>
+          <div className="flex items-end gap-5 mb-4">
+            {doctor.avatarUrl ? (
+              <img
+                src={doctor.avatarUrl}
+                alt={doctor.name}
+                className="h-24 w-24 rounded-[var(--radius-2xl)] object-cover border-4 border-bg shadow-[var(--shadow-md)]"
+              />
+            ) : null}
+            <div>
+              <h1 className="text-[36px] font-semibold text-text-primary">{doctor.name}</h1>
+              <p className="text-[16px] text-text-secondary mt-1">{doctor.specialty}</p>
+              <p className="text-[13px] text-text-tertiary mt-2">{doctor.schedule}</p>
+            </div>
+          </div>
         </motion.section>
 
         <div className="px-6 py-10 md:px-10 grid grid-cols-1 xl:grid-cols-[1fr_260px] gap-10">
           <div className="space-y-8">
+            {doctor.videoIntroUrl && doctor.coverImageUrl && (
+              <MediaPreview
+                src={doctor.coverImageUrl}
+                alt={`ویدیو معرفی ${doctor.name}`}
+                videoUrl={doctor.videoIntroUrl}
+                aspect="video"
+                className="max-w-2xl"
+              />
+            )}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { label: "میانگین زمان گزارش", value: doctor.avgReportTime },
@@ -68,6 +99,22 @@ export function DoctorProfilePage({ doctor }: DoctorProfilePageProps) {
                 {doctor.aiInsight}
               </p>
             </div>
+
+            {doctor.recentPatients && doctor.recentPatients.length > 0 && (
+              <div>
+                <h2 className="text-[20px] font-semibold mb-4">بیماران اخیر</h2>
+                <div className="flex flex-wrap gap-2">
+                  {doctor.recentPatients.map((name) => (
+                    <span
+                      key={name}
+                      className="rounded-full glass-subtle px-4 py-2 text-[var(--text-sm)] text-text-secondary"
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div>
               <h2 className="text-[20px] font-semibold mb-4">Performance</h2>

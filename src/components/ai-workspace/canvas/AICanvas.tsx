@@ -18,7 +18,7 @@ interface AICanvasProps {
 
 export function AICanvas({ canvas, onSuggestionClick }: AICanvasProps) {
   return (
-    <div className="flex-1 overflow-y-auto p-6 md:p-8">
+    <div className="overflow-hidden">
       <AnimatePresence mode="wait">
         <motion.div
           key={canvas}

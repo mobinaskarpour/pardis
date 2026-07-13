@@ -1,14 +1,53 @@
 import type { PatientListItem } from "@/types";
 import { patientAhmadi } from "./ai-workspace";
+import { media } from "./media";
 
 export const patientsMock: PatientListItem[] = [
   {
     ...patientAhmadi,
+    avatarUrl: media.avatars.patient214,
+    coverImageUrl: media.facility.mriRoom,
     phone: "۰۹۱۲۱۲۳۴۵۶۷",
     insurance: "تأمین اجتماعی",
     financialStatus: "pending",
     nextAppointment: "۱۴۰۴/۰۱/۲۵ — ۱۰:۳۰",
     healthScore: 82,
+    documents: [
+      { id: "d1", title: "رضایت‌نامه MRI", type: "consent", date: "۱۴۰۴/۰۱/۲۲" },
+      { id: "d2", title: "ارجاع دکتر رضایی", type: "referral", date: "۱۴۰۴/۰۱/۱۸" },
+      { id: "d3", title: "کارت بیمه", type: "insurance", date: "۱۴۰۴/۰۱/۱۰" },
+    ],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۲۲",
+        type: "MRI مغز",
+        device: "دستگاه ۲",
+        status: "نیاز به بررسی",
+        thumbnailUrl: media.imaging.mriBrain,
+        previewUrl: media.imaging.mriBrainPhoto,
+        videoUrl: media.videos.mriScanDemo,
+      },
+      {
+        date: "۱۴۰۳/۱۱/۱۵",
+        type: "MRI زانو",
+        device: "دستگاه ۱",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.mriKnee,
+        previewUrl: media.imaging.mriKnee,
+      },
+    ],
+    reports: [
+      {
+        date: "۱۴۰۴/۰۱/۲۲",
+        title: "گزارش MRI مغز",
+        status: "در انتظار تأیید",
+      },
+      {
+        date: "۱۴۰۳/۱۱/۱۶",
+        title: "گزارش MRI زانو",
+        status: "تأیید شده",
+      },
+    ],
   },
   {
     id: "198",
@@ -20,13 +59,26 @@ export const patientsMock: PatientListItem[] = [
     specialty: "سونوگرافی",
     lastVisit: "۱۴۰۴/۰۱/۲۱",
     status: "فعال",
+    avatarUrl: media.avatars.patient198,
+    coverImageUrl: media.facility.reception,
     aiSummary:
       "بیمار با سابقه سونوگرافی شکم. آخرین گزارش تأیید شده. پیگیری ۶ ماهه پیشنهاد می‌شود.",
     timeline: [
       { date: "۱۴۰۴/۰۱/۲۱", event: "سونوگرافی شکم", type: "imaging" },
       { date: "۱۴۰۴/۰۱/۰۵", event: "ویزیت اولیه", type: "visit" },
+      { date: "۱۴۰۳/۱۰/۲۰", event: "آزمایش خون", type: "lab" },
     ],
-    mri: [],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۲۱",
+        type: "سونوگرافی شکم",
+        device: "سونو ۳",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.ultrasoundAbdomen,
+        previewUrl: media.imaging.ultrasoundAbdomen,
+        videoUrl: media.videos.ultrasoundLive,
+      },
+    ],
     reports: [
       { date: "۱۴۰۴/۰۱/۲۱", title: "گزارش سونوگرافی", status: "تأیید شده" },
     ],
@@ -35,6 +87,9 @@ export const patientsMock: PatientListItem[] = [
     financialStatus: "paid",
     nextAppointment: "۱۴۰۴/۰۴/۲۱",
     healthScore: 91,
+    documents: [
+      { id: "d4", title: "گزارش سونوگرافی PDF", type: "report", date: "۱۴۰۴/۰۱/۲۱" },
+    ],
   },
   {
     id: "176",
@@ -46,13 +101,31 @@ export const patientsMock: PatientListItem[] = [
     specialty: "رادیولوژی",
     lastVisit: "۱۴۰۴/۰۱/۲۰",
     status: "در انتظار",
+    avatarUrl: media.avatars.patient176,
     aiSummary:
       "CT شکم انجام شده. منتظر تأیید پزشک. سابقه دیابت در پرونده ثبت شده.",
     timeline: [
       { date: "۱۴۰۴/۰۱/۲۰", event: "CT شکم", type: "imaging" },
       { date: "۱۴۰۳/۱۰/۱۵", event: "MRI زانو", type: "imaging" },
+      { date: "۱۴۰۳/۰۸/۰۲", event: "ویزیت داخلی", type: "visit" },
     ],
-    mri: [],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۲۰",
+        type: "CT شکم",
+        device: "CT دستگاه ۱",
+        status: "در انتظار تأیید",
+        thumbnailUrl: media.imaging.ctAbdomen,
+        previewUrl: media.imaging.ctScanPhoto,
+      },
+      {
+        date: "۱۴۰۳/۱۰/۱۵",
+        type: "MRI زانو",
+        device: "دستگاه ۱",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.mriKnee,
+      },
+    ],
     reports: [
       { date: "۱۴۰۴/۰۱/۲۰", title: "گزارش CT", status: "در انتظار تأیید" },
     ],
@@ -71,12 +144,23 @@ export const patientsMock: PatientListItem[] = [
     specialty: "ماموگرافی",
     lastVisit: "۱۴۰۴/۰۱/۱۹",
     status: "فعال",
+    avatarUrl: media.avatars.patient165,
     aiSummary:
       "ماموگرافی غربالگری. نتیجه طبیعی. یادآوری سالانه تنظیم شده.",
     timeline: [
       { date: "۱۴۰۴/۰۱/۱۹", event: "ماموگرافی", type: "imaging" },
+      { date: "۱۴۰۳/۰۱/۱۹", event: "ماموگرافی سال قبل", type: "imaging" },
     ],
-    mri: [],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۱۹",
+        type: "ماموگرافی",
+        device: "ماموگرافی ۱",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.mammography,
+        previewUrl: media.imaging.mammography,
+      },
+    ],
     reports: [
       { date: "۱۴۰۴/۰۱/۱۹", title: "گزارش ماموگرافی", status: "تأیید شده" },
     ],
@@ -93,10 +177,14 @@ export const patientsMock: PatientListItem[] = [
     specialty: "MRI",
     lastVisit: "۱۴۰۴/۰۱/۱۸",
     status: "پیگیری",
+    avatarUrl: media.avatars.patient142,
+    coverImageUrl: media.facility.waitingArea,
     aiSummary:
       "MRI ستون فقرات — نیاز به مقایسه با تصویر ۶ ماه قبل. AI پیشنهاد overlay دارد.",
     timeline: [
       { date: "۱۴۰۴/۰۱/۱۸", event: "MRI ستون فقرات", type: "imaging" },
+      { date: "۱۴۰۳/۰۷/۱۲", event: "MRI قبلی — مقایسه", type: "imaging" },
+      { date: "۱۴۰۳/۰۶/۲۰", event: "فیزیوتراپی", type: "visit" },
     ],
     mri: [
       {
@@ -104,6 +192,9 @@ export const patientsMock: PatientListItem[] = [
         type: "MRI ستون فقرات",
         device: "دستگاه ۱",
         status: "بررسی شده",
+        thumbnailUrl: media.imaging.mriSpine,
+        previewUrl: media.imaging.mriSpine,
+        videoUrl: media.videos.workflowDemo,
       },
     ],
     reports: [
@@ -122,14 +213,166 @@ export const patientsMock: PatientListItem[] = [
     specialty: "سونوگرافی",
     lastVisit: "۱۴۰۴/۰۱/۱۷",
     status: "فعال",
+    avatarUrl: media.avatars.patient128,
     aiSummary: "سونوگرافی بارداری — هفته ۲۴. همه پارامترها طبیعی.",
     timeline: [
       { date: "۱۴۰۴/۰۱/۱۷", event: "سونوگرافی بارداری", type: "imaging" },
+      { date: "۱۴۰۳/۱۰/۱۷", event: "سونو هفته ۱۶", type: "imaging" },
     ],
-    mri: [],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۱۷",
+        type: "سونوگرافی بارداری",
+        device: "سونو ۲",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.ultrasoundOb,
+        previewUrl: media.imaging.ultrasoundOb,
+        videoUrl: media.videos.ultrasoundLive,
+      },
+    ],
     reports: [],
     financialStatus: "paid",
     healthScore: 88,
+  },
+  {
+    id: "203",
+    name: "رضا موسوی",
+    caseNumber: "۲۰۳",
+    age: 47,
+    gender: "مرد",
+    doctor: "دکتر کریمی",
+    specialty: "MRI",
+    lastVisit: "۱۴۰۴/۰۱/۲۲",
+    status: "در انتظار",
+    avatarUrl: media.avatars.patient203,
+    aiSummary:
+      "MRI زانو راست — پارگی جزئی منیسک. نیاز به مشاوره ارتوپد. گزارش آماده بررسی.",
+    timeline: [
+      { date: "۱۴۰۴/۰۱/۲۲", event: "MRI زانو راست", type: "imaging" },
+      { date: "۱۴۰۴/۰۱/۱۵", event: "معاینه ارتوپد", type: "visit" },
+    ],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۲۲",
+        type: "MRI زانو",
+        device: "دستگاه ۲",
+        status: "آماده بررسی",
+        thumbnailUrl: media.imaging.mriKnee,
+        previewUrl: media.imaging.mriKnee,
+      },
+    ],
+    reports: [
+      { date: "۱۴۰۴/۰۱/۲۲", title: "گزارش MRI زانو", status: "در انتظار تأیید" },
+    ],
+    phone: "۰۹۱۲۹۸۷۶۵۴۳",
+    insurance: "تأمین اجتماعی",
+    financialStatus: "pending",
+    healthScore: 71,
+  },
+  {
+    id: "189",
+    name: "زهرا صادقی",
+    caseNumber: "۱۸۹",
+    age: 41,
+    gender: "زن",
+    doctor: "دکتر اکبری",
+    specialty: "رادیولوژی",
+    lastVisit: "۱۴۰۴/۰۱/۲۱",
+    status: "فعال",
+    avatarUrl: media.avatars.patient189,
+    aiSummary:
+      "CT سینه با تزریق — رد ندول ریوی. پیگیری ۳ ماهه توصیه شده.",
+    timeline: [
+      { date: "۱۴۰۴/۰۱/۲۱", event: "CT سینه", type: "imaging" },
+      { date: "۱۴۰۳/۱۲/۰۵", event: "عکس قفسه سینه", type: "imaging" },
+    ],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۲۱",
+        type: "CT سینه",
+        device: "CT دستگاه ۱",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.ctAbdomen,
+        previewUrl: media.imaging.ctScanPhoto,
+      },
+    ],
+    reports: [
+      { date: "۱۴۰۴/۰۱/۲۱", title: "گزارش CT سینه", status: "تأیید شده" },
+    ],
+    financialStatus: "paid",
+    healthScore: 86,
+  },
+  {
+    id: "155",
+    name: "امیر حسینی",
+    caseNumber: "۱۵۵",
+    age: 33,
+    gender: "مرد",
+    doctor: "دکتر شفیعی",
+    specialty: "MRI",
+    lastVisit: "۱۴۰۴/۰۱/۲۰",
+    status: "پیگیری",
+    avatarUrl: media.avatars.patient155,
+    aiSummary:
+      "MRI شانه — التهاب تاندون روتاتور کاف. فیزیوتراپی پیشنهاد شده.",
+    timeline: [
+      { date: "۱۴۰۴/۰۱/۲۰", event: "MRI شانه", type: "imaging" },
+      { date: "۱۴۰۴/۰۱/۰۸", event: "ویزیت ارتوپد", type: "visit" },
+    ],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۲۰",
+        type: "MRI شانه",
+        device: "دستگاه ۱",
+        status: "بررسی شده",
+        thumbnailUrl: media.imaging.mriBrain,
+        previewUrl: media.imaging.mriBrainPhoto,
+      },
+    ],
+    reports: [
+      { date: "۱۴۰۴/۰۱/۲۰", title: "گزارش MRI شانه", status: "تأیید شده" },
+    ],
+    financialStatus: "partial",
+    healthScore: 79,
+  },
+  {
+    id: "091",
+    name: "لیلا فرهادی",
+    caseNumber: "۰۹۱",
+    age: 56,
+    gender: "زن",
+    doctor: "دکتر موسوی",
+    specialty: "ماموگرافی",
+    lastVisit: "۱۴۰۴/۰۱/۱۹",
+    status: "فعال",
+    avatarUrl: media.avatars.patient091,
+    aiSummary:
+      "ماموگرافی + سونوگرافی پستان — BI-RADS 2. پیگیری منظم ۶ ماهه.",
+    timeline: [
+      { date: "۱۴۰۴/۰۱/۱۹", event: "ماموگرافی", type: "imaging" },
+      { date: "۱۴۰۴/۰۱/۱۹", event: "سونوگرافی پستان", type: "imaging" },
+    ],
+    mri: [
+      {
+        date: "۱۴۰۴/۰۱/۱۹",
+        type: "ماموگرافی",
+        device: "ماموگرافی ۱",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.mammography,
+      },
+      {
+        date: "۱۴۰۴/۰۱/۱۹",
+        type: "سونوگرافی پستان",
+        device: "سونو ۱",
+        status: "تأیید شده",
+        thumbnailUrl: media.imaging.ultrasoundAbdomen,
+      },
+    ],
+    reports: [
+      { date: "۱۴۰۴/۰۱/۱۹", title: "گزارش ماموگرافی", status: "تأیید شده" },
+    ],
+    financialStatus: "paid",
+    healthScore: 92,
   },
 ];
 

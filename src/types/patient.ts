@@ -13,12 +13,24 @@ export interface ImagingRecord {
   type: string;
   device: string;
   status: string;
+  thumbnailUrl?: string;
+  previewUrl?: string;
+  videoUrl?: string;
 }
 
 export interface MedicalReport {
   date: string;
   title: string;
   status: string;
+  documentUrl?: string;
+}
+
+export interface PatientDocument {
+  id: string;
+  title: string;
+  type: "report" | "consent" | "referral" | "insurance";
+  date: string;
+  url?: string;
 }
 
 export interface Patient {
@@ -43,4 +55,7 @@ export interface PatientListItem extends Patient {
   financialStatus?: FinancialStatus;
   nextAppointment?: string;
   healthScore?: number;
+  avatarUrl?: string;
+  coverImageUrl?: string;
+  documents?: PatientDocument[];
 }

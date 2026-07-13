@@ -20,6 +20,7 @@ export interface ImagingSeries {
   id: string;
   label: string;
   sliceCount: number;
+  thumbnailUrl?: string;
 }
 
 export interface ImagingStudy {
@@ -36,6 +37,9 @@ export interface ImagingStudy {
   waitMinutes?: number;
   series: ImagingSeries[];
   aiAnalysis: ImagingAIAnalysis;
+  thumbnailUrl?: string;
+  previewUrl?: string;
+  videoUrl?: string;
 }
 
 export interface ImagingDevice {
