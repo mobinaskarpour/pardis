@@ -26,6 +26,16 @@ export interface AIAction {
   icon?: string;
 }
 
+export interface WorkflowSuggestion {
+  status: "pending" | "accepted" | "dismissed";
+  /** Why the AI is suggesting it — the detected pattern */
+  reason: string;
+  workflowId: string;
+  workflowName: string;
+  triggerLabel: string;
+  actionLabels: string[];
+}
+
 export interface WorkspaceMessage {
   id: string;
   role: "user" | "assistant";
@@ -35,6 +45,8 @@ export interface WorkspaceMessage {
   citations?: Citation[];
   suggestedQuestions?: string[];
   actions?: AIAction[];
+  /** Present when the AI detected a repeated task and proposes automating it */
+  workflowSuggestion?: WorkflowSuggestion;
 }
 
 export interface Conversation {

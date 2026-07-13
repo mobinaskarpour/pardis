@@ -9,7 +9,12 @@ import { useAIWorkspace } from "@/hooks/useAIWorkspace";
 import { pageLabels } from "@/config/labels";
 import { Reveal } from "@/components/motion";
 
-export function AIWorkspacePage() {
+interface AIWorkspacePageProps {
+  /** Query handed off from the dashboard chat box — submitted on mount */
+  initialQuery?: string;
+}
+
+export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
   const {
     conversations,
     activeId,
@@ -24,7 +29,9 @@ export function AIWorkspacePage() {
     newConversation,
     setActiveCategory,
     onThinkingComplete,
-  } = useAIWorkspace();
+    acceptWorkflowSuggestion,
+    dismissWorkflowSuggestion,
+  } = useAIWorkspace(initialQuery);
 
   return (
     <AppShell pageTitle={pageLabels.chat} hideFloatingAI>
@@ -56,6 +63,8 @@ export function AIWorkspacePage() {
             onCategoryChange={setActiveCategory}
             onSuggestionClick={submitQuery}
             onThinkingComplete={onThinkingComplete}
+            onAcceptWorkflowSuggestion={acceptWorkflowSuggestion}
+            onDismissWorkflowSuggestion={dismissWorkflowSuggestion}
           />
         </Reveal>
       </div>

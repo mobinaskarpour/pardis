@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import type {
   CanvasType,
   Conversation,
@@ -9,15 +9,22 @@ import type {
 } from "@/lib/ai-workspace-data";
 import { initialConversations } from "@/lib/ai-workspace-data";
 import { processAIQuery } from "@/lib/ai-engine";
+import { detectRepeatedTask } from "@/lib/workflow-detection";
+import { useWorkflowStore } from "@/store/workflow-store";
+import type { Workflow } from "@/types/workflow";
+import type { WorkflowSuggestion } from "@/types";
 
 function generateId() {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
-export function useAIWorkspace() {
+export function useAIWorkspace(initialQuery?: string) {
   const [conversations, setConversations] =
     useState<Conversation[]>(initialConversations);
-  const [activeId, setActiveId] = useState<string | null>("conv-1");
+  // An incoming query (from the dashboard chat box) starts a fresh conversation
+  const [activeId, setActiveId] = useState<string | null>(
+    initialQuery ? null : "conv-dose"
+  );
   const [activeCategory, setActiveCategory] = useState<HistoryCategory | "all">(
     "all"
   );
@@ -50,8 +57,15 @@ export function useAIWorkspace() {
     [lastAssistant]
   );
 
+  /** Drafts proposed by repetition detection, kept until the user accepts */
+  const pendingDraftsRef = useRef<Record<string, Workflow>>({});
+
   const finishResponse = useCallback(
-    (userContent: string, convId: string | null) => {
+    (
+      userContent: string,
+      convId: string | null,
+      suggestion?: WorkflowSuggestion
+    ) => {
       const response = processAIQuery(userContent);
       const assistantMsg: WorkspaceMessage = {
         id: generateId(),
@@ -62,6 +76,7 @@ export function useAIWorkspace() {
         citations: response.citations,
         suggestedQuestions: response.suggestedQuestions,
         actions: response.actions,
+        workflowSuggestion: suggestion,
       };
 
       setPreviewCanvas(response.canvas);
@@ -95,11 +110,21 @@ export function useAIWorkspace() {
   const [pendingQuery, setPendingQuery] = useState<{
     content: string;
     convId: string | null;
+    suggestion?: WorkflowSuggestion;
   } | null>(null);
 
   const submitQuery = useCallback(
     (content: string) => {
       if (thinking) return;
+
+      const detection = detectRepeatedTask(
+        content,
+        conversations,
+        useWorkflowStore.getState().hasWorkflow
+      );
+      if (detection) {
+        pendingDraftsRef.current[detection.draft.id] = detection.draft;
+      }
 
       const userMsg: WorkspaceMessage = {
         id: generateId(),
@@ -133,18 +158,67 @@ export function useAIWorkspace() {
       }
 
       setThinking(true);
-      setPendingQuery({ content, convId });
+      setPendingQuery({ content, convId, suggestion: detection?.suggestion });
     },
-    [activeId, thinking]
+    [activeId, thinking, conversations]
   );
+
+  const bootedRef = useRef(false);
+  useEffect(() => {
+    if (initialQuery && !bootedRef.current) {
+      bootedRef.current = true;
+      submitQuery(initialQuery);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onThinkingComplete = useCallback(() => {
     if (pendingQuery) {
       setThinking(false);
-      finishResponse(pendingQuery.content, pendingQuery.convId);
+      finishResponse(
+        pendingQuery.content,
+        pendingQuery.convId,
+        pendingQuery.suggestion
+      );
       setPendingQuery(null);
     }
   }, [pendingQuery, finishResponse]);
+
+  const setSuggestionStatus = useCallback(
+    (messageId: string, status: WorkflowSuggestion["status"]) => {
+      setConversations((prev) =>
+        prev.map((c) => ({
+          ...c,
+          messages: c.messages.map((m) =>
+            m.id === messageId && m.workflowSuggestion
+              ? {
+                  ...m,
+                  workflowSuggestion: { ...m.workflowSuggestion, status },
+                }
+              : m
+          ),
+        }))
+      );
+    },
+    []
+  );
+
+  const acceptWorkflowSuggestion = useCallback(
+    (messageId: string, workflowId: string) => {
+      const draft = pendingDraftsRef.current[workflowId];
+      if (draft) {
+        useWorkflowStore.getState().addWorkflow(draft);
+        delete pendingDraftsRef.current[workflowId];
+      }
+      setSuggestionStatus(messageId, "accepted");
+    },
+    [setSuggestionStatus]
+  );
+
+  const dismissWorkflowSuggestion = useCallback(
+    (messageId: string) => setSuggestionStatus(messageId, "dismissed"),
+    [setSuggestionStatus]
+  );
 
   const selectConversation = useCallback((id: string) => {
     setActiveId(id);
@@ -170,5 +244,7 @@ export function useAIWorkspace() {
     newConversation,
     setActiveCategory,
     onThinkingComplete,
+    acceptWorkflowSuggestion,
+    dismissWorkflowSuggestion,
   };
 }

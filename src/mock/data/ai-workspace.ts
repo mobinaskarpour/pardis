@@ -34,9 +34,9 @@ export const historyCategories: {
 ];
 
 export const emptySuggestions = [
+  "گزارش دوز امروز را برای فیزیک بهداشت بفرست",
   "امروز چه بیمارانی مراجعه کرده‌اند؟",
   "درآمد امروز چقدر است؟",
-  "آخرین MRIها",
   "پرونده‌های باز",
   "ساخت Workflow",
 ];
@@ -177,6 +177,43 @@ export const revenueData = {
 };
 
 export const initialConversations: Conversation[] = [
+  {
+    id: "conv-dose",
+    title: "گزارش دوز CT",
+    category: "reports",
+    preview: "گزارش دوز امروز را برای فیزیک بهداشت بفرست",
+    updatedAt: "دیروز",
+    messages: [
+      {
+        id: "md1",
+        role: "user",
+        content: "گزارش دوز امروز بخش سی‌تی را برای فیزیک بهداشت بفرست",
+      },
+      {
+        id: "md2",
+        role: "assistant",
+        content:
+          "گزارش دوز روز شنبه تهیه شد: ۳۱ اسکن، دوز میانگین ۸.۹ mSv — و برای واحد فیزیک بهداشت ارسال شد.",
+        canvas: "report",
+        reasoning: ["استخراج دوز از کنسول دستگاه‌ها", "ارسال به فیزیک بهداشت"],
+        citations: [{ id: "cd0", source: "ct", label: "کنسول CT" }],
+      },
+      {
+        id: "md3",
+        role: "user",
+        content: "گزارش دوز امروز را هم برای فیزیک بهداشت ارسال کن",
+      },
+      {
+        id: "md4",
+        role: "assistant",
+        content:
+          "گزارش دوز روز یکشنبه تهیه شد: ۲۶ اسکن، دوز میانگین ۷.۸ mSv — و برای واحد فیزیک بهداشت ارسال شد.",
+        canvas: "report",
+        reasoning: ["استخراج دوز از کنسول دستگاه‌ها", "ارسال به فیزیک بهداشت"],
+        citations: [{ id: "cd0b", source: "ct", label: "کنسول CT" }],
+      },
+    ],
+  },
   {
     id: "conv-1",
     title: "پرونده احمدی",

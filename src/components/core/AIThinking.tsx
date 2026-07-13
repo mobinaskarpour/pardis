@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,13 @@ export function AIThinking({
 }: AIThinkingProps) {
   const [index, setIndex] = useState(0);
 
+  // Keep the latest callback in a ref so the timers below never restart
+  // (and never double-fire) when the parent re-creates onComplete.
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  });
+
   useEffect(() => {
     if (!active) {
       setIndex(0);
@@ -38,18 +45,18 @@ export function AIThinking({
     }
 
     const interval = setInterval(() => {
-      setIndex((prev) => {
-        if (prev >= steps.length - 1) {
-          clearInterval(interval);
-          setTimeout(() => onComplete?.(), 300);
-          return prev;
-        }
-        return prev + 1;
-      });
+      setIndex((prev) => Math.min(prev + 1, steps.length - 1));
     }, 650);
 
     return () => clearInterval(interval);
-  }, [active, steps, onComplete]);
+  }, [active, steps]);
+
+  useEffect(() => {
+    if (!active || index < steps.length - 1) return;
+
+    const timeout = setTimeout(() => onCompleteRef.current?.(), 300);
+    return () => clearTimeout(timeout);
+  }, [active, index, steps]);
 
   return (
     <AnimatePresence>
