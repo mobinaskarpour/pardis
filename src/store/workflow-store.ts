@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Workflow } from "@/types/workflow";
-import { ctWorkflowsSeed } from "@/mock/data/workflows";
+import { imagingWorkflowsSeed } from "@/mock/data/workflow-scenarios";
 
 interface WorkflowState {
   workflows: Workflow[];
@@ -13,7 +13,7 @@ interface WorkflowState {
 export const useWorkflowStore = create<WorkflowState>()(
   persist(
     (set, get) => ({
-      workflows: ctWorkflowsSeed,
+      workflows: imagingWorkflowsSeed,
       addWorkflow: (wf) =>
         set((state) =>
           state.workflows.some((w) => w.id === wf.id)
@@ -29,7 +29,7 @@ export const useWorkflowStore = create<WorkflowState>()(
       hasWorkflow: (id) => get().workflows.some((w) => w.id === id),
     }),
     {
-      name: "pardis-workflows",
+      name: "pardis-workflows-v2",
       // Hydrated manually after mount (see Providers) to avoid an SSR
       // markup mismatch between the seeded and persisted state.
       skipHydration: true,

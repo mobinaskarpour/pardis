@@ -1,6 +1,6 @@
 import type { Conversation, WorkflowSuggestion } from "@/types";
 import type { Workflow } from "@/types/workflow";
-import { buildDoseReportDraft } from "@/mock/data/workflows";
+import { buildOperationalSummaryDraft } from "@/mock/data/workflow-scenarios";
 import {
   actionTypes,
   optionLabel,
@@ -11,10 +11,33 @@ import { toPersianDigits } from "@/lib/persian";
 /** How many similar requests before the AI proposes a workflow */
 const REPEAT_THRESHOLD = 3;
 
-function isDoseReportRequest(text: string): boolean {
-  const t = text.trim().toLowerCase();
-  return t.includes("دوز") && /گزارش|فیزیک|ارسال|بفرست/.test(t);
-}
+type PatternMatcher = {
+  id: string;
+  test: (text: string) => boolean;
+  buildDraft: () => Workflow;
+  reasonTemplate: (count: number) => string;
+};
+
+const patterns: PatternMatcher[] = [
+  {
+    id: "operational-summary",
+    test: (t) =>
+      /گزارش.*آماده|بیمار.*منتظر|درآمد.*امروز|پزشک.*تأخیر|تاخیر.*دارد/.test(t),
+    buildDraft: buildOperationalSummaryDraft,
+    reasonTemplate: (n) =>
+      `این ${toPersianDigits(n)}مین بار در روزهای اخیر است که سوالات عملیاتی روزانه را می‌پرسید.`,
+  },
+  {
+    id: "dose-report",
+    test: (t) => {
+      const s = t.trim().toLowerCase();
+      return s.includes("دوز") && /گزارش|فیزیک|ارسال|بفرست/.test(s);
+    },
+    buildDraft: buildOperationalSummaryDraft,
+    reasonTemplate: (n) =>
+      `این ${toPersianDigits(n)}مین بار در روزهای اخیر است که گزارش عملیاتی را درخواست می‌کنید.`,
+  },
+];
 
 export function triggerLabelFor(wf: Workflow): string {
   if (wf.trigger.type === "schedule") {
@@ -27,37 +50,53 @@ export function triggerLabelFor(wf: Workflow): string {
   return "اجرای دستی";
 }
 
+function countPreviousMatches(
+  conversations: Conversation[],
+  test: (text: string) => boolean
+): number {
+  return conversations
+    .flatMap((c) => c.messages)
+    .filter((m) => m.role === "user" && test(m.content)).length;
+}
+
 /**
  * Detects whether the just-submitted query is a repeated task the user has
- * asked for several times before. Returns a suggestion payload (with the
- * draft workflow registered under `workflowId`) or null.
+ * asked for several times before. Returns a suggestion payload or null.
  */
 export function detectRepeatedTask(
   content: string,
   conversations: Conversation[],
   hasWorkflow: (id: string) => boolean
 ): { suggestion: WorkflowSuggestion; draft: Workflow } | null {
-  if (!isDoseReportRequest(content)) return null;
+  for (const pattern of patterns) {
+    if (!pattern.test(content)) continue;
 
-  const draft = buildDoseReportDraft();
-  if (hasWorkflow(draft.id)) return null;
+    const draft = pattern.buildDraft();
+    if (hasWorkflow(draft.id) && hasWorkflow("wf-ai-detected")) continue;
 
-  const previous = conversations
-    .flatMap((c) => c.messages)
-    .filter((m) => m.role === "user" && isDoseReportRequest(m.content)).length;
+    const previous = countPreviousMatches(conversations, pattern.test);
+    const total = previous + 1;
+    if (total < REPEAT_THRESHOLD) continue;
 
-  const total = previous + 1;
-  if (total < REPEAT_THRESHOLD) return null;
+    return {
+      draft,
+      suggestion: {
+        status: "pending",
+        reason:
+          total >= 10
+            ? `شما این فرآیند را ${toPersianDigits(total)} بار در ۱۰ روز گذشته تکرار کرده‌اید. آیا می‌خواهید THE MACHINE آن را خودکار کند؟`
+            : pattern.reasonTemplate(total),
+        workflowId: draft.id,
+        workflowName: draft.name,
+        dashboardName: `داشبورد ${draft.name}`,
+        dashboardWidgets: draft.dashboardWidgets.map((w) => w.label),
+        connectedSystems: draft.connectedSystems,
+        triggerLabel: triggerLabelFor(draft),
+        actionLabels: draft.actions.map((a) => optionLabel(actionTypes, a.type)),
+        repeatCount: total,
+      },
+    };
+  }
 
-  return {
-    draft,
-    suggestion: {
-      status: "pending",
-      reason: `این ${toPersianDigits(total)}مین بار در روزهای اخیر است که ارسال گزارش دوز را درخواست می‌کنید.`,
-      workflowId: draft.id,
-      workflowName: draft.name,
-      triggerLabel: triggerLabelFor(draft),
-      actionLabels: draft.actions.map((a) => optionLabel(actionTypes, a.type)),
-    },
-  };
+  return null;
 }

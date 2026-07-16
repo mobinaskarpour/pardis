@@ -220,18 +220,4 @@ export const commandPaletteItems = [
   { id: "10", category: "بیمار", title: "صادقی، زهرا", subtitle: "CT سینه", imageUrl: "/media/avatars/patient-189.jpg" },
 ];
 
-export const dockItems = [
-  { id: "home", label: "مرکز فرمان", href: "/", icon: "home" },
-  { id: "patients", label: "بیماران", href: "/patients", icon: "users" },
-  { id: "doctors", label: "پزشکان", href: "/doctors", icon: "stethoscope" },
-  { id: "imaging", label: "تصویربرداری", href: "/imaging", icon: "scan" },
-  { id: "appointments", label: "نوبت‌ها", href: "/appointments", icon: "calendar" },
-  { id: "reports", label: "گزارش‌ها", href: "/reports", icon: "file-text" },
-  { id: "analytics", label: "هوش پزشکی", href: "/analytics", icon: "activity" },
-  { id: "knowledge", label: "دانش", href: "/knowledge", icon: "book" },
-  { id: "workflows", label: "گردش‌کار", href: "/workflows", icon: "git-branch" },
-  { id: "automation", label: "اتوماسیون", href: "/automation", icon: "zap" },
-  { id: "financial", label: "مالی", href: "/financial", icon: "wallet" },
-  { id: "chat", label: "فضای کار هوش مصنوعی", href: "/chat", icon: "sparkles" },
-  { id: "settings", label: "تنظیمات", href: "/settings", icon: "settings" },
-];
+export { dockItems } from "@/config/navigation";

@@ -1,235 +1,216 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  AlertTriangle,
-  CheckCircle2,
+  ArrowLeft,
+  Bot,
   ChevronLeft,
-  Clock3,
-  PauseCircle,
+  GitBranch,
+  MessageSquare,
   Sparkles,
-  XCircle,
-  Zap,
+  TrendingUp,
 } from "lucide-react";
 import { AppShell } from "@/components/shell/AppShell";
+import { Card } from "@/components/core";
 import { ModuleHero } from "@/components/modules/shared/ModuleShell";
-import { Card, Status, type StatusTone } from "@/components/core";
+import { WorkflowCard } from "./WorkflowCard";
+import { workflowCategories } from "@/config/workflow-categories";
 import { spring } from "@/lib/motion";
 import { toPersianDigits } from "@/lib/persian";
 import { cn } from "@/lib/utils";
 import { useWorkflowStore } from "@/store/workflow-store";
-import { workflowStatus, type Workflow, type WorkflowStatus } from "@/types/workflow";
-import { triggerLabelFor } from "@/lib/workflow-detection";
-import { optionLabel, triggerEvents } from "@/config/workflow-options";
+import { workflowStatus, type WorkflowCategoryId } from "@/types/workflow";
 import { pageLabels } from "@/config/labels";
 
-const statusMeta: Record<
-  WorkflowStatus,
-  { label: string; tone: StatusTone; pulse?: boolean }
-> = {
-  active: { label: "فعال", tone: "success", pulse: true },
-  warning: { label: "هشدار", tone: "warning" },
-  error: { label: "خطا", tone: "error" },
-  paused: { label: "متوقف", tone: "neutral" },
-};
-
-function rateColor(rate: number) {
-  if (rate >= 95) return "bg-success";
-  if (rate >= 85) return "bg-warning";
-  return "bg-error";
-}
-
-function triggerText(wf: Workflow): string {
-  if (wf.trigger.type === "event")
-    return optionLabel(triggerEvents, wf.trigger.event);
-  return triggerLabelFor(wf);
-}
-
-function WorkflowRow({ wf, index }: { wf: Workflow; index: number }) {
-  const status = workflowStatus(wf);
-  const meta = statusMeta[status];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 + index * 0.05, ...spring.soft }}
-    >
-      <Link href={`/workflows/${wf.id}`} className="block group">
-        <Card variant="workflow" hover className="cursor-pointer">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-3">
-                <h3 className="text-[16px] font-semibold text-text-primary">
-                  {wf.name}
-                </h3>
-                <Status label={meta.label} tone={meta.tone} pulse={meta.pulse} />
-                {wf.source === "ai" && (
-                  <span className="inline-flex items-center gap-1.5 rounded-[6px] bg-accent-indigo/10 px-2 py-0.5 text-[12px] font-medium text-accent-indigo">
-                    <Sparkles size={12} strokeWidth={1.75} />
-                    ساخته‌شده از گفتگو
-                  </span>
-                )}
-              </div>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
-                {wf.description}
-              </p>
-            </div>
-
-            <div className="flex shrink-0 items-center gap-3">
-              <span className="flex items-center gap-2 text-[12px] text-text-tertiary">
-                <Zap size={14} strokeWidth={1.75} />
-                {triggerText(wf)}
-              </span>
-              <ChevronLeft
-                size={16}
-                strokeWidth={1.75}
-                className="text-text-tertiary transition-transform duration-[120ms] group-hover:-translate-x-0.5"
-              />
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-2 text-[13px]">
-            <span className="flex items-center gap-1.5 text-text-tertiary">
-              <Clock3 size={14} strokeWidth={1.75} />
-              آخرین اجرا:{" "}
-              <span className="text-text-secondary">{wf.lastRun}</span>
-            </span>
-            <span className="text-text-tertiary">
-              اجرای امروز:{" "}
-              <span className="font-medium text-text-secondary">
-                {toPersianDigits(wf.runsToday)}
-              </span>
-            </span>
-            <span className="flex items-center gap-2.5 text-text-tertiary">
-              نرخ موفقیت:
-              <span className="relative h-1.5 w-24 overflow-hidden rounded-full bg-bg-subtle">
-                <span
-                  className={cn(
-                    "absolute inset-y-0 right-0 rounded-full",
-                    rateColor(wf.successRate)
-                  )}
-                  style={{ width: `${wf.successRate}%` }}
-                />
-              </span>
-              <span className="font-medium text-text-secondary">
-                {toPersianDigits(wf.successRate)}٪
-              </span>
-            </span>
-          </div>
-
-          {wf.issue && (
-            <div
-              className={cn(
-                "mt-4 flex items-start gap-2.5 rounded-[10px] border p-3 text-[13px] leading-relaxed",
-                status === "error"
-                  ? "border-error/25 bg-error/5 text-error"
-                  : "border-warning/25 bg-warning/5 text-warning"
-              )}
-            >
-              {status === "error" ? (
-                <XCircle
-                  size={16}
-                  strokeWidth={1.75}
-                  className="mt-0.5 shrink-0"
-                />
-              ) : (
-                <AlertTriangle
-                  size={16}
-                  strokeWidth={1.75}
-                  className="mt-0.5 shrink-0"
-                />
-              )}
-              {wf.issue}
-            </div>
-          )}
-        </Card>
-      </Link>
-    </motion.div>
-  );
-}
+const lifecycle = [
+  "گفتگو",
+  "درخواست‌های تکراری",
+  "شناسایی الگو",
+  "پیشنهاد AI",
+  "تأیید مدیر",
+  "ساخت گردش‌کار",
+  "اجرا",
+  "تحلیل و داشبورد",
+];
 
 export function WorkflowsPage() {
   const workflows = useWorkflowStore((s) => s.workflows);
+  const [category, setCategory] = useState<WorkflowCategoryId | "all">("all");
 
-  const counts = {
-    active: workflows.filter((w) => workflowStatus(w) === "active").length,
-    warning: workflows.filter((w) => workflowStatus(w) === "warning").length,
-    error: workflows.filter((w) => workflowStatus(w) === "error").length,
-    paused: workflows.filter((w) => workflowStatus(w) === "paused").length,
-  };
+  const filtered = useMemo(
+    () =>
+      category === "all"
+        ? workflows
+        : workflows.filter((w) => w.category === category),
+    [workflows, category]
+  );
 
-  const summary = [
-    {
-      id: "active",
-      label: "فعال",
-      count: counts.active,
-      icon: CheckCircle2,
-      className: "text-success",
-    },
-    {
-      id: "warning",
-      label: "هشدار",
-      count: counts.warning,
-      icon: AlertTriangle,
-      className: "text-warning",
-    },
-    {
-      id: "error",
-      label: "خطا",
-      count: counts.error,
-      icon: XCircle,
-      className: "text-error",
-    },
-    {
-      id: "paused",
-      label: "متوقف",
-      count: counts.paused,
-      icon: PauseCircle,
-      className: "text-text-tertiary",
-    },
-  ];
-
-  const needsAttention = counts.warning + counts.error;
+  const aiCount = workflows.filter((w) => w.source === "ai").length;
+  const activeCount = workflows.filter((w) => workflowStatus(w) === "active").length;
 
   return (
     <AppShell pageTitle={pageLabels.workflows}>
       <div className="h-full overflow-y-auto px-6 py-8 md:px-10 md:py-10">
+        <div className="mx-auto w-full max-w-[1200px]">
         <ModuleHero
           title={pageLabels.workflows}
-          subtitle="بخش سی‌تی اسکن"
-          aiSummary={`${toPersianDigits(workflows.length)} گردش‌کار تعریف شده — ${
-            needsAttention > 0
-              ? `${toPersianDigits(needsAttention)} مورد نیاز به بررسی دارد.`
-              : "همه‌چیز عادی است."
-          } گردش‌کارهای جدید را می‌توانید از دل گفتگو با AI بسازید.`}
+          subtitle="مرکز تصویربرداری پردیس نور"
+          aiSummary="THE MACHINE از گفتگو یاد می‌گیرد و فرآیندهای تکراری را به گردش‌کار تبدیل می‌کند. تحلیل و KPIs در مرکز فرمان — جدا از تعریف فرآیند."
         />
 
-        <div className="mb-6 flex flex-wrap gap-3">
-          {summary.map((s) => {
-            const Icon = s.icon;
-            return (
-              <div
-                key={s.id}
-                className="flex items-center gap-2 rounded-[10px] border border-border bg-bg-elevated px-3.5 py-2"
-              >
-                <Icon size={16} strokeWidth={1.75} className={s.className} />
-                <span className="text-[13px] text-text-secondary">
-                  {s.label}
-                </span>
-                <span className="text-[15px] font-semibold text-text-primary">
-                  {toPersianDigits(s.count)}
-                </span>
-              </div>
-            );
-          })}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05, ...spring.soft }}
+          className="mb-8"
+        >
+          <Card variant="default" hover={false} padding="md">
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">
+              چرخه یادگیری THE MACHINE
+            </p>
+            <div className="flex min-w-max items-center gap-1 overflow-x-auto scrollbar-none">
+              {lifecycle.map((step, i) => (
+                <div key={step} className="flex items-center gap-1">
+                  <span
+                    className={cn(
+                      "rounded-full px-3 py-1 text-[11px] font-medium whitespace-nowrap",
+                      i === 0 || i === 2 || i === 5
+                        ? "bg-accent-indigo/10 text-accent-indigo"
+                        : "bg-bg-subtle/80 text-text-tertiary"
+                    )}
+                  >
+                    {step}
+                  </span>
+                  {i < lifecycle.length - 1 && (
+                    <ChevronLeft size={12} className="text-text-muted rotate-180" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {[
+            { label: "گردش‌کار فعال", value: activeCount, icon: GitBranch },
+            { label: "ساخته‌شده با AI", value: aiCount, icon: Sparkles },
+            {
+              label: "میانگین Automation Score",
+              value: Math.round(
+                workflows.reduce((s, w) => s + w.automationScore, 0) /
+                  workflows.length
+              ),
+              icon: TrendingUp,
+            },
+            {
+              label: "اجرای امروز",
+              value: workflows.reduce((s, w) => s + w.runsToday, 0),
+              icon: Bot,
+            },
+          ].map((stat) => (
+            <Card key={stat.label} variant="status" hover={false} padding="sm">
+              <stat.icon
+                size={16}
+                strokeWidth={1.75}
+                className="mb-2 text-text-tertiary"
+              />
+              <p className="text-[20px] font-bold text-text-primary tabular-nums">
+                {toPersianDigits(stat.value)}
+              </p>
+              <p className="text-[11px] text-text-tertiary">{stat.label}</p>
+            </Card>
+          ))}
         </div>
 
-        <div className="max-w-4xl space-y-4 pb-8">
-          {workflows.map((wf, i) => (
-            <WorkflowRow key={wf.id} wf={wf} index={i} />
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setCategory("all")}
+              className={cn(
+                "rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-colors",
+                category === "all"
+                  ? "bg-primary text-white"
+                  : "bg-bg-subtle/80 text-text-secondary hover:bg-bg-subtle"
+              )}
+            >
+              همه ({toPersianDigits(workflows.length)})
+            </button>
+            {workflowCategories.map((cat) => {
+              const count = workflows.filter((w) => w.category === cat.id).length;
+              if (count === 0) return null;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategory(cat.id)}
+                  className={cn(
+                    "rounded-full px-3.5 py-1.5 text-[12px] font-medium transition-colors",
+                    category === cat.id
+                      ? "bg-primary text-white"
+                      : "bg-bg-subtle/80 text-text-secondary hover:bg-bg-subtle"
+                  )}
+                >
+                  {cat.emoji} {cat.label} ({toPersianDigits(count)})
+                </button>
+              );
+            })}
+          </div>
+          <Link
+            href="/chat"
+            className="inline-flex items-center gap-2 rounded-[14px] bg-primary px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_4px_16px_rgba(45,90,123,0.25)] transition-transform hover:scale-[1.02]"
+          >
+            <MessageSquare size={16} strokeWidth={1.75} />
+            شروع گفتگو
+          </Link>
+        </div>
+
+        <div className="grid gap-4 pb-10 lg:grid-cols-2">
+          {filtered.map((wf, i) => (
+            <WorkflowCard key={wf.id} wf={wf} index={i} />
           ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <Card className="py-12 text-center text-text-tertiary" hover={false}>
+            گردش‌کاری در این دسته یافت نشد.
+          </Card>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, ...spring.soft }}
+          className="mb-8"
+        >
+          <Card variant="insight" hover={false} padding="lg">
+            <div className="flex flex-wrap items-start gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-accent-indigo/10">
+                <Sparkles size={22} className="text-accent-indigo" strokeWidth={1.75} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-[16px] font-semibold text-text-primary">
+                  ساخت Workflow توسط AI — ویژگی امضای THE MACHINE
+                </h2>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
+                  وقتی مدیر مرکز بارها بپرسد «کدام گزارش‌ها آماده‌اند؟» یا «کدام
+                  پزشک تأخیر دارد؟»، THE MACHINE الگو را تشخیص می‌دهد و پیشنهاد
+                  می‌دهد: «این فرآیند ۳۷ بار در ۱۰ روز تکرار شده — خودکارش
+                  کنم؟»
+                </p>
+                <Link
+                  href="/workflows/wf-ai-detected"
+                  className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-semibold text-accent-indigo hover:underline"
+                >
+                  مشاهده نمونه گردش‌کار AI
+                  <ArrowLeft size={14} strokeWidth={1.75} />
+                </Link>
+              </div>
+            </div>
+          </Card>
+        </motion.div>
         </div>
       </div>
     </AppShell>

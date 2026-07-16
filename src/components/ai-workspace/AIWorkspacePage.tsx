@@ -4,20 +4,34 @@ import { useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppShell } from "@/components/shell/AppShell";
 import { AICanvas } from "./canvas/AICanvas";
-import { CommandInput } from "@/components/command-center/CommandInput";
-import { defaultCommandSuggestions } from "@/mock/data/command-suggestions";
-import { LivingCore } from "@/components/command-center/LivingCore";
 import { AIThinking } from "@/components/core/AIThinking";
 import { StreamingText } from "./StreamingText";
-import { WorkflowSuggestionCard } from "./WorkflowSuggestionCard";
+import { WorkflowSuggestionNotification } from "./WorkflowSuggestionNotification";
+import { ChatHero } from "./ChatHero";
+import { SuggestedActionPills } from "./SuggestedActionPills";
+import { PremiumChatInput } from "./PremiumChatInput";
+import { ConversationHistoryPanel } from "./ConversationHistoryPanel";
+import { MemoryContextChip } from "./MemoryContextChip";
+import { DashboardGenerationCard } from "./DashboardGenerationCard";
+import { LivingCore } from "@/components/command-center/LivingCore";
 import { useAIWorkspace } from "@/hooks/useAIWorkspace";
 import { pageLabels } from "@/config/labels";
 import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { Plus, MessageSquare } from "lucide-react";
+
+const formatLabels: Record<string, string> = {
+  answer: "پاسخ",
+  timeline: "Timeline",
+  workflow: "Workflow",
+  chart: "نمودار",
+  "executive-summary": "خلاصه اجرایی",
+  dashboard: "Dashboard",
+  document: "سند",
+  "medical-report": "گزارش پزشکی",
+  "task-list": "لیست وظایف",
+};
 
 interface AIWorkspacePageProps {
-  /** Query handed off from the dashboard chat box — submitted on mount */
   initialQuery?: string;
 }
 
@@ -26,133 +40,154 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
     conversations,
     activeId,
     messages,
-    canvas,
     thinking,
+    thinkingSteps,
     streamingMessageId,
+    historySearch,
     context,
     submitQuery,
     selectConversation,
     newConversation,
+    setHistorySearch,
     onThinkingComplete,
     acceptWorkflowSuggestion,
     dismissWorkflowSuggestion,
+    togglePin,
+    toggleFavorite,
+    handleAction,
   } = useAIWorkspace(initialQuery);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const hasMessages = messages.length > 0;
+  const isNewChat = !hasMessages && !thinking;
+
+  const activeWorkflowMessage = [...messages]
+    .reverse()
+    .find(
+      (m) =>
+        m.role === "assistant" &&
+        m.workflowSuggestion &&
+        m.workflowSuggestion.status !== "dismissed" &&
+        streamingMessageId !== m.id
+    );
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     });
-  }, [messages, thinking, canvas]);
-
-  const hasMessages = messages.length > 0;
+  }, [messages, thinking]);
 
   return (
     <AppShell pageTitle={pageLabels.chat} hideFloatingAI>
-      <div className="flex min-h-[calc(100vh-60px)] flex-col">
-        {/* Conversation history sidebar — minimal strip */}
-        <div className="border-b border-border px-6 py-3 md:px-10">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
-            <button
-              type="button"
-              onClick={newConversation}
-              className="flex shrink-0 items-center gap-1.5 rounded-full glass-subtle px-3 py-1.5 text-[var(--text-sm)] text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-            >
-              <Plus size={14} />
-              گفتگوی جدید
-            </button>
-            {conversations.slice(0, 6).map((conv) => (
-              <button
-                key={conv.id}
-                type="button"
-                onClick={() => selectConversation(conv.id)}
-                className={cn(
-                  "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[var(--text-sm)] transition-colors cursor-pointer",
-                  activeId === conv.id
-                    ? "bg-primary/10 text-primary"
-                    : "text-text-tertiary hover:text-text-secondary hover:bg-bg-subtle/60"
-                )}
-              >
-                <MessageSquare size={13} />
-                {conv.title}
-              </button>
-            ))}
-          </div>
-        </div>
+      <div className="flex h-[calc(100vh-60px)] overflow-hidden bg-[#eef0f3]">
+        {/* Main conversation column */}
+        <div className="flex flex-1 flex-col min-w-0">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none">
+            {isNewChat ? (
+              <div className="mx-auto max-w-3xl px-6 py-8">
+                <ChatHero />
 
-        {/* Main content — conversation + generated UI */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none">
-          <div className="mx-auto max-w-4xl px-6 py-8 md:px-10">
-            {!hasMessages && !thinking ? (
-              <div className="flex flex-col items-center text-center pt-12 pb-8">
-                <LivingCore size="sm" />
-                <h2 className="mt-8 text-heading text-text-primary">
-                  با ماشین صحبت کنید
-                </h2>
-                <p className="mt-2 text-[var(--text-body)] text-text-tertiary max-w-md">
-                  پاسخ‌ها فقط متن نیستند — ماشین رابط را می‌سازد.
-                </p>
+                <div className="mt-8">
+                  <PremiumChatInput
+                    onSubmit={submitQuery}
+                    disabled={thinking}
+                    showQuickCommands
+                    large
+                  />
+                </div>
+
+                <div className="mt-10">
+                  <SuggestedActionPills
+                    onSelect={submitQuery}
+                    disabled={thinking}
+                  />
+                </div>
               </div>
             ) : (
-              <div className="space-y-6">
+              <div className="mx-auto max-w-3xl px-6 py-6 space-y-8">
                 {messages.map((msg) => (
                   <motion.div
                     key={msg.id}
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={spring.soft}
                   >
                     {msg.role === "user" ? (
                       <div className="flex justify-end">
-                        <div className="rounded-[var(--radius-xl)] bg-primary/10 px-5 py-3 max-w-lg">
-                          <p className="text-[var(--text-body)] text-text-primary">
+                        <div className="rounded-[18px] bg-primary px-5 py-3 max-w-lg shadow-sm">
+                          <p className="text-[15px] text-white leading-relaxed">
                             {msg.content}
                           </p>
                         </div>
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        <div className="rounded-[var(--radius-xl)] glass-subtle px-5 py-4 max-w-2xl">
-                          {streamingMessageId === msg.id ? (
-                            <StreamingText text={msg.content} />
-                          ) : (
-                            <p className="text-[var(--text-body-lg)] text-text-primary leading-relaxed">
-                              {msg.content}
-                            </p>
-                          )}
-                        </div>
-
-                        {msg.workflowSuggestion &&
-                          streamingMessageId !== msg.id && (
-                            <WorkflowSuggestionCard
-                              suggestion={msg.workflowSuggestion}
-                              onAccept={() =>
-                                acceptWorkflowSuggestion(
-                                  msg.id,
-                                  msg.workflowSuggestion!.workflowId
-                                )
-                              }
-                              onDismiss={() =>
-                                dismissWorkflowSuggestion(msg.id)
-                              }
-                            />
-                          )}
-
-                        {msg.canvas && msg.canvas !== "welcome" && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 12 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={spring.soft}
-                            className="rounded-[var(--radius-2xl)] glass overflow-hidden"
-                          >
-                            <AICanvas
-                              canvas={msg.canvas}
-                              onSuggestionClick={submitQuery}
-                            />
-                          </motion.div>
+                        {msg.memoryContext && (
+                          <MemoryContextChip text={msg.memoryContext} />
                         )}
+
+                        {msg.responseFormat && msg.responseFormat !== "answer" && (
+                          <span className="inline-block rounded-[6px] bg-bg-subtle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-text-muted">
+                            {formatLabels[msg.responseFormat] ?? msg.responseFormat}
+                          </span>
+                        )}
+
+                        {msg.content && (
+                          <div className="flex items-start gap-3">
+                            <div className="shrink-0 mt-1">
+                              <LivingCore size="sm" variant="ambient" active={thinking} />
+                            </div>
+                            <div className="flex-1 rounded-[18px] border border-border/60 bg-white px-5 py-4 shadow-sm max-w-2xl">
+                              {streamingMessageId === msg.id ? (
+                                <StreamingText text={msg.content} />
+                              ) : (
+                                <p className="text-[15px] text-text-primary leading-[1.75]">
+                                  {msg.content}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {msg.dashboardGeneration && (
+                          <DashboardGenerationCard
+                            generation={msg.dashboardGeneration}
+                          />
+                        )}
+
+                        {msg.canvas &&
+                          msg.canvas !== "welcome" &&
+                          streamingMessageId !== msg.id && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 12 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={spring.soft}
+                              className="rounded-[20px] border border-border/60 bg-white overflow-hidden shadow-sm"
+                            >
+                              <AICanvas
+                                canvas={msg.canvas}
+                                onSuggestionClick={submitQuery}
+                              />
+                            </motion.div>
+                          )}
+
+                        {msg.suggestedQuestions &&
+                          msg.suggestedQuestions.length > 0 &&
+                          streamingMessageId !== msg.id && (
+                            <div className="flex flex-wrap gap-2">
+                              {msg.suggestedQuestions.slice(0, 4).map((q) => (
+                                <button
+                                  key={q}
+                                  type="button"
+                                  onClick={() => submitQuery(q)}
+                                  className="rounded-full border border-border/60 bg-white px-3.5 py-1.5 text-[12px] text-text-secondary hover:border-primary/25 hover:text-primary transition-colors"
+                                >
+                                  {q}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                       </div>
                     )}
                   </motion.div>
@@ -164,53 +199,79 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
+                      className="flex items-start gap-3"
                     >
+                      <LivingCore size="sm" variant="ambient" active />
                       <AIThinking
                         active
-                        steps={[
-                          "تحلیل درخواست...",
-                          "جستجو در داده‌ها...",
-                          "ساخت رابط...",
-                        ]}
+                        steps={thinkingSteps}
                         onComplete={onThinkingComplete}
+                        className="flex-1 border-primary/15 bg-white shadow-sm"
                       />
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
             )}
-
-            {/* Context actions */}
-            {context.actions && context.actions.length > 0 && hasMessages && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="mt-8 flex flex-wrap gap-2"
-              >
-                {context.actions.map((action) => (
-                  <button
-                    key={action.id}
-                    type="button"
-                    className="rounded-full glass-subtle px-4 py-2 text-[var(--text-sm)] text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
-                  >
-                    {action.label}
-                  </button>
-                ))}
-              </motion.div>
-            )}
           </div>
+
+          {/* Input — sticky bottom when in conversation */}
+          {!isNewChat && (
+            <div className="shrink-0 border-t border-border/60 bg-white/90 backdrop-blur-xl px-6 py-4">
+              <PremiumChatInput
+                onSubmit={submitQuery}
+                disabled={thinking}
+                showQuickCommands
+              />
+            </div>
+          )}
+
+          {context.actions && context.actions.length > 0 && hasMessages && (
+            <div className="shrink-0 border-t border-border/40 bg-[#fafbfc] px-6 py-2 flex flex-wrap gap-2">
+              {context.actions.map((action) => (
+                <button
+                  key={action.id}
+                  type="button"
+                  onClick={() => handleAction(action.id)}
+                  className={cn(
+                    "rounded-full border border-border/60 bg-white px-3.5 py-1.5",
+                    "text-[12px] font-medium text-text-secondary",
+                    "hover:border-primary/25 hover:text-primary transition-colors"
+                  )}
+                >
+                  {action.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Prompt — fixed at bottom */}
-        <div className="sticky bottom-0 border-t border-border bg-bg/80 backdrop-blur-xl px-6 py-5 md:px-10">
-          <CommandInput
-            onSubmit={submitQuery}
-            disabled={thinking}
-            suggestions={!hasMessages ? defaultCommandSuggestions : []}
-            autoFocus={false}
-          />
-        </div>
+        <ConversationHistoryPanel
+          conversations={conversations}
+          activeId={activeId}
+          search={historySearch}
+          onSearchChange={setHistorySearch}
+          onSelect={selectConversation}
+          onNew={newConversation}
+          onTogglePin={togglePin}
+          onToggleFavorite={toggleFavorite}
+        />
       </div>
+
+      <WorkflowSuggestionNotification
+        suggestion={activeWorkflowMessage?.workflowSuggestion}
+        onAccept={() => {
+          if (!activeWorkflowMessage?.workflowSuggestion) return;
+          acceptWorkflowSuggestion(
+            activeWorkflowMessage.id,
+            activeWorkflowMessage.workflowSuggestion.workflowId
+          );
+        }}
+        onDismiss={() => {
+          if (!activeWorkflowMessage) return;
+          dismissWorkflowSuggestion(activeWorkflowMessage.id);
+        }}
+      />
     </AppShell>
   );
 }

@@ -1,5 +1,5 @@
-import { ModuleScaffold } from "@/components/modules/shared/ModuleScaffold";
+import { SmartIntegrationsPage } from "@/components/modules/integrations/SmartIntegrationsPage";
 
 export default function Page() {
-  return <ModuleScaffold moduleId="integrations" />;
+  return <SmartIntegrationsPage />;
 }

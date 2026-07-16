@@ -6,3 +6,4 @@ export type * from "./module";
 export type * from "./user";
 export type * from "./notification";
 export type * from "./ai";
+export type * from "./dashboard";

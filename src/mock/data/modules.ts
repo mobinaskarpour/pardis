@@ -72,10 +72,11 @@ export const moduleMetaMock: Record<ModuleId, ModuleMeta> = {
   workflows: {
     id: "workflows",
     title: pageLabels.workflows,
-    subtitle: "استودیو Workflow",
-    aiSummary: "۵ Workflow فعال. ۲ پیشنهاد AI جدید برای پیگیری MRI.",
-    suggestions: ["ساخت Workflow", "پیگیری MRI", "اتوماسیون SMS"],
-    quickActions: [{ label: "Workflow جدید", href: "/workflows" }],
+    subtitle: "اتوماسیون مرکز تصویربرداری",
+    aiSummary:
+      "۱۲ گردش‌کار فعال در پردیس نور — ۱ ساخته‌شده از گفتگو. THE MACHINE از مکالمات یاد می‌گیرد و خودکار می‌سازد.",
+    suggestions: ["گزارش MRI", "نوبت‌های فردا", "بیمار VIP", "گزارش بحرانی"],
+    quickActions: [{ label: "ورک‌فلو", href: "/workflows" }],
   },
   automation: {
     id: "automation",
@@ -105,10 +106,27 @@ export const moduleMetaMock: Record<ModuleId, ModuleMeta> = {
   integrations: {
     id: "integrations",
     title: pageLabels.integrations,
-    subtitle: "یکپارچه‌سازی‌ها",
-    aiSummary: "WhatsApp، PACS، CRM متصل. Email در حال Sync.",
-    suggestions: ["وضعیت PACS", "WhatsApp", "Cloud Backup"],
-    quickActions: [{ label: "اتصال جدید" }],
+    subtitle: "اتصال به هر سیستم سازمان",
+    aiSummary:
+      "۱۹ اتصال تخصصی. PACS، واتساپ و سپیدار فعال. سونوگرافی نیاز به توجه.",
+    suggestions: ["وضعیت PACS", "اتصال پیامک", "Google Calendar", "Azure AI"],
+    quickActions: [{ label: "اتصال جدید", href: "/integrations" }],
+  },
+  users: {
+    id: "users",
+    title: pageLabels.users,
+    subtitle: "مدیریت کاربران",
+    aiSummary: "۱۲ کاربر فعال. ۲ دعوت‌نامه در انتظار. ۱ حساب غیرفعال.",
+    suggestions: ["کاربران فعال", "دعوت‌نامه‌ها", "آخرین ورود"],
+    quickActions: [{ label: "دعوت کاربر", href: "/users" }],
+  },
+  roles: {
+    id: "roles",
+    title: pageLabels.roles,
+    subtitle: "نقش‌ها و سطح دسترسی",
+    aiSummary: "۶ نقش تعریف‌شده. ۲ نقش سفارشی. سیاست RBAC فعال.",
+    suggestions: ["نقش مدیر", "دسترسی پزشک", "لاگ تغییرات"],
+    quickActions: [{ label: "نقش جدید", href: "/roles" }],
   },
   settings: {
     id: "settings",

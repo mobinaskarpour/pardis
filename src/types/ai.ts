@@ -26,14 +26,44 @@ export interface AIAction {
   icon?: string;
 }
 
+export type ResponseFormat =
+  | "answer"
+  | "timeline"
+  | "workflow"
+  | "chart"
+  | "executive-summary"
+  | "dashboard"
+  | "document"
+  | "medical-report"
+  | "task-list";
+
+export type HistoryTimeGroup = "today" | "yesterday" | "week" | "earlier";
+
+export type WorkflowGenerationPhase =
+  | "analyzing"
+  | "building"
+  | "connecting"
+  | "dashboard"
+  | "complete";
+
+export interface DashboardGeneration {
+  status: "generating" | "complete";
+  widgets: string[];
+}
+
 export interface WorkflowSuggestion {
-  status: "pending" | "accepted" | "dismissed";
+  status: "pending" | "generating" | "accepted" | "dismissed";
   /** Why the AI is suggesting it — the detected pattern */
   reason: string;
   workflowId: string;
   workflowName: string;
+  dashboardName: string;
+  dashboardWidgets: string[];
+  connectedSystems: string[];
   triggerLabel: string;
   actionLabels: string[];
+  repeatCount: number;
+  generationPhase?: WorkflowGenerationPhase;
 }
 
 export interface WorkspaceMessage {
@@ -45,8 +75,10 @@ export interface WorkspaceMessage {
   citations?: Citation[];
   suggestedQuestions?: string[];
   actions?: AIAction[];
-  /** Present when the AI detected a repeated task and proposes automating it */
   workflowSuggestion?: WorkflowSuggestion;
+  memoryContext?: string;
+  responseFormat?: ResponseFormat;
+  dashboardGeneration?: DashboardGeneration;
 }
 
 export interface Conversation {
@@ -56,6 +88,9 @@ export interface Conversation {
   preview: string;
   messages: WorkspaceMessage[];
   updatedAt: string;
+  pinned?: boolean;
+  favorite?: boolean;
+  timeGroup?: HistoryTimeGroup;
 }
 
 export interface AIResponse {
@@ -67,6 +102,9 @@ export interface AIResponse {
   actions: AIAction[];
   conversationTitle?: string;
   category?: HistoryCategory;
+  memoryContext?: string;
+  responseFormat?: ResponseFormat;
+  thinkingSteps?: string[];
 }
 
 export interface AIContextState {

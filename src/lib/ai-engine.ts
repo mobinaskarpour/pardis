@@ -4,6 +4,10 @@ import {
   specializedCommandResults,
   defaultCommandSuggestions,
 } from "@/mock/data/command-suggestions";
+import {
+  getMemoryContext,
+  inferResponseFormat,
+} from "@/mock/data/chat-experience";
 
 function matchInput(input: string, patterns: string[]): boolean {
   const normalized = input.trim().toLowerCase();
@@ -99,6 +103,15 @@ function mapCategoryToHistory(category: string): HistoryCategory {
 }
 
 export function processAIQuery(input: string): AIResponse {
+  const response = processAIQueryInternal(input);
+  return {
+    ...response,
+    memoryContext: getMemoryContext(input),
+    responseFormat: inferResponseFormat(response.canvas),
+  };
+}
+
+function processAIQueryInternal(input: string): AIResponse {
   const query = input.trim();
 
   const specialized = trySpecialized(query);

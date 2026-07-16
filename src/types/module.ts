@@ -25,4 +25,6 @@ export type ModuleId =
   | "financial"
   | "notifications"
   | "integrations"
+  | "users"
+  | "roles"
   | "settings";
