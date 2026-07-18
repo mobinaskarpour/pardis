@@ -23,7 +23,7 @@ export function AIAssistant({ onCommand }: AIAssistantProps) {
   >([
     {
       role: "ai",
-      text: "من THEMACHINE هستم. می‌توانم Workflow شما را ویرایش، بهینه یا گسترش دهم.",
+      text: "من THEMACHINE هستم. می‌توانم Workflow مرکز را برای مدیرعامل ویرایش، بهینه یا گسترش دهم.",
     },
   ]);
 

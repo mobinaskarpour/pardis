@@ -73,9 +73,17 @@ export function CommandCenterPage() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.18, ...spring.soft }}
-              className="mb-2 text-[var(--text-body-lg)] text-text-tertiary"
+              className="mb-1 text-[var(--text-body-lg)] text-text-tertiary"
             >
               {getGreeting()} {user.name}
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, ...spring.soft }}
+              className="mb-2 text-[13px] font-medium text-text-muted"
+            >
+              {user.role}
             </motion.p>
 
             <motion.h1

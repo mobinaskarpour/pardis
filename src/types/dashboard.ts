@@ -53,3 +53,37 @@ export interface HeroDashboardCard {
   sourceWorkflowId: string;
   sourceWorkflowName: string;
 }
+
+/** AI-discovered persistent dashboards from conversation */
+
+export type DashboardWidgetTone =
+  | "default"
+  | "success"
+  | "warning"
+  | "danger"
+  | "info";
+
+export interface DiscoveredDashboardWidget {
+  id: string;
+  label: string;
+  value: string;
+  delta?: string;
+  description?: string;
+  tone?: DashboardWidgetTone;
+  sparkline?: number[];
+}
+
+export interface DiscoveredDashboard {
+  id: string;
+  name: string;
+  scenarioId: string;
+  scenarioName: string;
+  description: string;
+  widgets: DiscoveredDashboardWidget[];
+  source: "ai";
+  createdAt: string;
+  conversationOrigin?: {
+    detectedAt: string;
+    sampleQuery: string;
+  };
+}

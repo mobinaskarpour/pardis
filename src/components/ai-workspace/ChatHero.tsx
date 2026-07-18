@@ -19,6 +19,9 @@ export function ChatHero() {
         {chatGreeting.timeLabel}{" "}
         <span className="text-text-primary">{chatGreeting.userName}</span>
       </p>
+      <p className="mt-1 text-[12px] font-medium text-text-tertiary">
+        {chatGreeting.userRole}
+      </p>
 
       <h1 className="mt-3 max-w-lg text-[22px] md:text-[24px] font-semibold leading-snug tracking-tight text-text-primary">
         {chatGreeting.headline}

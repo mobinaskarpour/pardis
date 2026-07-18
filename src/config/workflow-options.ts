@@ -64,6 +64,7 @@ export const recipients: Option[] = [
   { id: "ct-tech", label: "تکنسین CT" },
   { id: "nurse", label: "پرستار بخش" },
   { id: "ct-manager", label: "مدیر بخش سی‌تی" },
+  { id: "ceo", label: "مدیرعامل" },
   { id: "equip-engineer", label: "مهندس تجهیزات" },
   { id: "patient", label: "بیمار" },
 ];

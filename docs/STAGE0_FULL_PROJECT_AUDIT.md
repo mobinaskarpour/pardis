@@ -22,7 +22,7 @@ From `layout.tsx` metadata, sidebar copy, labels, and mock narratives:
 | Featured nav | `navigation.ts` | `/chat` = «گفتگو با ماشین» (AI Workspace), marked `featured` |
 
 ### Target users (inferred from UI roles and modules — not invented beyond evidence)
-- **Primary persona in mock:** دکتر اخلاق‌پور — «مدیر بخش سی‌تی اسکن» (`mock/data/user.ts`)
+- **Primary persona in mock:** دکتر اخلاق‌پور — «مدیرعامل» (`mock/data/user.ts`)
 - **Implied operators:** imaging-center managers, radiologists/doctors, ops staff using patients / imaging / workflows / integrations
 - **Unclear without docs:** multi-tenant SaaS vs single-facility tool; billing model; clinical vs admin primary; regulatory/compliance posture
 

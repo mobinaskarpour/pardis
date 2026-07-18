@@ -44,6 +44,10 @@ export const media = {
     facilityTour: "/media/videos/facility-tour.mp4",
     ultrasoundLive: "/media/videos/ultrasound-demo.mp4",
   },
+  ai: {
+    doctorAvatar: "/media/ai/doctor-avatar.png",
+    themachineLogo: "/media/ai/themachine-logo.svg",
+  },
   documents: {
     reportSample: "/media/documents/sample-report.pdf",
   },

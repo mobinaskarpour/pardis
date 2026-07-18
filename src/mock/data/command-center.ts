@@ -1,14 +1,16 @@
+import { currentUserMock } from "./user";
+
 export const user = {
-  name: "دکتر اخلاق‌پور",
-  role: "مدیر بخش سی‌تی اسکن",
-  initials: "ا",
+  name: currentUserMock.name,
+  role: currentUserMock.role,
+  initials: currentUserMock.initials,
 };
 
 export const aiSummary = {
-  greeting: "صبح بخیر دکتر اخلاق‌پور.",
+  greeting: `صبح بخیر ${currentUserMock.name}، ${currentUserMock.role}.`,
   lines: [
-    "امروز ۳۴ بیمار مراجعه کرده‌اند.",
-    "سه گزارش نیاز به بررسی فوری دارند.",
+    "خلاصه عملکرد امروز مرکز برای مدیرعامل آماده است.",
+    "۳۴ بیمار مراجعه کرده‌اند؛ سه گزارش نیاز به بررسی فوری دارند.",
     "دستگاه MRI شماره ۲ امروز بیشترین استفاده را داشته است.",
   ],
 };

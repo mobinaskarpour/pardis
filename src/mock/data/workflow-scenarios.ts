@@ -340,10 +340,10 @@ export const imagingWorkflowsSeed: Workflow[] = [
       "هر شب: جمع‌آوری داده عملیاتی، زمان انتظار، گزارش‌ها، درآمد، رد شده‌ها و خلاصه اجرایی AI.",
     category: "analytics",
     executiveSummary:
-      "هر شب ساعت ۲۳:۰۰ گزارش اجرایی برای مدیر مرکز تولید می‌شود. داشبورد مرکز فرمان خودکار به‌روز می‌شود.",
+      "هر شب ساعت ۲۳:۰۰ گزارش اجرایی برای مدیرعامل تولید می‌شود. داشبورد مرکز فرمان خودکار به‌روز می‌شود.",
     automationScore: 92,
     connectedSystems: ["Dashboard", "RIS", "Accounting", "OpenAI"],
-    approvals: [{ role: "مدیر مرکز", required: false }],
+    approvals: [{ role: "مدیرعامل", required: false }],
     performance: {
       avgDuration: "۶ دقیقه",
       timeSaved: "۲ ساعت/شب",
@@ -484,7 +484,7 @@ export const imagingWorkflowsSeed: Workflow[] = [
     source: "ai",
     createdFrom: "الگوی تکراری در گفتگو — ۳۷ بار در ۱۰ روز",
     whyAICreated:
-      "مدیر مرکز به‌طور مکرر در گفتگو با THEMACHINE پرسید: «کدام گزارش‌ها آماده‌اند؟»، «کدام بیماران منتظرند؟»، «امروز درآمد چقدر بوده؟» و «کدام پزشک تأخیر دارد؟» THEMACHINE این ۴ سوال را به یک فرآیند واحد تبدیل کرد.",
+      "مدیرعامل به‌طور مکرر در گفتگو با THEMACHINE پرسید: «کدام گزارش‌ها آماده‌اند؟»، «کدام بیماران منتظرند؟»، «امروز درآمد چقدر بوده؟» و «کدام پزشک تأخیر دارد؟» THEMACHINE این ۴ سوال را به یک فرآیند واحد تبدیل کرد.",
     conversationOrigin: {
       detectedAt: "۱۴۰۴/۰۱/۱۸",
       repeatCount: 37,
@@ -502,7 +502,7 @@ export const imagingWorkflowsSeed: Workflow[] = [
       "ویژگی امضای THEMACHINE: یادگیری از گفتگو، شناسایی الگو، پیشنهاد خودکارسازی و ساخت داشبورد. این گردش‌کار هر صبح خلاصه عملیاتی تولید می‌کند.",
     automationScore: 98,
     connectedSystems: ["RIS", "Dashboard", "OpenAI", "Patient Database"],
-    approvals: [{ role: "مدیر مرکز", required: true }],
+    approvals: [{ role: "مدیرعامل", required: true }],
     performance: {
       avgDuration: "۲ دقیقه",
       timeSaved: "۴۵ دقیقه/روز",

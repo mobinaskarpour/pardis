@@ -19,6 +19,7 @@ interface PremiumChatInputProps {
   disabled?: boolean;
   showQuickCommands?: boolean;
   large?: boolean;
+  onVoiceOpen?: () => void;
 }
 
 export function PremiumChatInput({
@@ -26,6 +27,7 @@ export function PremiumChatInput({
   disabled,
   showQuickCommands = true,
   large = false,
+  onVoiceOpen,
 }: PremiumChatInputProps) {
   const [value, setValue] = useState("");
   const [focused, setFocused] = useState(false);
@@ -120,21 +122,35 @@ export function PremiumChatInput({
         </div>
 
         <div className="flex items-center gap-1 border-t border-border/50 px-4 py-2.5 bg-bg-layer-1/80">
-          {[
-            { icon: Paperclip, label: "پیوست" },
-            { icon: ImagePlus, label: "تصویر" },
-            { icon: Mic, label: "صدا" },
-          ].map(({ icon: Icon, label }) => (
-            <button
-              key={label}
-              type="button"
-              disabled={disabled}
-              className="flex items-center gap-1.5 rounded-[8px] px-2.5 py-1.5 text-[11px] text-text-muted hover:text-text-secondary hover:bg-bg-subtle transition-colors disabled:opacity-40"
-            >
-              <Icon size={14} strokeWidth={1.75} />
-              {label}
-            </button>
-          ))}
+          <button
+            type="button"
+            disabled={disabled}
+            className="flex items-center gap-1.5 rounded-[8px] px-2.5 py-1.5 text-[11px] text-text-muted hover:text-text-secondary hover:bg-bg-subtle transition-colors disabled:opacity-40"
+          >
+            <Paperclip size={14} strokeWidth={1.75} />
+            پیوست
+          </button>
+          <button
+            type="button"
+            disabled={disabled}
+            className="flex items-center gap-1.5 rounded-[8px] px-2.5 py-1.5 text-[11px] text-text-muted hover:text-text-secondary hover:bg-bg-subtle transition-colors disabled:opacity-40"
+          >
+            <ImagePlus size={14} strokeWidth={1.75} />
+            تصویر
+          </button>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={onVoiceOpen}
+            className={cn(
+              "flex items-center gap-1.5 rounded-[8px] px-2.5 py-1.5 text-[11px] transition-colors disabled:opacity-40",
+              "text-primary hover:bg-primary/8 font-medium"
+            )}
+            aria-label="دستیار صوتی"
+          >
+            <Mic size={14} strokeWidth={1.75} />
+            صدا
+          </button>
           <span className="ms-auto text-[10px] text-text-tertiary">
             خط جدید با Shift و Enter
           </span>

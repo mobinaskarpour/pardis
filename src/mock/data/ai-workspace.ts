@@ -280,7 +280,7 @@ export const initialConversations: Conversation[] = [
         id: "md2",
         role: "assistant",
         content:
-          "گزارش دوز روز شنبه تهیه شد: ۳۱ اسکن، دوز میانگین ۸.۹ mSv — و برای واحد فیزیک بهداشت ارسال شد.",
+          "خلاصه برای مدیرعامل: گزارش دوز روز شنبه تهیه شد — ۳۱ اسکن، دوز میانگین ۸.۹ mSv — و برای واحد فیزیک بهداشت ارسال شد.",
         canvas: "report",
         reasoning: ["استخراج دوز از کنسول دستگاه‌ها", "ارسال به فیزیک بهداشت"],
         citations: [{ id: "cd0", source: "ct", label: "کنسول CT" }],
@@ -294,7 +294,7 @@ export const initialConversations: Conversation[] = [
         id: "md4",
         role: "assistant",
         content:
-          "گزارش دوز روز یکشنبه تهیه شد: ۲۶ اسکن، دوز میانگین ۷.۸ mSv — و برای واحد فیزیک بهداشت ارسال شد.",
+          "خلاصه برای مدیرعامل: گزارش دوز روز یکشنبه تهیه شد — ۲۶ اسکن، دوز میانگین ۷.۸ mSv — و برای واحد فیزیک بهداشت ارسال شد.",
         canvas: "report",
         reasoning: ["استخراج دوز از کنسول دستگاه‌ها", "ارسال به فیزیک بهداشت"],
         citations: [{ id: "cd0b", source: "ct", label: "کنسول CT" }],
@@ -361,7 +361,7 @@ export const initialConversations: Conversation[] = [
         id: "m4",
         role: "assistant",
         content:
-          "درآمد ماه جاری ۱.۲ میلیارد تومان است. نسبت به ماه گذشته ۸٪ کاهش داشته.",
+          "خلاصه مالی برای مدیرعامل: درآمد ماه جاری ۱.۲ میلیارد تومان است. نسبت به ماه گذشته ۸٪ کاهش داشته.",
         canvas: "revenue",
         reasoning: ["اطلاعات از سیستم مالی", "گزارش روزانه"],
         citations: [

@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 interface PromptBarProps {
   onSubmit: (value: string) => void;
   disabled?: boolean;
+  onVoiceOpen?: () => void;
 }
 
-export function PromptBar({ onSubmit, disabled }: PromptBarProps) {
+export function PromptBar({ onSubmit, disabled, onVoiceOpen }: PromptBarProps) {
   const [value, setValue] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -86,9 +87,10 @@ export function PromptBar({ onSubmit, disabled }: PromptBarProps) {
 
         <motion.button
           type="button"
+          onClick={onVoiceOpen}
           whileHover={{ y: -2, transition: spring.gentle }}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-border text-text-tertiary transition-colors duration-[120ms] hover:border-border-hover hover:text-text-secondary cursor-pointer"
-          aria-label="ورودی صوتی"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border border-border text-text-tertiary transition-colors duration-[120ms] hover:border-primary/30 hover:text-primary cursor-pointer"
+          aria-label="دستیار صوتی"
         >
           <Mic size={18} strokeWidth={1.75} />
         </motion.button>

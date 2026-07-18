@@ -8,6 +8,7 @@ import {
   getMemoryContext,
   inferResponseFormat,
 } from "@/mock/data/chat-experience";
+import { currentUserMock } from "@/mock/data/user";
 
 function matchInput(input: string, patterns: string[]): boolean {
   const normalized = input.trim().toLowerCase();
@@ -120,7 +121,7 @@ function processAIQueryInternal(input: string): AIResponse {
   if (matchInput(query, ["دوز", "فیزیک بهداشت"])) {
     return {
       content:
-        "گزارش دوز امروز بخش سی‌تی تهیه شد: ۲۸ اسکن، دوز میانگین ۸.۴ mSv، بدون مورد خارج از محدوده — و برای واحد فیزیک بهداشت ارسال شد.",
+        "خلاصه برای مدیرعامل: گزارش دوز امروز بخش سی‌تی تهیه شد — ۲۸ اسکن، دوز میانگین ۸.۴ mSv، بدون مورد خارج از محدوده — و برای واحد فیزیک بهداشت ارسال شد.",
       canvas: "report",
       conversationTitle: "گزارش دوز CT",
       category: "reports",
@@ -198,7 +199,7 @@ function processAIQueryInternal(input: string): AIResponse {
   ) {
     return {
       content:
-        "درآمد ماه جاری ۱.۲ میلیارد تومان است. نسبت به ماه گذشته ۸٪ کاهش داشته. MRI بیشترین سهم را دارد.",
+        "درآمد ماه جاری مرکز ۱.۲ میلیارد تومان است. نسبت به ماه گذشته ۸٪ کاهش داشته. MRI بیشترین سهم را دارد. خلاصه مالی برای مدیرعامل آماده است.",
       canvas: "revenue",
       conversationTitle: "درآمد ماهانه",
       category: "financial",
@@ -231,7 +232,7 @@ function processAIQueryInternal(input: string): AIResponse {
   ) {
     return {
       content:
-        "امروز ۲۴ بیمار پذیرش شده‌اند. ۵ نفر در انتظار و ۸ نفر منتظر تأیید پزشک هستند.",
+        "خلاصه عملکرد امروز مرکز برای مدیرعامل: ۲۴ بیمار پذیرش شده‌اند. ۵ نفر در انتظار و ۸ نفر منتظر تأیید پزشک هستند.",
       canvas: "patients-today",
       conversationTitle: "بیماران امروز",
       category: "patients",
@@ -311,7 +312,7 @@ function processAIQueryInternal(input: string): AIResponse {
   if (matchInput(query, ["گزارش", "report", "پرونده‌های باز"])) {
     return {
       content:
-        "۷ پرونده باز وجود دارد. ۳ گزارش نیاز به بررسی فوری دارند.",
+        "۷ پرونده باز در سطح مرکز وجود دارد. ۳ گزارش نیاز به بررسی فوری دارند — خلاصه وضعیت برای مدیرعامل آماده است.",
       canvas: "report",
       conversationTitle: "گزارش‌ها",
       category: "reports",
@@ -333,11 +334,11 @@ function processAIQueryInternal(input: string): AIResponse {
 
   return {
     content:
-      "درخواست شما را دریافت کردم. می‌توانید پرونده بیمار، درآمد، MRIها یا ورک‌فلو را بررسی کنید.",
+      `سلام ${currentUserMock.name}، ${currentUserMock.role}. درخواست شما را دریافت کردم. می‌توانید خلاصه عملکرد مرکز، پرونده بیمار، درآمد، MRIها یا ورک‌فلو را بررسی کنید.`,
     canvas: "welcome",
     conversationTitle: query.slice(0, 30),
     category: "sessions",
-    reasoning: ["تحلیل درخواست", "جستجو در پایگاه دانش"],
+    reasoning: ["تحلیل درخواست مدیرعامل", "جستجو در پایگاه دانش مرکز"],
     citations: [{ id: "c0", source: "knowledge", label: "پایگاه دانش" }],
     suggestedQuestions: defaultCommandSuggestions
       .filter((s) => s.category === "ai" || s.category === "imaging")

@@ -63,7 +63,7 @@ const MOCK_VERSIONS = [
 ];
 
 const MOCK_PERMISSIONS = [
-  { role: "مدیر بخش", access: "ویرایش + اجرا" },
+  { role: "مدیرعامل", access: "ویرایش + اجرا" },
   { role: "مسئول پذیرش", access: "مشاهده + تأیید" },
   { role: "حسابداری", access: "مشاهده" },
 ];

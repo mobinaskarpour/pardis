@@ -39,6 +39,71 @@ export type ResponseFormat =
 
 export type HistoryTimeGroup = "today" | "yesterday" | "week" | "earlier";
 
+/** Unified AI suggestion queue — unlimited simultaneous cards */
+export type AISuggestionType =
+  | "workflow"
+  | "dashboard"
+  | "automation"
+  | "report"
+  | "reminder"
+  | "alert";
+
+export type AISuggestionStatus =
+  | "pending"
+  | "preview"
+  | "generating"
+  | "accepted"
+  | "dismissed";
+
+export interface AISuggestionBase {
+  id: string;
+  type: AISuggestionType;
+  status: AISuggestionStatus;
+  title: string;
+  subtitle: string;
+  description?: string;
+  primaryLabel: string;
+  secondaryLabel?: string;
+  conversationId: string;
+  messageId?: string;
+  createdAt: number;
+}
+
+export interface WorkflowQueueSuggestion extends AISuggestionBase {
+  type: "workflow";
+  workflowId: string;
+  workflowName: string;
+  dashboardName: string;
+  dashboardWidgets: string[];
+  connectedSystems: string[];
+  triggerLabel: string;
+  actionLabels: string[];
+  repeatCount: number;
+  reason: string;
+  generationPhase?: WorkflowGenerationPhase;
+}
+
+export interface DashboardQueueSuggestion extends AISuggestionBase {
+  type: "dashboard";
+  dashboardId: string;
+  dashboardName: string;
+  scenarioName: string;
+  widgets: DashboardSuggestionWidget[];
+  widgetCount: number;
+  reason: string;
+  generationPhase?: DashboardGenerationPhase;
+}
+
+export interface GenericQueueSuggestion extends AISuggestionBase {
+  type: "automation" | "report" | "reminder" | "alert";
+  detail?: string;
+}
+
+export type AISuggestion =
+  | WorkflowQueueSuggestion
+  | DashboardQueueSuggestion
+  | GenericQueueSuggestion;
+
 export type WorkflowGenerationPhase =
   | "analyzing"
   | "building"
@@ -49,6 +114,33 @@ export type WorkflowGenerationPhase =
 export interface DashboardGeneration {
   status: "generating" | "complete";
   widgets: string[];
+}
+
+export type DashboardGenerationPhase =
+  | "analyzing"
+  | "selecting"
+  | "building"
+  | "complete";
+
+export interface DashboardSuggestionWidget {
+  id: string;
+  label: string;
+  value: string;
+  delta?: string;
+  description?: string;
+  tone?: "default" | "success" | "warning" | "danger" | "info";
+  sparkline?: number[];
+}
+
+export interface DashboardSuggestion {
+  status: "pending" | "preview" | "generating" | "accepted" | "dismissed";
+  reason: string;
+  dashboardId: string;
+  dashboardName: string;
+  scenarioName: string;
+  widgets: DashboardSuggestionWidget[];
+  widgetCount: number;
+  generationPhase?: DashboardGenerationPhase;
 }
 
 export interface WorkflowSuggestion {
@@ -75,7 +167,10 @@ export interface WorkspaceMessage {
   citations?: Citation[];
   suggestedQuestions?: string[];
   actions?: AIAction[];
+  /** @deprecated Prefer AI suggestion queue */
   workflowSuggestion?: WorkflowSuggestion;
+  /** @deprecated Prefer AI suggestion queue */
+  dashboardSuggestion?: DashboardSuggestion;
   memoryContext?: string;
   responseFormat?: ResponseFormat;
   dashboardGeneration?: DashboardGeneration;

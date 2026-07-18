@@ -1,18 +1,27 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import type {
   CanvasType,
   Conversation,
   HistoryCategory,
   WorkspaceMessage,
 } from "@/lib/ai-workspace-data";
-import type { WorkflowGenerationPhase } from "@/types/ai";
+import type {
+  AISuggestion,
+  DashboardGenerationPhase,
+  DashboardQueueSuggestion,
+  DashboardSuggestion,
+  WorkflowGenerationPhase,
+  WorkflowQueueSuggestion,
+} from "@/types/ai";
 import { initialConversations } from "@/lib/ai-workspace-data";
 import { processAIQuery } from "@/lib/ai-engine";
 import { useWorkflowStore } from "@/store/workflow-store";
+import { useDashboardStore } from "@/store/dashboard-store";
 import type { Workflow } from "@/types/workflow";
-import type { WorkflowSuggestion } from "@/types";
+import type { DiscoveredDashboard } from "@/types/dashboard";
 import {
   getThinkingSteps,
   inferTimeGroup,
@@ -20,12 +29,60 @@ import {
 import {
   buildDemoWorkflowDraft,
   detectDemoWorkflow,
+  demoWorkflowPatterns,
   patternToSuggestion,
   type DemoWorkflowPattern,
 } from "@/mock/data/workflow-detection-demo";
+import {
+  buildDiscoveredDashboard,
+  detectDemoDashboard,
+  demoDashboardPatterns,
+  patternToDashboardSuggestion,
+  type DemoDashboardPattern,
+} from "@/mock/data/dashboard-detection-demo";
+
+/** Shared scenario pairs — when one side matches, both cards must appear */
+const DISCOVERY_PAIRS: { workflowId: string; dashboardId: string }[] = [
+  { workflowId: "mri-ready", dashboardId: "mri-prep" },
+  { workflowId: "insurance", dashboardId: "insurance-tracking" },
+  { workflowId: "appointments", dashboardId: "appointments-tomorrow" },
+];
+
+function resolvePairedDiscoveries(
+  workflowPattern: DemoWorkflowPattern | null,
+  dashboardPattern: DemoDashboardPattern | null
+): {
+  workflow: DemoWorkflowPattern | null;
+  dashboard: DemoDashboardPattern | null;
+} {
+  let workflow = workflowPattern;
+  let dashboard = dashboardPattern;
+
+  for (const pair of DISCOVERY_PAIRS) {
+    const wfMatch = workflow?.id === pair.workflowId;
+    const dashMatch = dashboard?.id === pair.dashboardId;
+    if (wfMatch || dashMatch) {
+      workflow =
+        workflow ??
+        demoWorkflowPatterns.find((p) => p.id === pair.workflowId) ??
+        null;
+      dashboard =
+        dashboard ??
+        demoDashboardPatterns.find((p) => p.id === pair.dashboardId) ??
+        null;
+      break;
+    }
+  }
+
+  return { workflow, dashboard };
+}
 
 function generateId() {
   return `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+}
+
+function suggestionId(prefix: string) {
+  return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 }
 
 function seedConversations(): Conversation[] {
@@ -37,9 +94,137 @@ function seedConversations(): Conversation[] {
   }));
 }
 
-const PHASE_DURATIONS = [2000, 2400, 2200, 2600];
+const WORKFLOW_PHASE_DURATIONS = [2000, 2400, 2200, 2600];
+const DASHBOARD_PHASE_DURATIONS = [1800, 2000, 2200];
+
+function workflowToQueueItem(
+  pattern: DemoWorkflowPattern,
+  draft: Workflow,
+  conversationId: string,
+  messageId: string
+): WorkflowQueueSuggestion {
+  const legacy = patternToSuggestion(pattern, draft);
+  return {
+    id: suggestionId("sug-wf"),
+    type: "workflow",
+    status: "pending",
+    title: "⚙️ فرآیند جدید شناسایی شد",
+    subtitle: legacy.workflowName,
+    description:
+      "این گفتگو یک فرآیند تکرارشونده را شناسایی کرده است و می‌تواند به یک Workflow قابل اجرا تبدیل شود.",
+    primaryLabel: "⚡ ایجاد Workflow",
+    secondaryLabel: "بعداً",
+    conversationId,
+    messageId,
+    createdAt: Date.now(),
+    workflowId: legacy.workflowId,
+    workflowName: legacy.workflowName,
+    dashboardName: legacy.dashboardName,
+    dashboardWidgets: legacy.dashboardWidgets,
+    connectedSystems: legacy.connectedSystems,
+    triggerLabel: legacy.triggerLabel,
+    actionLabels: legacy.actionLabels,
+    repeatCount: legacy.repeatCount,
+    reason: legacy.reason,
+  };
+}
+
+function dashboardToQueueItem(
+  pattern: DemoDashboardPattern,
+  conversationId: string,
+  messageId: string
+): DashboardQueueSuggestion {
+  const legacy = patternToDashboardSuggestion(pattern);
+  return {
+    id: suggestionId("sug-dash"),
+    type: "dashboard",
+    status: "pending",
+    title: "📊 داشبورد جدید شناسایی شد",
+    subtitle: legacy.dashboardName,
+    description:
+      "این گفتگو می‌تواند به یک داشبورد دائمی تبدیل شود.",
+    primaryLabel: "📊 ایجاد داشبورد",
+    secondaryLabel: "بعداً",
+    conversationId,
+    messageId,
+    createdAt: Date.now(),
+    dashboardId: legacy.dashboardId,
+    dashboardName: legacy.dashboardName,
+    scenarioName: legacy.scenarioName,
+    widgets: legacy.widgets,
+    widgetCount: legacy.widgetCount,
+    reason: legacy.reason,
+  };
+}
+
+function extraSuggestionsForPattern(
+  content: string,
+  conversationId: string,
+  messageId: string
+): AISuggestion[] {
+  const q = content.toLowerCase();
+  const extras: AISuggestion[] = [];
+  const base = {
+    conversationId,
+    messageId,
+    createdAt: Date.now(),
+    status: "pending" as const,
+    secondaryLabel: "بعداً",
+  };
+
+  if (q.includes("تأخیر") || q.includes("تاخیر") || q.includes("هشدار")) {
+    extras.push({
+      ...base,
+      id: suggestionId("sug-alert"),
+      type: "alert",
+      title: "هشدار عملیاتی شناسایی شد",
+      subtitle: "موارد نیازمند پیگیری فوری",
+      primaryLabel: "مشاهده هشدارها",
+      detail: "تأخیر گزارش یا ظرفیت بحرانی در گفتگو تشخیص داده شد.",
+    });
+  }
+
+  if (q.includes("یادآوری") || q.includes("فردا") || q.includes("نوبت")) {
+    extras.push({
+      ...base,
+      id: suggestionId("sug-reminder"),
+      type: "reminder",
+      title: "یادآوری هوشمند پیشنهاد شد",
+      subtitle: "یادآوری نوبت‌ها و پیگیری‌ها",
+      primaryLabel: "ایجاد یادآوری",
+      detail: "می‌توان یادآوری خودکار برای نوبت‌های فردا تنظیم کرد.",
+    });
+  }
+
+  if (q.includes("گزارش") && (q.includes("pdf") || q.includes("خلاصه"))) {
+    extras.push({
+      ...base,
+      id: suggestionId("sug-report"),
+      type: "report",
+      title: "گزارش اجرایی آماده ساخت است",
+      subtitle: "خلاصه روزانه مرکز",
+      primaryLabel: "تولید گزارش",
+      detail: "از این گفتگو می‌توان گزارش PDF اجرایی ساخت.",
+    });
+  }
+
+  if (q.includes("خودکار") || q.includes("اتوماسیون") || q.includes("ارسال نتایج")) {
+    extras.push({
+      ...base,
+      id: suggestionId("sug-auto"),
+      type: "automation",
+      title: "اتوماسیون جدید پیشنهاد شد",
+      subtitle: "قانون خودکار از گفتگو استخراج شد",
+      primaryLabel: "فعال‌سازی اتوماسیون",
+      detail: "الگوی تکراری قابل تبدیل به قانون اتوماسیون است.",
+    });
+  }
+
+  return extras;
+}
 
 export function useAIWorkspace(initialQuery?: string) {
+  const router = useRouter();
   const [conversations, setConversations] =
     useState<Conversation[]>(seedConversations);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -51,6 +236,15 @@ export function useAIWorkspace(initialQuery?: string) {
   const [thinking, setThinking] = useState(false);
   const [thinkingSteps, setThinkingSteps] = useState<string[]>([]);
   const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
+    null
+  );
+  const [suggestionQueue, setSuggestionQueue] = useState<AISuggestion[]>([]);
+  const [dashboardBuilderOpen, setDashboardBuilderOpen] = useState(false);
+  const [dashboardBuilderId, setDashboardBuilderId] = useState<string | null>(
+    null
+  );
+  const [workflowBuilderOpen, setWorkflowBuilderOpen] = useState(false);
+  const [workflowBuilderId, setWorkflowBuilderId] = useState<string | null>(
     null
   );
 
@@ -77,31 +271,110 @@ export function useAIWorkspace(initialQuery?: string) {
     [lastAssistant]
   );
 
+  /** Active suggestions for current conversation (or all if no active chat) */
+  const activeSuggestions = useMemo(() => {
+    const list = suggestionQueue.filter(
+      (s) =>
+        s.status !== "dismissed" &&
+        (!activeId || s.conversationId === activeId)
+    );
+    return list.sort((a, b) => a.createdAt - b.createdAt);
+  }, [suggestionQueue, activeId]);
+
   const pendingDraftsRef = useRef<Record<string, Workflow>>({});
-  const pendingPatternRef = useRef<DemoWorkflowPattern | null>(null);
+  const pendingDashboardDraftsRef = useRef<Record<string, DiscoveredDashboard>>(
+    {}
+  );
+  const pendingWorkflowPatternRef = useRef<DemoWorkflowPattern | null>(null);
+  const pendingDashboardPatternRef = useRef<DemoDashboardPattern | null>(null);
 
-  const appendDetectionMessage = useCallback(
-    (convId: string, pattern: DemoWorkflowPattern) => {
-      const draft = buildDemoWorkflowDraft(pattern);
-      pendingDraftsRef.current[draft.id] = draft;
+  const enqueueSuggestions = useCallback((items: AISuggestion[]) => {
+    if (items.length === 0) return;
+    setSuggestionQueue((prev) => {
+      // Never replace — append independent cards
+      const next = [...prev];
+      for (const item of items) {
+        const dup = next.some(
+          (s) =>
+            s.status !== "dismissed" &&
+            s.type === item.type &&
+            ((s.type === "workflow" &&
+              item.type === "workflow" &&
+              s.workflowId === item.workflowId) ||
+              (s.type === "dashboard" &&
+                item.type === "dashboard" &&
+                s.dashboardId === item.dashboardId) ||
+              (s.type === item.type &&
+                s.subtitle === item.subtitle &&
+                s.conversationId === item.conversationId))
+        );
+        if (!dup) next.push(item);
+      }
+      return next;
+    });
+  }, []);
 
-      const detectionMsg: WorkspaceMessage = {
-        id: generateId(),
-        role: "assistant",
-        content:
-          "الگوی تکراری تشخیص داده شد. می‌توانید این فرآیند را به ورک‌فلو تبدیل کنید.",
-        workflowSuggestion: patternToSuggestion(pattern, draft),
-      };
-
-      setConversations((prev) =>
-        prev.map((c) =>
-          c.id === convId
-            ? { ...c, messages: [...c.messages, detectionMsg] }
-            : c
-        )
+  const patchSuggestion = useCallback(
+    (id: string, patch: Partial<AISuggestion>) => {
+      setSuggestionQueue((prev) =>
+        prev.map((s) => (s.id === id ? ({ ...s, ...patch } as AISuggestion) : s))
       );
     },
     []
+  );
+
+  const removeSuggestion = useCallback((id: string) => {
+    setSuggestionQueue((prev) =>
+      prev.map((s) =>
+        s.id === id ? ({ ...s, status: "dismissed" } as AISuggestion) : s
+      )
+    );
+  }, []);
+
+  const enqueueFromDetection = useCallback(
+    (
+      convId: string,
+      messageId: string,
+      userContent: string,
+      workflowPattern: DemoWorkflowPattern | null,
+      dashboardPattern: DemoDashboardPattern | null
+    ) => {
+      const paired = resolvePairedDiscoveries(
+        workflowPattern,
+        dashboardPattern
+      );
+      const items: AISuggestion[] = [];
+
+      // Always enqueue independently — never replace one with the other
+      if (paired.workflow) {
+        const draft = buildDemoWorkflowDraft(paired.workflow);
+        pendingDraftsRef.current[draft.id] = draft;
+        items.push(
+          workflowToQueueItem(paired.workflow, draft, convId, messageId)
+        );
+      }
+
+      if (paired.dashboard) {
+        const draft = buildDiscoveredDashboard(paired.dashboard);
+        pendingDashboardDraftsRef.current[draft.id] = draft;
+        items.push(
+          dashboardToQueueItem(paired.dashboard, convId, messageId)
+        );
+      }
+
+      // Only add extras when we already have core discoveries, keep panel focused
+      if (items.length > 0) {
+        const extras = extraSuggestionsForPattern(
+          userContent,
+          convId,
+          messageId
+        ).slice(0, 1);
+        items.push(...extras);
+      }
+
+      enqueueSuggestions(items);
+    },
+    [enqueueSuggestions]
   );
 
   const finishResponse = useCallback(
@@ -144,16 +417,25 @@ export function useAIWorkspace(initialQuery?: string) {
       const streamMs = response.content.length * 18 + 500;
       setTimeout(() => setStreamingMessageId(null), streamMs);
 
-      const pattern = pendingPatternRef.current;
-      if (convId && pattern) {
-        const detectionDelay = streamMs + 1200 + Math.random() * 600;
+      const dashboardPattern = pendingDashboardPatternRef.current;
+      const workflowPattern = pendingWorkflowPatternRef.current;
+
+      if (convId && (dashboardPattern || workflowPattern)) {
+        const detectionDelay = streamMs + 900 + Math.random() * 400;
         setTimeout(() => {
-          appendDetectionMessage(convId, pattern);
-          pendingPatternRef.current = null;
+          enqueueFromDetection(
+            convId,
+            assistantMsg.id,
+            userContent,
+            workflowPattern,
+            dashboardPattern
+          );
+          pendingWorkflowPatternRef.current = null;
+          pendingDashboardPatternRef.current = null;
         }, detectionDelay);
       }
     },
-    [appendDetectionMessage]
+    [enqueueFromDetection]
   );
 
   const [pendingQuery, setPendingQuery] = useState<{
@@ -165,8 +447,8 @@ export function useAIWorkspace(initialQuery?: string) {
     (content: string) => {
       if (thinking) return;
 
-      const pattern = detectDemoWorkflow(content);
-      pendingPatternRef.current = pattern;
+      pendingDashboardPatternRef.current = detectDemoDashboard(content);
+      pendingWorkflowPatternRef.current = detectDemoWorkflow(content);
 
       setThinkingSteps(getThinkingSteps(content));
 
@@ -231,74 +513,223 @@ export function useAIWorkspace(initialQuery?: string) {
     }
   }, [pendingQuery, finishResponse]);
 
-  const updateSuggestion = useCallback(
+  const openWorkflowBuilder = useCallback(
+    (id: string) => {
+      setWorkflowBuilderId(id);
+      setWorkflowBuilderOpen(true);
+      patchSuggestion(id, {
+        status: "preview",
+      } as Partial<WorkflowQueueSuggestion>);
+    },
+    [patchSuggestion]
+  );
+
+  const closeWorkflowBuilder = useCallback(() => {
+    if (workflowBuilderId) {
+      const item = suggestionQueue.find((s) => s.id === workflowBuilderId);
+      if (item?.type === "workflow" && item.status === "preview") {
+        patchSuggestion(workflowBuilderId, {
+          status: "pending",
+        } as Partial<WorkflowQueueSuggestion>);
+      }
+    }
+    setWorkflowBuilderOpen(false);
+    setWorkflowBuilderId(null);
+  }, [workflowBuilderId, suggestionQueue, patchSuggestion]);
+
+  const confirmWorkflowCreation = useCallback(() => {
+    if (!workflowBuilderId) return;
+    const item = suggestionQueue.find((s) => s.id === workflowBuilderId);
+    if (!item || item.type !== "workflow") return;
+
+    const workflowId = item.workflowId;
+    const sid = workflowBuilderId;
+
+    patchSuggestion(sid, {
+      status: "generating",
+      generationPhase: "analyzing",
+    } as Partial<WorkflowQueueSuggestion>);
+
+    let elapsed = WORKFLOW_PHASE_DURATIONS[0] ?? 2000;
     (
-      messageId: string,
-      patch: Partial<WorkflowSuggestion>
-    ) => {
-      setConversations((prev) =>
-        prev.map((c) => ({
-          ...c,
-          messages: c.messages.map((m) =>
-            m.id === messageId && m.workflowSuggestion
-              ? {
-                  ...m,
-                  workflowSuggestion: { ...m.workflowSuggestion, ...patch },
-                }
-              : m
-          ),
-        }))
-      );
-    },
-    []
-  );
-
-  const acceptWorkflowSuggestion = useCallback(
-    (messageId: string, workflowId: string) => {
-      updateSuggestion(messageId, {
-        status: "generating",
-        generationPhase: "analyzing",
-      });
-
-      let elapsed = PHASE_DURATIONS[0] ?? 2000;
-      (["building", "connecting", "dashboard"] as WorkflowGenerationPhase[]).forEach(
-        (phase, i) => {
-          setTimeout(() => {
-            updateSuggestion(messageId, {
-              status: "generating",
-              generationPhase: phase,
-            });
-          }, elapsed);
-          elapsed += PHASE_DURATIONS[i + 1] ?? 2200;
-        }
-      );
-
-      const totalDuration = PHASE_DURATIONS.reduce((s, d) => s + d, 0) + 400;
-
+      ["building", "connecting", "dashboard"] as WorkflowGenerationPhase[]
+    ).forEach((phase, i) => {
       setTimeout(() => {
-        const draft = pendingDraftsRef.current[workflowId];
-        if (draft) {
-          useWorkflowStore.getState().addWorkflow({
-            ...draft,
-            enabled: true,
-            source: "ai",
-          });
-          delete pendingDraftsRef.current[workflowId];
-        }
-        updateSuggestion(messageId, {
-          status: "accepted",
-          generationPhase: "complete",
+        patchSuggestion(sid, {
+          status: "generating",
+          generationPhase: phase,
+        } as Partial<WorkflowQueueSuggestion>);
+      }, elapsed);
+      elapsed += WORKFLOW_PHASE_DURATIONS[i + 1] ?? 2200;
+    });
+
+    const totalDuration =
+      WORKFLOW_PHASE_DURATIONS.reduce((s, d) => s + d, 0) + 400;
+
+    setTimeout(() => {
+      const draft = pendingDraftsRef.current[workflowId];
+      if (draft) {
+        useWorkflowStore.getState().addWorkflow({
+          ...draft,
+          enabled: true,
+          source: "ai",
         });
-      }, totalDuration);
+        delete pendingDraftsRef.current[workflowId];
+      }
+      setWorkflowBuilderOpen(false);
+      setWorkflowBuilderId(null);
+      // Remove only the Workflow card — Dashboard stays
+      removeSuggestion(sid);
+      router.push(`/workflows/${workflowId}`);
+    }, totalDuration);
+  }, [
+    workflowBuilderId,
+    suggestionQueue,
+    patchSuggestion,
+    removeSuggestion,
+    router,
+  ]);
+
+  const openDashboardBuilder = useCallback(
+    (id: string) => {
+      setDashboardBuilderId(id);
+      setDashboardBuilderOpen(true);
+      patchSuggestion(id, {
+        status: "preview",
+      } as Partial<DashboardQueueSuggestion>);
     },
-    [updateSuggestion]
+    [patchSuggestion]
   );
 
-  const dismissWorkflowSuggestion = useCallback(
-    (messageId: string) =>
-      updateSuggestion(messageId, { status: "dismissed" }),
-    [updateSuggestion]
+  const closeDashboardBuilder = useCallback(() => {
+    if (dashboardBuilderId) {
+      const item = suggestionQueue.find((s) => s.id === dashboardBuilderId);
+      if (item?.type === "dashboard" && item.status === "preview") {
+        patchSuggestion(dashboardBuilderId, {
+          status: "pending",
+        } as Partial<DashboardQueueSuggestion>);
+      }
+    }
+    setDashboardBuilderOpen(false);
+    setDashboardBuilderId(null);
+  }, [dashboardBuilderId, suggestionQueue, patchSuggestion]);
+
+  const confirmDashboardCreation = useCallback(() => {
+    if (!dashboardBuilderId) return;
+    const item = suggestionQueue.find((s) => s.id === dashboardBuilderId);
+    if (!item || item.type !== "dashboard") return;
+
+    const dashboardId = item.dashboardId;
+    const sid = dashboardBuilderId;
+
+    patchSuggestion(sid, {
+      status: "generating",
+      generationPhase: "analyzing",
+    } as Partial<DashboardQueueSuggestion>);
+
+    let elapsed = DASHBOARD_PHASE_DURATIONS[0] ?? 1800;
+    (["selecting", "building"] as DashboardGenerationPhase[]).forEach(
+      (phase, i) => {
+        setTimeout(() => {
+          patchSuggestion(sid, {
+            status: "generating",
+            generationPhase: phase,
+          } as Partial<DashboardQueueSuggestion>);
+        }, elapsed);
+        elapsed += DASHBOARD_PHASE_DURATIONS[i + 1] ?? 2000;
+      }
+    );
+
+    const totalDuration =
+      DASHBOARD_PHASE_DURATIONS.reduce((s, d) => s + d, 0) + 500;
+
+    setTimeout(() => {
+      const draft = pendingDashboardDraftsRef.current[dashboardId];
+      if (draft) {
+        useDashboardStore.getState().addDashboard(draft);
+        delete pendingDashboardDraftsRef.current[dashboardId];
+      }
+      setDashboardBuilderOpen(false);
+      setDashboardBuilderId(null);
+      // Remove only the Dashboard card — Workflow stays
+      removeSuggestion(sid);
+      router.push(`/dashboards/${dashboardId}`);
+    }, totalDuration);
+  }, [
+    dashboardBuilderId,
+    suggestionQueue,
+    patchSuggestion,
+    removeSuggestion,
+    router,
+  ]);
+
+  const handleSuggestionPrimary = useCallback(
+    (id: string) => {
+      const item = suggestionQueue.find((s) => s.id === id);
+      if (!item) return;
+
+      switch (item.type) {
+        case "workflow":
+          openWorkflowBuilder(id);
+          break;
+        case "dashboard":
+          openDashboardBuilder(id);
+          break;
+        case "automation":
+        case "report":
+        case "reminder":
+        case "alert":
+          removeSuggestion(id);
+          break;
+      }
+    },
+    [
+      suggestionQueue,
+      openWorkflowBuilder,
+      openDashboardBuilder,
+      removeSuggestion,
+    ]
   );
+
+  const handleSuggestionDismiss = useCallback(
+    (id: string) => {
+      if (dashboardBuilderId === id) {
+        setDashboardBuilderOpen(false);
+        setDashboardBuilderId(null);
+      }
+      if (workflowBuilderId === id) {
+        setWorkflowBuilderOpen(false);
+        setWorkflowBuilderId(null);
+      }
+      removeSuggestion(id);
+    },
+    [dashboardBuilderId, workflowBuilderId, removeSuggestion]
+  );
+
+  const dashboardBuilderSuggestion =
+    useMemo((): DashboardSuggestion | null => {
+      if (!dashboardBuilderId) return null;
+      const item = suggestionQueue.find((s) => s.id === dashboardBuilderId);
+      if (!item || item.type !== "dashboard") return null;
+      return {
+        status: item.status,
+        reason: item.reason,
+        dashboardId: item.dashboardId,
+        dashboardName: item.dashboardName,
+        scenarioName: item.scenarioName,
+        widgets: item.widgets,
+        widgetCount: item.widgetCount,
+        generationPhase: item.generationPhase,
+      };
+    }, [dashboardBuilderId, suggestionQueue]);
+
+  const workflowBuilderSuggestion =
+    useMemo((): WorkflowQueueSuggestion | null => {
+      if (!workflowBuilderId) return null;
+      const item = suggestionQueue.find((s) => s.id === workflowBuilderId);
+      if (!item || item.type !== "workflow") return null;
+      return item;
+    }, [workflowBuilderId, suggestionQueue]);
 
   const selectConversation = useCallback((id: string) => {
     setActiveId(id);
@@ -308,7 +739,8 @@ export function useAIWorkspace(initialQuery?: string) {
   const newConversation = useCallback(() => {
     setActiveId(null);
     setPreviewCanvas(null);
-    pendingPatternRef.current = null;
+    pendingWorkflowPatternRef.current = null;
+    pendingDashboardPatternRef.current = null;
   }, []);
 
   const togglePin = useCallback((id: string) => {
@@ -349,14 +781,23 @@ export function useAIWorkspace(initialQuery?: string) {
     activeCategory,
     historySearch,
     context,
+    suggestionQueue: activeSuggestions,
+    dashboardBuilderOpen,
+    dashboardBuilderSuggestion,
+    workflowBuilderOpen,
+    workflowBuilderSuggestion,
     submitQuery,
     selectConversation,
     newConversation,
     setActiveCategory,
     setHistorySearch,
     onThinkingComplete,
-    acceptWorkflowSuggestion,
-    dismissWorkflowSuggestion,
+    handleSuggestionPrimary,
+    handleSuggestionDismiss,
+    closeDashboardBuilder,
+    confirmDashboardCreation,
+    closeWorkflowBuilder,
+    confirmWorkflowCreation,
     togglePin,
     toggleFavorite,
     handleAction,

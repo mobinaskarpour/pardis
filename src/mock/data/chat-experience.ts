@@ -27,9 +27,12 @@ export interface ContextTask {
   urgent?: boolean;
 }
 
+import { currentUserMock } from "./user";
+
 export const chatGreeting = {
   timeLabel: "صبح بخیر",
-  userName: "دکتر اخلاق‌پور",
+  userName: currentUserMock.name,
+  userRole: currentUserMock.role,
   headline: "امروز دوست دارید چه کاری را به THEMACHINE بسپارید؟",
   placeholder:
     "هر سوالی درباره مرکز، بیماران، گزارش‌ها، مالی، دستگاه‌ها یا فرآیندها دارید بپرسید...",
@@ -40,21 +43,21 @@ export const contextualSuggestedActions: ContextualAction[] = [
     id: "mri-ready",
     emoji: "🩻",
     label: "گزارش‌های MRI امروز",
-    query: "گزارش‌های MRI آماده امروز را نشان بده",
+    query: "آماده‌سازی و تأیید MRI امروز",
     accent: "from-accent-cyan/8 to-transparent border-accent-cyan/20",
   },
   {
     id: "appointments",
     emoji: "📅",
-    label: "نوبت‌های امروز",
-    query: "وضعیت نوبت‌های امروز",
+    label: "نوبت‌های فردا",
+    query: "مدیریت نوبت‌های فردا",
     accent: "from-primary/8 to-transparent border-primary/20",
   },
   {
     id: "insurance",
     emoji: "💳",
     label: "وضعیت بیمه",
-    query: "وضعیت بیمه بیماران امروز",
+    query: "بررسی و پیگیری بیمه",
     accent: "from-success/8 to-transparent border-success/20",
   },
   {
@@ -165,11 +168,11 @@ export function getMemoryContext(query: string): string | undefined {
   if (q.includes("mri") || q.includes("گزارش"))
     return "بر اساس گزارش‌های امروز...";
   if (q.includes("هفته") || q.includes("عملکرد"))
-    return "بر اساس گفتگوهای هفته گذشته...";
+    return "بر اساس خلاصه عملکرد مرکز برای مدیرعامل...";
   if (q.includes("بیمار") || q.includes("احمدی"))
-    return "بر اساس پرونده‌های اخیر...";
+    return "بر اساس پرونده‌های اخیر مرکز...";
   if (q.includes("درآمد") || q.includes("مالی"))
-    return "بر اساس داده‌های مالی امروز...";
+    return "بر اساس داده‌های مالی امروز مرکز...";
   return undefined;
 }
 

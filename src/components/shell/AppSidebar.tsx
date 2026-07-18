@@ -7,6 +7,7 @@ import {
   BarChart3,
   GitBranch,
   Globe,
+  LayoutDashboard,
   Moon,
   MoreHorizontal,
   Plus,
@@ -21,6 +22,7 @@ import {
 import { user } from "@/lib/mock-data";
 import { useWorkflowStore } from "@/store/workflow-store";
 import { useThemeStore, resolveTheme } from "@/store/theme-store";
+import { useDashboardStore } from "@/store/dashboard-store";
 import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -45,11 +47,13 @@ interface AppSidebarProps {
 export function AppSidebar({ onOpenMore }: AppSidebarProps) {
   const pathname = usePathname();
   const workflows = useWorkflowStore((s) => s.workflows);
+  const dashboards = useDashboardStore((s) => s.dashboards);
   const moreActive = isMoreNavActive(pathname);
   const theme = useThemeStore((s) => s.theme);
   const setTheme = useThemeStore((s) => s.setTheme);
   const resolved = resolveTheme(theme);
   const identified = workflows.filter((w) => w.enabled).slice(0, 5);
+  const recentDashboards = dashboards.slice(0, 5);
 
   const cycleTheme = () => {
     if (theme === "light") setTheme("dark");
@@ -218,6 +222,40 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
             ))}
           </ul>
         </div>
+
+        {recentDashboards.length > 0 && (
+          <div className="mt-5">
+            <p className="mb-1.5 px-2.5 text-[10px] font-semibold tracking-[0.08em] text-text-muted">
+              داشبوردها
+            </p>
+            <ul className="space-y-0.5">
+              {recentDashboards.map((dash, i) => (
+                <li key={dash.id}>
+                  <Link
+                    href={`/dashboards/${dash.id}`}
+                    className="group flex items-start gap-2 rounded-[10px] px-2.5 py-1.5 transition-colors hover:bg-bg-subtle/70"
+                  >
+                    <LayoutDashboard
+                      size={12}
+                      className="mt-0.5 shrink-0 text-primary/70"
+                      strokeWidth={1.75}
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="line-clamp-2 text-[12px] leading-snug text-text-secondary group-hover:text-text-primary">
+                        {dash.name}
+                      </span>
+                      {i === 0 && (
+                        <span className="mt-1 inline-block rounded-[4px] bg-primary/10 px-1.5 py-px text-[9px] font-semibold text-primary">
+                          جدید
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="mt-5">
           <p className="mb-1.5 px-2.5 text-[10px] font-semibold tracking-[0.08em] text-text-muted">

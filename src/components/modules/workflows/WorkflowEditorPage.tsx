@@ -167,7 +167,7 @@ export function WorkflowEditorPage({ id }: { id: string }) {
       id: generateId("run"),
       time: "همین الان",
       status: "success" as const,
-      detail: "اجرای آزمایشی توسط مدیر بخش — همه اقدامات شبیه‌سازی شدند",
+      detail: "اجرای آزمایشی توسط مدیرعامل — همه اقدامات شبیه‌سازی شدند",
     };
     const next = {
       ...draft,

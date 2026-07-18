@@ -94,8 +94,16 @@ export function Topbar({ onSearchOpen, onMenuOpen, pageTitle }: TopbarProps) {
           type="button"
           whileHover={{ scale: 1.02, transition: spring.gentle }}
           className="flex h-8 items-center gap-2 rounded-[9px] px-1.5 transition-colors hover:bg-bg-subtle cursor-pointer"
-          aria-label="پروفایل"
+          aria-label={`${user.name} — ${user.role}`}
         >
+          <span className="hidden text-end sm:block">
+            <span className="block text-[12px] font-medium leading-tight text-text-primary">
+              {user.name}
+            </span>
+            <span className="block text-[10px] leading-tight text-text-muted">
+              {user.role}
+            </span>
+          </span>
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-[12px] font-medium text-primary">
             {user.initials}
           </span>

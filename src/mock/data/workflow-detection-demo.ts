@@ -20,10 +20,18 @@ export interface DemoWorkflowPattern {
 export const demoWorkflowPatterns: DemoWorkflowPattern[] = [
   {
     id: "mri-ready",
-    queries: ["گزارش‌های mri", "mri آماده", "گزارش mri"],
+    queries: [
+      "گزارش‌های mri",
+      "mri آماده",
+      "گزارش mri",
+      "آماده‌سازی و تأیید mri",
+      "آماده‌سازی و تأیید گزارش mri",
+      "تأیید گزارش mri",
+      "mri امروز",
+    ],
     workflowId: "wf-mri-report-prep",
-    workflowName: "آماده‌سازی و تأیید گزارش MRI",
-    dashboardName: "داشبورد گزارش‌دهی MRI",
+    workflowName: "آماده‌سازی و تأیید MRI",
+    dashboardName: "داشبورد MRI امروز",
     dashboardWidgets: [
       "گزارش‌های امروز",
       "میانگین زمان گزارش",
@@ -36,9 +44,17 @@ export const demoWorkflowPatterns: DemoWorkflowPattern[] = [
   },
   {
     id: "appointments",
-    queries: ["نوبت‌های امروز", "وضعیت نوبت", "نوبت امروز"],
+    queries: [
+      "نوبت‌های امروز",
+      "وضعیت نوبت",
+      "نوبت امروز",
+      "نوبت‌های فردا",
+      "مدیریت نوبت‌های فردا",
+      "نوبت فردا",
+      "ظرفیت فردا",
+    ],
     workflowId: "wf-tomorrow-appointments",
-    workflowName: "مدیریت هوشمند نوبت‌ها",
+    workflowName: "مدیریت نوبت‌های فردا",
     dashboardName: "داشبورد نوبت‌دهی",
     dashboardWidgets: [
       "نوبت‌های امروز",
@@ -51,7 +67,14 @@ export const demoWorkflowPatterns: DemoWorkflowPattern[] = [
   },
   {
     id: "insurance",
-    queries: ["وضعیت بیمه", "بیمه بیمار", "مطالبات بیمه"],
+    queries: [
+      "وضعیت بیمه",
+      "بیمه بیمار",
+      "مطالبات بیمه",
+      "بررسی و پیگیری بیمه",
+      "پیگیری بیمه",
+      "پرونده بیمه",
+    ],
     workflowId: "wf-insurance-check",
     workflowName: "بررسی و پیگیری بیمه",
     dashboardName: "داشبورد بیمه",
@@ -80,7 +103,13 @@ export const demoWorkflowPatterns: DemoWorkflowPattern[] = [
   },
   {
     id: "devices",
-    queries: ["وضعیت دستگاه", "دستگاه‌های تصویر", "سلامت mri", "سلامت ct"],
+    queries: [
+      "وضعیت دستگاه",
+      "دستگاه‌های تصویر",
+      "سلامت mri",
+      "سلامت ct",
+      "وضعیت دستگاه‌های تصویربرداری",
+    ],
     workflowId: "wf-device-health",
     workflowName: "پایش سلامت تجهیزات",
     dashboardName: "داشبورد تجهیزات",

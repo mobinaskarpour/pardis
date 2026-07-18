@@ -1,0 +1,84 @@
+/** Premium medical AI assistant portrait — soft, modern, non-cartoon */
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="none">
+  <defs>
+    <radialGradient id="studio" cx="50%" cy="38%" r="68%">
+      <stop offset="0%" stop-color="#e8eef2"/>
+      <stop offset="50%" stop-color="#c5d4de"/>
+      <stop offset="100%" stop-color="#8fa3b2"/>
+    </radialGradient>
+    <linearGradient id="skinTone" x1="35%" y1="20%" x2="75%" y2="90%">
+      <stop offset="0%" stop-color="#f0d0b8"/>
+      <stop offset="40%" stop-color="#dfb492"/>
+      <stop offset="100%" stop-color="#c89672"/>
+    </linearGradient>
+    <linearGradient id="coatFill" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e8edf1"/>
+    </linearGradient>
+    <linearGradient id="hairFill" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#4a3428"/>
+      <stop offset="55%" stop-color="#2c1e18"/>
+      <stop offset="100%" stop-color="#1a120e"/>
+    </linearGradient>
+    <linearGradient id="scrubs" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#6aafbc"/>
+      <stop offset="100%" stop-color="#3d7f8e"/>
+    </linearGradient>
+    <filter id="faceSoft" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="0.6"/>
+    </filter>
+  </defs>
+
+  <circle cx="320" cy="320" r="320" fill="url(#studio)"/>
+
+  <!-- coat / shoulders -->
+  <path d="M48 640 C90 455 155 400 320 400 C485 400 550 455 592 640 Z" fill="url(#coatFill)"/>
+  <path d="M210 430 C240 470 270 485 320 485 C370 485 400 470 430 430 L415 640 L225 640 Z" fill="url(#scrubs)"/>
+  <path d="M195 420 C155 455 110 520 85 640 L225 640 L210 430 Z" fill="url(#coatFill)"/>
+  <path d="M445 420 C485 455 530 520 555 640 L415 640 L445 420 Z" fill="url(#coatFill)"/>
+
+  <!-- collar -->
+  <path d="M255 430 L300 495 L320 470 L340 495 L385 430 L355 455 L320 435 L285 455 Z" fill="#f7fafc" opacity="0.95"/>
+
+  <!-- neck -->
+  <ellipse cx="320" cy="385" rx="48" ry="42" fill="url(#skinTone)"/>
+
+  <!-- face -->
+  <ellipse cx="320" cy="280" rx="118" ry="135" fill="url(#skinTone)"/>
+
+  <!-- hair mass -->
+  <path d="M195 255 C185 155 235 100 320 95 C405 100 455 155 445 255 C455 185 425 125 320 118 C215 125 185 185 195 255 Z" fill="url(#hairFill)"/>
+  <path d="M198 245 C175 310 188 375 215 400 C205 350 205 300 218 255 Z" fill="url(#hairFill)"/>
+  <path d="M442 245 C465 310 452 375 425 400 C435 350 435 300 422 255 Z" fill="url(#hairFill)"/>
+  <path d="M230 140 C250 115 290 105 320 108 C285 125 255 145 238 175 Z" fill="url(#hairFill)" opacity="0.85"/>
+
+  <!-- soft cheeks -->
+  <ellipse cx="245" cy="305" rx="22" ry="14" fill="#e8a888" opacity="0.28"/>
+  <ellipse cx="395" cy="305" rx="22" ry="14" fill="#e8a888" opacity="0.28"/>
+
+  <!-- eyes -->
+  <ellipse cx="275" cy="272" rx="13" ry="11" fill="#24343c"/>
+  <ellipse cx="365" cy="272" rx="13" ry="11" fill="#24343c"/>
+  <circle cx="278" cy="268" r="3.5" fill="#fff" opacity="0.75"/>
+  <circle cx="368" cy="268" r="3.5" fill="#fff" opacity="0.75"/>
+  <ellipse cx="275" cy="278" rx="12" ry="3" fill="#2a5676" opacity="0.08"/>
+  <ellipse cx="365" cy="278" rx="12" ry="3" fill="#2a5676" opacity="0.08"/>
+
+  <!-- brows -->
+  <path d="M252 250 Q275 240 298 250" stroke="#3a2a22" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <path d="M342 250 Q365 240 388 250" stroke="#3a2a22" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.5"/>
+
+  <!-- nose -->
+  <path d="M320 285 L312 325 Q320 332 328 325 Z" fill="#c49272" opacity="0.5"/>
+
+  <!-- calm expression -->
+  <path d="M290 345 Q320 360 350 345" stroke="#a87060" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+
+  <!-- stethoscope -->
+  <path d="M240 510 Q320 555 400 510" stroke="#4a7a8a" stroke-width="4" fill="none" opacity="0.4" stroke-linecap="round"/>
+  <circle cx="240" cy="508" r="6" fill="#4a7a8a" opacity="0.35"/>
+  <circle cx="400" cy="508" r="6" fill="#4a7a8a" opacity="0.35"/>
+
+  <!-- soft highlight on coat -->
+  <ellipse cx="320" cy="560" rx="90" ry="20" fill="#ffffff" opacity="0.25"/>
+</svg>

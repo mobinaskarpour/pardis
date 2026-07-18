@@ -1,18 +1,21 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppShell } from "@/components/shell/AppShell";
 import { AICanvas } from "./canvas/AICanvas";
 import { AIThinking } from "@/components/core/AIThinking";
 import { StreamingText } from "./StreamingText";
-import { WorkflowSuggestionNotification } from "./WorkflowSuggestionNotification";
 import { ChatHero } from "./ChatHero";
 import { SuggestedActionPills } from "./SuggestedActionPills";
 import { PremiumChatInput } from "./PremiumChatInput";
 import { ConversationHistoryPanel } from "./ConversationHistoryPanel";
 import { MemoryContextChip } from "./MemoryContextChip";
 import { DashboardGenerationCard } from "./DashboardGenerationCard";
+import { DashboardBuilderDialog } from "./DashboardBuilderDialog";
+import { WorkflowBuilderDialog } from "./WorkflowBuilderDialog";
+import { AINotificationCenter } from "./AINotificationCenter";
+import { VoiceAssistantOverlay } from "./voice/VoiceAssistantOverlay";
 import { LivingCore } from "@/components/command-center/LivingCore";
 import { useAIWorkspace } from "@/hooks/useAIWorkspace";
 import { pageLabels } from "@/config/labels";
@@ -45,31 +48,37 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
     streamingMessageId,
     historySearch,
     context,
+    suggestionQueue,
     submitQuery,
     selectConversation,
     newConversation,
     setHistorySearch,
     onThinkingComplete,
-    acceptWorkflowSuggestion,
-    dismissWorkflowSuggestion,
+    handleSuggestionPrimary,
+    handleSuggestionDismiss,
+    dashboardBuilderOpen,
+    dashboardBuilderSuggestion,
+    workflowBuilderOpen,
+    workflowBuilderSuggestion,
+    closeDashboardBuilder,
+    confirmDashboardCreation,
+    closeWorkflowBuilder,
+    confirmWorkflowCreation,
     togglePin,
     toggleFavorite,
     handleAction,
   } = useAIWorkspace(initialQuery);
 
+  const [voiceOpen, setVoiceOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasMessages = messages.length > 0;
   const isNewChat = !hasMessages && !thinking;
 
-  const activeWorkflowMessage = [...messages]
-    .reverse()
-    .find(
-      (m) =>
-        m.role === "assistant" &&
-        m.workflowSuggestion &&
-        m.workflowSuggestion.status !== "dismissed" &&
-        streamingMessageId !== m.id
-    );
+  const openVoice = useCallback(() => setVoiceOpen(true), []);
+  const closeVoice = useCallback(() => setVoiceOpen(false), []);
+  const switchVoiceToText = useCallback(() => {
+    setVoiceOpen(false);
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -78,10 +87,18 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
     });
   }, [messages, thinking]);
 
+  useEffect(() => {
+    if (!voiceOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [voiceOpen]);
+
   return (
     <AppShell pageTitle={pageLabels.chat} hideFloatingAI>
       <div className="flex h-[calc(100vh-4.5rem)] overflow-hidden bg-bg-layer-1 rounded-[var(--radius-xl)]">
-        {/* Main conversation column */}
         <div className="flex flex-1 flex-col min-w-0">
           <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none">
             {isNewChat ? (
@@ -94,6 +111,7 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                     disabled={thinking}
                     showQuickCommands
                     large
+                    onVoiceOpen={openVoice}
                   />
                 </div>
 
@@ -127,16 +145,22 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                           <MemoryContextChip text={msg.memoryContext} />
                         )}
 
-                        {msg.responseFormat && msg.responseFormat !== "answer" && (
-                          <span className="inline-block rounded-[6px] bg-bg-subtle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-text-muted">
-                            {formatLabels[msg.responseFormat] ?? msg.responseFormat}
-                          </span>
-                        )}
+                        {msg.responseFormat &&
+                          msg.responseFormat !== "answer" && (
+                            <span className="inline-block rounded-[6px] bg-bg-subtle px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-text-muted">
+                              {formatLabels[msg.responseFormat] ??
+                                msg.responseFormat}
+                            </span>
+                          )}
 
                         {msg.content && (
                           <div className="flex items-start gap-3">
                             <div className="shrink-0 mt-1">
-                              <LivingCore size="sm" variant="ambient" active={thinking} />
+                              <LivingCore
+                                size="sm"
+                                variant="ambient"
+                                active={thinking}
+                              />
                             </div>
                             <div className="flex-1 rounded-[16px] border border-border bg-bg-elevated px-4 py-3.5 shadow-[var(--shadow-sm)] max-w-2xl">
                               {streamingMessageId === msg.id ? (
@@ -157,18 +181,18 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                         )}
 
                         {msg.canvas && streamingMessageId !== msg.id && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 12 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={spring.soft}
-                              className="rounded-[16px] border border-border bg-bg-elevated overflow-hidden shadow-[var(--shadow-sm)]"
-                            >
-                              <AICanvas
-                                canvas={msg.canvas}
-                                onSuggestionClick={submitQuery}
-                              />
-                            </motion.div>
-                          )}
+                          <motion.div
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={spring.soft}
+                            className="rounded-[16px] border border-border bg-bg-elevated overflow-hidden shadow-[var(--shadow-sm)]"
+                          >
+                            <AICanvas
+                              canvas={msg.canvas}
+                              onSuggestionClick={submitQuery}
+                            />
+                          </motion.div>
+                        )}
 
                         {msg.suggestedQuestions &&
                           msg.suggestedQuestions.length > 0 &&
@@ -213,13 +237,13 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
             )}
           </div>
 
-          {/* Input — sticky bottom when in conversation */}
           {!isNewChat && (
             <div className="shrink-0 border-t border-border bg-bg-elevated/95 backdrop-blur-md px-6 py-4">
               <PremiumChatInput
                 onSubmit={submitQuery}
                 disabled={thinking}
                 showQuickCommands
+                onVoiceOpen={openVoice}
               />
             </div>
           )}
@@ -256,19 +280,31 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
         />
       </div>
 
-      <WorkflowSuggestionNotification
-        suggestion={activeWorkflowMessage?.workflowSuggestion}
-        onAccept={() => {
-          if (!activeWorkflowMessage?.workflowSuggestion) return;
-          acceptWorkflowSuggestion(
-            activeWorkflowMessage.id,
-            activeWorkflowMessage.workflowSuggestion.workflowId
-          );
-        }}
-        onDismiss={() => {
-          if (!activeWorkflowMessage) return;
-          dismissWorkflowSuggestion(activeWorkflowMessage.id);
-        }}
+      <AINotificationCenter
+        suggestions={suggestionQueue}
+        onPrimary={handleSuggestionPrimary}
+        onDismiss={handleSuggestionDismiss}
+      />
+
+      <WorkflowBuilderDialog
+        open={workflowBuilderOpen}
+        suggestion={workflowBuilderSuggestion}
+        onClose={closeWorkflowBuilder}
+        onConfirm={confirmWorkflowCreation}
+      />
+
+      <DashboardBuilderDialog
+        open={dashboardBuilderOpen}
+        suggestion={dashboardBuilderSuggestion}
+        onClose={closeDashboardBuilder}
+        onConfirm={confirmDashboardCreation}
+      />
+
+      <VoiceAssistantOverlay
+        open={voiceOpen}
+        onClose={closeVoice}
+        onSubmitQuery={submitQuery}
+        onSwitchToText={switchVoiceToText}
       />
     </AppShell>
   );

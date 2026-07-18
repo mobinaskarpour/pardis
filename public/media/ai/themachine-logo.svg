@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <radialGradient id="disc" cx="38%" cy="32%" r="72%">
+      <stop offset="0%" stop-color="#f4f7fa"/>
+      <stop offset="55%" stop-color="#d5e2ea"/>
+      <stop offset="100%" stop-color="#9eb4c4"/>
+    </radialGradient>
+    <linearGradient id="mark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3d7294"/>
+      <stop offset="100%" stop-color="#1e4a66"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f1218" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <!-- soft disc -->
+  <circle cx="256" cy="256" r="248" fill="url(#disc)"/>
+  <circle cx="256" cy="256" r="248" fill="url(#glow)"/>
+
+  <!-- inner glass ring -->
+  <circle cx="256" cy="256" r="196" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.5" fill="none"/>
+
+  <!-- brand tile -->
+  <rect x="176" y="148" width="160" height="160" rx="36" fill="url(#mark)" filter="url(#softShadow)"/>
+  <rect x="176" y="148" width="160" height="160" rx="36" fill="#ffffff" fill-opacity="0.08"/>
+
+  <!-- TM wordmark -->
+  <text
+    x="256"
+    y="244"
+    text-anchor="middle"
+    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="58"
+    font-weight="700"
+    letter-spacing="2"
+    fill="#ffffff"
+  >TM</text>
+
+  <!-- subtle AI spark -->
+  <path d="M340 168 L344 180 L356 184 L344 188 L340 200 L336 188 L324 184 L336 180 Z" fill="#ffffff" fill-opacity="0.55"/>
+
+  <!-- THEMACHINE -->
+  <text
+    x="256"
+    y="368"
+    text-anchor="middle"
+    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="28"
+    font-weight="650"
+    letter-spacing="3.5"
+    fill="#1e4a66"
+  >THEMACHINE</text>
+
+  <text
+    x="256"
+    y="398"
+    text-anchor="middle"
+    font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"
+    font-size="14"
+    font-weight="500"
+    letter-spacing="1.5"
+    fill="#4a6578"
+    fill-opacity="0.85"
+  >AI MEDICAL OS</text>
+</svg>
