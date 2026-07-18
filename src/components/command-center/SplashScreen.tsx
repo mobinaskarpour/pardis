@@ -46,7 +46,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           transition={{ delay: 0.6, ...spring.soft }}
           className="text-center"
         >
-          <h1 className="text-[13px] font-medium tracking-[0.2em] text-text-tertiary uppercase">
+          <h1 className="text-[13px] font-semibold tracking-tight text-text-tertiary">
             THEMACHINE
           </h1>
           <p className="mt-2 text-[15px] text-text-secondary">

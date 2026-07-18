@@ -5,7 +5,7 @@ import { Providers } from "@/components/Providers";
 
 const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
-  subsets: ["arabic"],
+  subsets: ["arabic", "latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
 

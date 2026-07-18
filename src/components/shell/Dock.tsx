@@ -30,7 +30,7 @@ export function Dock({ onOpenMore }: DockProps) {
       aria-label="ناوبری اصلی"
     >
       <div className="mb-4 px-2 pt-1">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-text-muted">
+        <p className="text-[10px] font-semibold tracking-tight text-text-muted">
           THEMACHINE
         </p>
         <p className="mt-0.5 text-[11px] text-text-tertiary">چهار تجربه اصلی</p>

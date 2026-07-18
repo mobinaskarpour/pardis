@@ -77,7 +77,7 @@ export function MoreDrawer({ open, onClose }: MoreDrawerProps) {
             <header className="shrink-0 border-b border-border px-5 pb-4 pt-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[10px] font-semibold tracking-[0.1em] text-text-muted">
+                  <p className="text-[10px] font-semibold tracking-tight text-text-muted">
                     THEMACHINE
                   </p>
                   <h2 className="mt-1 text-[18px] font-semibold tracking-tight text-text-primary">
