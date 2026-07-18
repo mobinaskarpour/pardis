@@ -29,7 +29,7 @@ interface HistoryEntry {
 const collaborators: Collaborator[] = [
   { id: "1", name: "Mobin", role: "editing", color: "#5b5fc7" },
   { id: "2", name: "دکتر اخلاق‌پور", role: "viewing", color: "#4da8a8" },
-  { id: "3", name: "THE MACHINE", role: "reviewing", color: "#10a37f" },
+  { id: "3", name: "THEMACHINE", role: "reviewing", color: "#10a37f" },
 ];
 
 export function useWorkflowStudio(workflowId: string) {
@@ -360,7 +360,7 @@ export function useWorkflowStudio(workflowId: string) {
         id: generateStudioId("log"),
         time: new Date().toLocaleTimeString("fa-IR"),
         level: "info",
-        message: "✨ THE MACHINE در حال ساخت Workflow...",
+        message: "✨ THEMACHINE در حال ساخت Workflow...",
       },
     ]);
 

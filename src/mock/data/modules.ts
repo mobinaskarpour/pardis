@@ -24,7 +24,7 @@ export const moduleMetaMock: Record<ModuleId, ModuleMeta> = {
     title: pageLabels.doctors,
     subtitle: "مرکز پزشکان",
     aiSummary:
-      "۴ پزشک فعال. دکتر کریمی بار کاری بحرانی دارد. پیشنهاد redistribute.",
+      "۴ پزشک فعال. دکتر کریمی بار کاری بحرانی دارد. پیشنهاد: توزیع مجدد بار.",
     suggestions: ["پزشکان فعال امروز", "عملکرد هفتگی", "برنامه فردا"],
     quickActions: [{ label: "فضای کار هوش مصنوعی", href: "/chat" }],
   },
@@ -74,7 +74,7 @@ export const moduleMetaMock: Record<ModuleId, ModuleMeta> = {
     title: pageLabels.workflows,
     subtitle: "اتوماسیون مرکز تصویربرداری",
     aiSummary:
-      "۱۲ گردش‌کار فعال در پردیس نور — ۱ ساخته‌شده از گفتگو. THE MACHINE از مکالمات یاد می‌گیرد و خودکار می‌سازد.",
+      "۱۲ گردش‌کار فعال در پردیس نور — ۱ ساخته‌شده از گفتگو. THEMACHINE از مکالمات یاد می‌گیرد و خودکار می‌سازد.",
     suggestions: ["گزارش MRI", "نوبت‌های فردا", "بیمار VIP", "گزارش بحرانی"],
     quickActions: [{ label: "ورک‌فلو", href: "/workflows" }],
   },

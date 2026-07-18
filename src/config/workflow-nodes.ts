@@ -40,7 +40,7 @@ export const nodeDefinitions: NodeDefinition[] = [
   { id: "ai-classification", category: "ai", title: "طبقه‌بندی AI", description: "دسته‌بندی خودکار", icon: "tags", color: "#5b5fc7", inputs: 1, outputs: 1 },
   { id: "ai-ocr", category: "ai", title: "AI OCR", description: "استخراج متن از سند", icon: "scan-text", color: "#2d5a7b", inputs: 1, outputs: 1 },
   { id: "ai-summary", category: "ai", title: "خلاصه AI", description: "خلاصه‌سازی گزارش", icon: "file-text", color: "#4da8a8", inputs: 1, outputs: 1 },
-  { id: "ai-chat", category: "ai", title: "AI Chat", description: "گفتگو با THE MACHINE", icon: "message-square", color: "#10a37f", inputs: 1, outputs: 1 },
+  { id: "ai-chat", category: "ai", title: "AI Chat", description: "گفتگو با THEMACHINE", icon: "message-square", color: "#10a37f", inputs: 1, outputs: 1 },
   { id: "ai-routing", category: "ai", title: "مسیریابی AI", description: "مسیریابی هوشمند", icon: "git-branch", color: "#5b5fc7", inputs: 1, outputs: 3 },
   { id: "ai-workflow-suggestion", category: "ai", title: "پیشنهاد Workflow", description: "پیشنهاد گردش‌کار", icon: "sparkles", color: "#5b5fc7", inputs: 0, outputs: 1 },
   { id: "ai-prediction", category: "ai", title: "پیش‌بینی AI", description: "پیش‌بینی روند", icon: "trending-up", color: "#4da8a8", inputs: 1, outputs: 1 },

@@ -45,13 +45,14 @@ export function AppShell({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        closePalette();
         setMoreOpen(false);
         setMobileNavOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [closePalette]);
 
   if (immersive) {
     return <>{children}</>;
@@ -71,23 +72,24 @@ export function AppShell({
 
   if (isDashboard) {
     return (
-      <div className="flex h-screen overflow-hidden bg-[#eef0f3]">
+      <div className="flex h-screen overflow-hidden bg-bg-layer-2">
         <div className="bg-noise fixed inset-0 pointer-events-none" aria-hidden />
 
-        {/* RTL: first flex child sits on the right — sidebar */}
         <div className="hidden md:flex shrink-0 h-full">
           <AppSidebar onOpenMore={openMore} />
         </div>
 
-        <main className="relative flex-1 min-w-0 overflow-hidden">
-          <PageTransition>
-            {isValidElement(children)
-              ? cloneElement(children, {
-                  onOpenMenu: () => setMobileNavOpen(true),
-                  onOpenSearch: openPalette,
-                } as Record<string, unknown>)
-              : children}
-          </PageTransition>
+        <main className="relative flex-1 min-w-0 overflow-hidden py-3 pe-3">
+          <div className="h-full overflow-hidden rounded-[var(--radius-xl)] border border-border/70 bg-bg-elevated shadow-[var(--shadow-sm)]">
+            <PageTransition>
+              {isValidElement(children)
+                ? cloneElement(children, {
+                    onOpenMenu: () => setMobileNavOpen(true),
+                    onOpenSearch: openPalette,
+                  } as Record<string, unknown>)
+                : children}
+            </PageTransition>
+          </div>
         </main>
 
         {shellOverlays}
@@ -103,14 +105,21 @@ export function AppShell({
         <AppSidebar onOpenMore={openMore} />
       </div>
 
-      <div className={cn("relative flex min-h-screen flex-col md:ps-[280px]")}>
+      <div
+        className={cn(
+          "relative flex min-h-screen flex-col",
+          "md:ps-[calc(var(--sidebar-width)+1.25rem)]"
+        )}
+      >
         <Topbar
           onSearchOpen={openPalette}
           onMenuOpen={() => setMobileNavOpen(true)}
           pageTitle={pageTitle}
         />
-        <main className="flex-1">
-          <PageTransition>{children}</PageTransition>
+        <main className="flex-1 pe-3 pb-3">
+          <div className="min-h-[calc(100vh-4.5rem)] rounded-[var(--radius-xl)] border border-border/60 bg-bg-elevated/50 shadow-[var(--shadow-sm)]">
+            <PageTransition>{children}</PageTransition>
+          </div>
         </main>
       </div>
 

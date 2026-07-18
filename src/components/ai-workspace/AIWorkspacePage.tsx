@@ -21,11 +21,11 @@ import { cn } from "@/lib/utils";
 
 const formatLabels: Record<string, string> = {
   answer: "پاسخ",
-  timeline: "Timeline",
-  workflow: "Workflow",
+  timeline: "خط زمان",
+  workflow: "گردش‌کار",
   chart: "نمودار",
   "executive-summary": "خلاصه اجرایی",
-  dashboard: "Dashboard",
+  dashboard: "داشبورد",
   document: "سند",
   "medical-report": "گزارش پزشکی",
   "task-list": "لیست وظایف",
@@ -80,7 +80,7 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
 
   return (
     <AppShell pageTitle={pageLabels.chat} hideFloatingAI>
-      <div className="flex h-[calc(100vh-60px)] overflow-hidden bg-[#eef0f3]">
+      <div className="flex h-[calc(100vh-4.5rem)] overflow-hidden bg-bg-layer-1 rounded-[var(--radius-xl)]">
         {/* Main conversation column */}
         <div className="flex flex-1 flex-col min-w-0">
           <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-none">
@@ -115,8 +115,8 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                   >
                     {msg.role === "user" ? (
                       <div className="flex justify-end">
-                        <div className="rounded-[18px] bg-primary px-5 py-3 max-w-lg shadow-sm">
-                          <p className="text-[15px] text-white leading-relaxed">
+                        <div className="rounded-[16px] bg-primary px-4 py-2.5 max-w-lg shadow-[var(--shadow-sm)]">
+                          <p className="text-[14px] text-white leading-relaxed">
                             {msg.content}
                           </p>
                         </div>
@@ -138,11 +138,11 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                             <div className="shrink-0 mt-1">
                               <LivingCore size="sm" variant="ambient" active={thinking} />
                             </div>
-                            <div className="flex-1 rounded-[18px] border border-border/60 bg-white px-5 py-4 shadow-sm max-w-2xl">
+                            <div className="flex-1 rounded-[16px] border border-border bg-bg-elevated px-4 py-3.5 shadow-[var(--shadow-sm)] max-w-2xl">
                               {streamingMessageId === msg.id ? (
                                 <StreamingText text={msg.content} />
                               ) : (
-                                <p className="text-[15px] text-text-primary leading-[1.75]">
+                                <p className="text-[14px] text-text-primary leading-[1.7]">
                                   {msg.content}
                                 </p>
                               )}
@@ -156,14 +156,12 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                           />
                         )}
 
-                        {msg.canvas &&
-                          msg.canvas !== "welcome" &&
-                          streamingMessageId !== msg.id && (
+                        {msg.canvas && streamingMessageId !== msg.id && (
                             <motion.div
                               initial={{ opacity: 0, y: 12 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={spring.soft}
-                              className="rounded-[20px] border border-border/60 bg-white overflow-hidden shadow-sm"
+                              className="rounded-[16px] border border-border bg-bg-elevated overflow-hidden shadow-[var(--shadow-sm)]"
                             >
                               <AICanvas
                                 canvas={msg.canvas}
@@ -181,7 +179,7 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                                   key={q}
                                   type="button"
                                   onClick={() => submitQuery(q)}
-                                  className="rounded-full border border-border/60 bg-white px-3.5 py-1.5 text-[12px] text-text-secondary hover:border-primary/25 hover:text-primary transition-colors"
+                                  className="rounded-full border border-border bg-bg-elevated px-3.5 py-1.5 text-[12px] text-text-secondary hover:border-primary/25 hover:text-primary transition-colors"
                                 >
                                   {q}
                                 </button>
@@ -206,7 +204,7 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
                         active
                         steps={thinkingSteps}
                         onComplete={onThinkingComplete}
-                        className="flex-1 border-primary/15 bg-white shadow-sm"
+                        className="flex-1 border-primary/15 bg-bg-elevated shadow-[var(--shadow-sm)]"
                       />
                     </motion.div>
                   )}
@@ -217,7 +215,7 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
 
           {/* Input — sticky bottom when in conversation */}
           {!isNewChat && (
-            <div className="shrink-0 border-t border-border/60 bg-white/90 backdrop-blur-xl px-6 py-4">
+            <div className="shrink-0 border-t border-border bg-bg-elevated/95 backdrop-blur-md px-6 py-4">
               <PremiumChatInput
                 onSubmit={submitQuery}
                 disabled={thinking}
@@ -227,14 +225,14 @@ export function AIWorkspacePage({ initialQuery }: AIWorkspacePageProps) {
           )}
 
           {context.actions && context.actions.length > 0 && hasMessages && (
-            <div className="shrink-0 border-t border-border/40 bg-[#fafbfc] px-6 py-2 flex flex-wrap gap-2">
+            <div className="shrink-0 border-t border-border/40 bg-bg-layer-1/95 px-6 py-2 flex flex-wrap gap-2">
               {context.actions.map((action) => (
                 <button
                   key={action.id}
                   type="button"
                   onClick={() => handleAction(action.id)}
                   className={cn(
-                    "rounded-full border border-border/60 bg-white px-3.5 py-1.5",
+                    "rounded-full border border-border bg-bg-elevated px-3.5 py-1.5",
                     "text-[12px] font-medium text-text-secondary",
                     "hover:border-primary/25 hover:text-primary transition-colors"
                   )}

@@ -25,7 +25,7 @@ export interface Integration {
   recommended?: boolean;
   icon: string;
   color: string;
-  /** Signals THE MACHINE monitors from this system */
+  /** Signals THEMACHINE monitors from this system */
   signals: string[];
   /** Actions available through this connection */
   actions: string[];

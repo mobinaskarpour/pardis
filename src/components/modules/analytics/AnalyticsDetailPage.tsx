@@ -270,7 +270,7 @@ export function AnalyticsDetailPage({ metricId }: AnalyticsDetailPageProps) {
                   />
                   <div>
                     <p className="text-[15px] font-semibold text-text-primary mb-2">
-                      بینش THE MACHINE
+                      بینش THEMACHINE
                     </p>
                     <p className="text-[14px] leading-relaxed text-text-secondary">
                       {metric.aiInsight}

@@ -80,7 +80,7 @@ export function Status({
       animate={{ opacity: 1, scale: 1 }}
       transition={spring.gentle}
       className={cn(
-        "inline-flex items-center gap-1.5 px-2 py-0.5 text-[13px] font-medium",
+        "inline-flex items-center gap-1.5 px-2 py-0.5 text-[12px] font-medium",
         radius.sm,
         config.bg,
         config.text,

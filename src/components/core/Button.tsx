@@ -15,18 +15,18 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 
 const variants: Record<ButtonVariant, string> = {
   primary:
-    "bg-primary text-white border-primary hover:border-primary-muted shadow-[var(--shadow-sm)] hover:shadow-[var(--shadow-md)]",
+    "bg-primary text-white border-transparent shadow-[var(--shadow-sm)] hover:bg-primary-muted hover:shadow-[var(--shadow-md)]",
   ghost:
-    "bg-transparent text-text-secondary border-border hover:text-text-primary",
+    "bg-transparent text-text-secondary border-transparent hover:bg-bg-subtle hover:text-text-primary",
   subtle:
-    "bg-bg-elevated text-text-primary border-border",
-  ai: "bg-bg-elevated text-primary border-border-hover",
+    "bg-bg-elevated text-text-primary border-border hover:border-border-strong hover:shadow-[var(--shadow-sm)]",
+  ai: "bg-primary-soft text-primary border-border-hover hover:bg-primary/10",
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-[13px] gap-1.5 min-h-[32px]",
-  md: "px-4 py-2 text-[15px] gap-2 min-h-[40px]",
-  lg: "px-5 py-2.5 text-[16px] gap-2 min-h-[44px]",
+  sm: "px-3 py-1.5 text-[12px] gap-1.5 min-h-[32px]",
+  md: "px-4 py-2 text-[13px] gap-2 min-h-[38px]",
+  lg: "px-5 py-2.5 text-[14px] gap-2 min-h-[44px]",
 };
 
 export function Button({
@@ -49,7 +49,7 @@ export function Button({
         radius.md,
         interactive.focus,
         interactive.disabled,
-        "transition-[border-color,box-shadow,transform,opacity] duration-[180ms]",
+        "transition-[background-color,border-color,box-shadow,color,transform] duration-[160ms]",
         variants[variant],
         sizes[size],
         className

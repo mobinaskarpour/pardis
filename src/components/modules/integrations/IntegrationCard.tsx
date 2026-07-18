@@ -118,7 +118,7 @@ function MetaSection({
 }) {
   return (
     <div className="min-w-0">
-      <p className="text-[10px] font-medium text-text-muted mb-1.5">{title}</p>
+      <p className="text-[11px] font-medium text-text-tertiary mb-1.5">{title}</p>
       <ul className="space-y-0.5">
         {items.slice(0, 3).map((item) => (
           <li
@@ -165,7 +165,7 @@ export function IntegrationCard({
           : { y: -4, transition: spring.gentle }
       }
       className={cn(
-        "group relative flex flex-col rounded-[20px] border border-border/80",
+        "group relative flex flex-col rounded-[20px] border border-border-strong",
         "bg-[color-mix(in_srgb,var(--bg-elevated)_78%,transparent)]",
         "backdrop-blur-xl shadow-[var(--shadow-sm)]",
         "transition-[box-shadow,border-color,opacity] duration-[180ms]",

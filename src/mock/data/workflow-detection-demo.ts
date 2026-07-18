@@ -143,7 +143,7 @@ export function buildDemoWorkflowDraft(pattern: DemoWorkflowPattern): Workflow {
     name: pattern.workflowName,
     source: "ai",
     enabled: true,
-    whyAICreated: `THE MACHINE این فرآیند را از ${toPersianDigits(pattern.repeatCount)} گفتگوی مشابه در ۱۰ روز گذشته شناسایی کرد.`,
+    whyAICreated: `THEMACHINE این فرآیند را از ${toPersianDigits(pattern.repeatCount)} گفتگوی مشابه در ۱۰ روز گذشته شناسایی کرد.`,
     conversationOrigin: {
       detectedAt: "امروز",
       repeatCount: pattern.repeatCount,
@@ -164,7 +164,7 @@ export function patternToSuggestion(
 ): WorkflowSuggestion {
   return {
     status: "pending",
-    reason: `THE MACHINE تشخیص داده است که این درخواست ${toPersianDigits(pattern.repeatCount)} بار در گفتگوهای گذشته تکرار شده و قابلیت خودکارسازی دارد.`,
+    reason: `THEMACHINE تشخیص داده است که این درخواست ${toPersianDigits(pattern.repeatCount)} بار در گفتگوهای گذشته تکرار شده و قابلیت خودکارسازی دارد.`,
     workflowId: pattern.workflowId,
     workflowName: pattern.workflowName,
     dashboardName: pattern.dashboardName,

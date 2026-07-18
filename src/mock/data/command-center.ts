@@ -121,7 +121,7 @@ export const timelineEvents = [
   {
     id: "4",
     time: "09:42",
-    title: "AI پیشنهاد Workflow جدید داد",
+    title: "هوش مصنوعی پیشنهاد ورک‌فلو جدید داد",
     detail: "اتوماسیون پیگیری MRI",
     type: "ai" as const,
   },

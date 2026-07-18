@@ -11,6 +11,7 @@ import {
   MoreHorizontal,
   Plus,
   Sparkles,
+  Sun,
 } from "lucide-react";
 import {
   primaryNavItems,
@@ -19,6 +20,7 @@ import {
 } from "@/config/navigation";
 import { user } from "@/lib/mock-data";
 import { useWorkflowStore } from "@/store/workflow-store";
+import { useThemeStore, resolveTheme } from "@/store/theme-store";
 import { spring } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
@@ -44,47 +46,58 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
   const pathname = usePathname();
   const workflows = useWorkflowStore((s) => s.workflows);
   const moreActive = isMoreNavActive(pathname);
-
+  const theme = useThemeStore((s) => s.theme);
+  const setTheme = useThemeStore((s) => s.setTheme);
+  const resolved = resolveTheme(theme);
   const identified = workflows.filter((w) => w.enabled).slice(0, 5);
+
+  const cycleTheme = () => {
+    if (theme === "light") setTheme("dark");
+    else if (theme === "dark") setTheme("system");
+    else setTheme("light");
+  };
 
   return (
     <aside
       className={cn(
-        "flex h-full w-[280px] shrink-0 flex-col",
-        "border-s border-border/70 bg-white",
-        "shadow-[-8px_0_32px_rgba(17,19,24,0.04)]"
+        "flex h-full w-[var(--sidebar-width)] shrink-0 flex-col",
+        "m-3 me-0 rounded-[var(--radius-xl)]",
+        "border border-border/80 bg-bg-elevated",
+        "shadow-[var(--shadow-sm)]"
       )}
       aria-label="ناوبری اصلی"
     >
-      {/* Brand */}
-      <div className="border-b border-border/50 px-5 py-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-text-muted">
-          THE MACHINE
-        </p>
-        <p className="mt-0.5 text-[12px] font-medium text-text-tertiary">
-          پردیس نور · AI OS
-        </p>
+      <div className="px-4 pt-4 pb-3">
+        <div className="flex items-center gap-2.5 px-1">
+          <span className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-primary text-[11px] font-bold tracking-wide text-white">
+            TM
+          </span>
+          <div className="min-w-0">
+            <p className="text-[13px] font-semibold tracking-tight text-text-primary">
+              THEMACHINE
+            </p>
+            <p className="text-[11px] text-text-muted">پردیس نور</p>
+          </div>
+        </div>
       </div>
 
-      {/* Profile */}
-      <div className="px-4 py-4">
+      <div className="px-3 pb-3">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-[14px] p-3",
-            "border border-border/60 bg-gradient-to-br from-primary/[0.05] to-transparent"
+            "flex items-center gap-2.5 rounded-[12px] px-2.5 py-2",
+            "border border-border/70 bg-bg-layer-1"
           )}
         >
           <div
             className={cn(
-              "flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
-              "bg-gradient-to-br from-primary to-primary-muted text-[15px] font-bold text-white",
-              "shadow-[0_4px_12px_rgba(45,90,123,0.25)]"
+              "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+              "bg-primary/10 text-[13px] font-semibold text-primary"
             )}
           >
             {user.initials}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-[14px] font-semibold text-text-primary">
+            <p className="truncate text-[13px] font-medium text-text-primary">
               {user.name}
             </p>
             <p className="truncate text-[11px] text-text-muted">{user.role}</p>
@@ -92,21 +105,26 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 pb-3 scrollbar-none">
-        <Link
-          href="/chat"
-          className={cn(
-            "mb-5 flex w-full items-center justify-center gap-2 rounded-[12px]",
-            "bg-primary px-4 py-2.5 text-[13px] font-semibold text-white",
-            "shadow-[0_4px_14px_rgba(45,90,123,0.28)] transition-all",
-            "hover:bg-primary-muted hover:shadow-[0_6px_20px_rgba(45,90,123,0.32)]"
-          )}
-        >
-          <Plus size={16} strokeWidth={2} />
-          گفتگوی جدید
-        </Link>
+      <div className="flex-1 overflow-y-auto px-3 pb-2 scrollbar-none">
+        <motion.div whileHover={{ y: -1 }} whileTap={{ scale: 0.985 }} transition={spring.gentle}>
+          <Link
+            href="/chat"
+            className={cn(
+              "mb-4 flex w-full items-center justify-center gap-2 rounded-[11px]",
+              "bg-primary px-3.5 py-2.5 text-[13px] font-semibold text-white",
+              "shadow-[var(--shadow-sm)] transition-colors",
+              "hover:bg-primary-muted"
+            )}
+          >
+            <Plus size={15} strokeWidth={2} />
+            گفتگوی جدید
+          </Link>
+        </motion.div>
 
-        <nav className="space-y-1">
+        <p className="mb-1.5 px-2.5 text-[10px] font-semibold tracking-[0.08em] text-text-muted">
+          اصلی
+        </p>
+        <nav className="space-y-0.5">
           {primaryNavItems.map((item) => {
             const active = isPrimaryNavActive(pathname, item.href);
             const Icon = navIcons[item.id] ?? BarChart3;
@@ -119,12 +137,11 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
                 className="group relative block"
               >
                 <motion.div
-                  whileHover={{ x: -2, transition: spring.gentle }}
+                  whileHover={{ x: -1, transition: spring.gentle }}
                   whileTap={{ scale: 0.985, transition: spring.snappy }}
                   className={cn(
-                    "relative flex items-center gap-3 rounded-[12px] px-3 py-2.5",
+                    "relative flex items-center gap-2.5 rounded-[11px] px-2.5 py-2",
                     "text-[13px] font-medium transition-colors duration-150",
-                    item.featured && !active && "ring-1 ring-accent-indigo/12",
                     active
                       ? "text-primary"
                       : "text-text-secondary hover:text-text-primary"
@@ -132,43 +149,58 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
                 >
                   {active && (
                     <motion.div
-                      layoutId="sidebar-nav-active"
-                      className="absolute inset-0 rounded-[12px] bg-primary/[0.08]"
+                      layoutId={moreActive ? undefined : "sidebar-nav-active"}
+                      className="absolute inset-0 rounded-[11px] bg-primary/[0.09]"
+                      transition={spring.soft}
+                    />
+                  )}
+                  {active && (
+                    <motion.span
+                      layoutId={moreActive ? undefined : "sidebar-nav-rail"}
+                      className="absolute end-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-primary"
                       transition={spring.soft}
                     />
                   )}
 
                   <span
                     className={cn(
-                      "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px]",
+                      "relative z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-[8px]",
                       active
                         ? "bg-primary/12 text-primary"
-                        : "bg-bg-subtle/80 text-text-tertiary group-hover:bg-bg-subtle"
+                        : "text-text-tertiary group-hover:bg-bg-subtle group-hover:text-text-secondary"
                     )}
                   >
-                    <Icon size={16} strokeWidth={1.75} />
+                    <Icon size={15} strokeWidth={1.75} />
                   </span>
                   <span className="relative z-10">{item.label}</span>
+                  {item.featured && !active && (
+                    <span
+                      className="relative z-10 ms-auto rounded-[4px] px-1.5 py-0.5 text-[9px] font-semibold text-accent-indigo/80 bg-accent-indigo/8"
+                      aria-hidden
+                    >
+                      AI
+                    </span>
+                  )}
                 </motion.div>
               </Link>
             );
           })}
         </nav>
 
-        <div className="mt-6">
-          <p className="mb-2.5 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted">
-            گردش‌کارهای شناسایی‌شده
+        <div className="mt-5">
+          <p className="mb-1.5 px-2.5 text-[10px] font-semibold tracking-[0.08em] text-text-muted">
+            گردش‌کارها
           </p>
           <ul className="space-y-0.5">
             {identified.map((wf, i) => (
               <li key={wf.id}>
                 <Link
                   href={`/workflows/${wf.id}`}
-                  className="group flex items-start gap-2.5 rounded-[10px] px-3 py-2 transition-colors hover:bg-bg-subtle/60"
+                  className="group flex items-start gap-2 rounded-[10px] px-2.5 py-1.5 transition-colors hover:bg-bg-subtle/70"
                 >
                   <Sparkles
-                    size={13}
-                    className="mt-0.5 shrink-0 text-accent-indigo/80"
+                    size={12}
+                    className="mt-0.5 shrink-0 text-accent-indigo/70"
                     strokeWidth={1.75}
                   />
                   <span className="min-w-0 flex-1">
@@ -176,7 +208,7 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
                       {wf.name}
                     </span>
                     {wf.source === "ai" && i === 0 && (
-                      <span className="mt-1 inline-block rounded-[5px] bg-accent-indigo/10 px-1.5 py-px text-[9px] font-bold text-accent-indigo">
+                      <span className="mt-1 inline-block rounded-[4px] bg-accent-indigo/10 px-1.5 py-px text-[9px] font-semibold text-accent-indigo">
                         جدید
                       </span>
                     )}
@@ -188,7 +220,7 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
         </div>
 
         <div className="mt-5">
-          <p className="mb-2.5 px-3 text-[10px] font-bold uppercase tracking-[0.1em] text-text-muted">
+          <p className="mb-1.5 px-2.5 text-[10px] font-semibold tracking-[0.08em] text-text-muted">
             گفتگوها
           </p>
           <ul className="space-y-0.5">
@@ -196,7 +228,7 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
               <li key={c.id}>
                 <Link
                   href={c.href}
-                  className="block truncate rounded-[10px] px-3 py-2 text-[12px] text-text-tertiary transition-colors hover:bg-bg-subtle/60 hover:text-text-secondary"
+                  className="block truncate rounded-[10px] px-2.5 py-1.5 text-[12px] text-text-tertiary transition-colors hover:bg-bg-subtle/70 hover:text-text-secondary"
                 >
                   {c.title}
                 </Link>
@@ -206,26 +238,38 @@ export function AppSidebar({ onOpenMore }: AppSidebarProps) {
         </div>
       </div>
 
-      <div className="border-t border-border/50 p-3 space-y-0.5">
+      <div className="border-t border-border/60 p-2.5 space-y-0.5">
         <button
           type="button"
           onClick={onOpenMore}
           className={cn(
-            "flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-[13px] font-medium transition-colors",
+            "flex w-full items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13px] font-medium transition-colors",
             moreActive
-              ? "bg-bg-subtle text-text-primary"
-              : "text-text-tertiary hover:bg-bg-subtle/60 hover:text-text-secondary"
+              ? "bg-primary/[0.08] text-primary ring-1 ring-primary/15"
+              : "text-text-tertiary hover:bg-bg-subtle/70 hover:text-text-secondary"
           )}
         >
-          <MoreHorizontal size={17} strokeWidth={1.75} />
-          ⋯ بیشتر
+          <MoreHorizontal size={16} strokeWidth={1.75} />
+          بیشتر
         </button>
         <button
           type="button"
-          className="flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-[13px] text-text-muted transition-colors hover:bg-bg-subtle/60"
+          onClick={cycleTheme}
+          aria-label="تغییر ظاهر"
+          className="flex w-full items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[13px] text-text-muted transition-colors hover:bg-bg-subtle/70 hover:text-text-secondary"
         >
-          <Moon size={17} strokeWidth={1.75} />
-          ظاهر
+          {theme === "system" ? (
+            <Sun size={16} strokeWidth={1.75} className="opacity-70" />
+          ) : resolved === "dark" ? (
+            <Moon size={16} strokeWidth={1.75} />
+          ) : (
+            <Sun size={16} strokeWidth={1.75} />
+          )}
+          {theme === "system"
+            ? "سیستم"
+            : resolved === "dark"
+              ? "تیره"
+              : "روشن"}
         </button>
       </div>
     </aside>

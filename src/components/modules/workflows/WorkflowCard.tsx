@@ -84,7 +84,7 @@ export function WorkflowCard({ wf, index }: WorkflowCardProps) {
         <Card
           variant="workflow"
           hover
-          className="cursor-pointer overflow-hidden transition-shadow duration-[200ms] group-hover:shadow-[0_12px_40px_rgba(17,19,24,0.1)]"
+          className="cursor-pointer overflow-hidden transition-shadow duration-[160ms] group-hover:shadow-[var(--shadow-md)]"
         >
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0 flex-1">

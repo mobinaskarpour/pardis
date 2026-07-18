@@ -20,7 +20,7 @@ export function ProcessAIInsight({
   const headline =
     source === "ai" && whyCreated
       ? whyCreated
-      : "این فرآیند به‌صورت دستی تعریف شده — THE MACHINE می‌تواند بهینه‌سازی پیشنهاد دهد.";
+      : "این فرآیند به‌صورت دستی تعریف شده — THEMACHINE می‌تواند بهینه‌سازی پیشنهاد دهد.";
 
   return (
     <motion.div

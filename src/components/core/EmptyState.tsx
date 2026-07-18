@@ -15,10 +15,9 @@ interface EmptyStateProps {
   className?: string;
 }
 
-/** Illustration → AI Suggestion → Button — staggered entrance */
 export function EmptyState({
   title = "هنوز داده‌ای نیست",
-  description = "AI پیشنهاد می‌کند از یکی از گزینه‌های زیر شروع کنید.",
+  description = "از یکی از گزینه‌های زیر شروع کنید یا با THEMACHINE گفتگو کنید.",
   suggestions = [],
   actions = [],
   onSuggestionClick,
@@ -27,27 +26,31 @@ export function EmptyState({
   return (
     <Stagger
       className={cn(
-        "flex flex-col items-center justify-center text-center py-16 px-6",
+        "flex flex-col items-center justify-center text-center py-14 px-6",
         radius.lg,
-        "border border-dashed border-border bg-bg-elevated/40",
+        "border border-border-strong bg-bg-elevated/90 shadow-[var(--shadow-sm)]",
         className
       )}
-      staggerDelay={0.1}
+      staggerDelay={0.08}
     >
       <StaggerItem>
-        <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-bg-elevated mb-5 mx-auto">
-          <Sparkles size={22} strokeWidth={1.75} className="text-primary/70" />
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[14px] border border-border bg-bg-elevated shadow-[var(--shadow-sm)]">
+          <Sparkles size={18} strokeWidth={1.75} className="text-primary/80" />
         </div>
       </StaggerItem>
 
       <StaggerItem>
-        <h3 className="text-[18px] font-semibold text-text-primary">{title}</h3>
-        <p className="mt-2 max-w-sm text-[15px] text-text-secondary mx-auto">{description}</p>
+        <h3 className="text-[16px] font-semibold tracking-tight text-text-primary">
+          {title}
+        </h3>
+        <p className="mt-1.5 max-w-sm mx-auto text-[13px] text-text-secondary leading-relaxed">
+          {description}
+        </p>
       </StaggerItem>
 
       {suggestions.length > 0 && (
         <StaggerItem>
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <div className="mt-5 flex flex-wrap justify-center gap-1.5">
             {suggestions.map((s) => (
               <button
                 key={s}
@@ -55,7 +58,8 @@ export function EmptyState({
                 onClick={() => onSuggestionClick?.(s)}
                 className={cn(
                   radius.md,
-                  "border border-border bg-bg-elevated px-3 py-1.5 text-[13px] text-text-secondary",
+                  "border border-border bg-bg-elevated px-3 py-1.5 text-[12px] text-text-secondary",
+                  "shadow-[var(--shadow-sm)]",
                   "hover:border-border-hover hover:text-text-primary transition-colors duration-[120ms] cursor-pointer"
                 )}
               >

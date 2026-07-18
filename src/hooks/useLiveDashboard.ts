@@ -40,7 +40,7 @@ export function useLiveDashboard(workflows: Workflow[]) {
       }
     }
     if (items.length === 0) {
-      items.push("✦ THE MACHINE در حال یادگیری از اجرای گردش‌کارهاست…");
+      items.push("✦ THEMACHINE در حال یادگیری از اجرای گردش‌کارهاست…");
     }
     return items;
   }, [workflows]);

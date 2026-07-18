@@ -57,7 +57,7 @@ export function WorkflowsPage() {
         <ModuleHero
           title={pageLabels.workflows}
           subtitle="مرکز تصویربرداری پردیس نور"
-          aiSummary="THE MACHINE از گفتگو یاد می‌گیرد و فرآیندهای تکراری را به گردش‌کار تبدیل می‌کند. تحلیل و KPIs در مرکز فرمان — جدا از تعریف فرآیند."
+          aiSummary="THEMACHINE از گفتگو یاد می‌گیرد و فرآیندهای تکراری را به گردش‌کار تبدیل می‌کند. تحلیل و KPIs در مرکز فرمان — جدا از تعریف فرآیند."
         />
 
         <motion.div
@@ -68,7 +68,7 @@ export function WorkflowsPage() {
         >
           <Card variant="default" hover={false} padding="md">
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">
-              چرخه یادگیری THE MACHINE
+              چرخه یادگیری THEMACHINE
             </p>
             <div className="flex min-w-max items-center gap-1 overflow-x-auto scrollbar-none">
               {lifecycle.map((step, i) => (
@@ -192,11 +192,11 @@ export function WorkflowsPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="text-[16px] font-semibold text-text-primary">
-                  ساخت Workflow توسط AI — ویژگی امضای THE MACHINE
+                  ساخت Workflow توسط AI — ویژگی امضای THEMACHINE
                 </h2>
                 <p className="mt-1.5 text-[13px] leading-relaxed text-text-secondary">
                   وقتی مدیر مرکز بارها بپرسد «کدام گزارش‌ها آماده‌اند؟» یا «کدام
-                  پزشک تأخیر دارد؟»، THE MACHINE الگو را تشخیص می‌دهد و پیشنهاد
+                  پزشک تأخیر دارد؟»، THEMACHINE الگو را تشخیص می‌دهد و پیشنهاد
                   می‌دهد: «این فرآیند ۳۷ بار در ۱۰ روز تکرار شده — خودکارش
                   کنم؟»
                 </p>

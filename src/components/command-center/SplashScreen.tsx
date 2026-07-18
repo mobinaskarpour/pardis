@@ -47,7 +47,7 @@ export function SplashScreen({ onComplete }: SplashScreenProps) {
           className="text-center"
         >
           <h1 className="text-[13px] font-medium tracking-[0.2em] text-text-tertiary uppercase">
-            THE MACHINE
+            THEMACHINE
           </h1>
           <p className="mt-2 text-[15px] text-text-secondary">
             مرکز تصویربرداری پردیس نور

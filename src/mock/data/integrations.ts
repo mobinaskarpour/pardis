@@ -186,7 +186,7 @@ export const integrationsMock: Integration[] = [
   // ── AI ──
   {
     id: "openai",
-    name: "THE MACHINE AI",
+    name: "THEMACHINE AI",
     description: "تحلیل گزارش و دستیار پزشکی",
     category: "ai",
     status: "connected",

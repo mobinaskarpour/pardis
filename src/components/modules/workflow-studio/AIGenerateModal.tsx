@@ -40,7 +40,7 @@ export function AIGenerateModal({
                 ساخت Workflow با AI
               </h2>
               <p className="text-[12px] text-text-muted">
-                THE MACHINE گردش‌کار را می‌سازد
+                THEMACHINE گردش‌کار را می‌سازد
               </p>
             </div>
           </div>

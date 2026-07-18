@@ -70,7 +70,7 @@ export const defaultCommandSuggestions: CommandSuggestion[] = [
     label: "صف PACS",
     query: "وضعیت صف PACS و دستگاه‌ها",
     category: "imaging",
-    specialty: "PACS",
+    specialty: "پکس",
   },
   {
     id: "compare-mri",
@@ -93,7 +93,7 @@ export const defaultCommandSuggestions: CommandSuggestion[] = [
     label: "تحلیل ضایعه هیپوکامپ",
     query: "تحلیل AI ضایعه هیپوکامپ پرونده ۲۱۴",
     category: "ai",
-    specialty: "Deep Learning",
+    specialty: "یادگیری عمیق",
     urgent: true,
   },
   {
@@ -101,21 +101,21 @@ export const defaultCommandSuggestions: CommandSuggestion[] = [
     label: "تولید گزارش خودکار",
     query: "ساخت گزارش رادیولوژی خودکار برای MRI مغز",
     category: "ai",
-    specialty: "NLP",
+    specialty: "پردازش زبان",
   },
   {
     id: "ai-anomaly",
     label: "کشف آنومالی",
     query: "کشف آنومالی در تصاویر امروز",
     category: "ai",
-    specialty: "Computer Vision",
+    specialty: "بینایی ماشین",
   },
   {
     id: "ai-cdss",
     label: "تصمیم‌یار بالینی",
     query: "پیشنهاد CDSS برای پرونده ۲۱۴",
     category: "ai",
-    specialty: "CDSS",
+    specialty: "تصمیم‌یار",
   },
   {
     id: "ai-birads",
@@ -213,10 +213,10 @@ export const specializedCommandResults: Record<
   "ai-lesion": {
     preview: "ضایعه ۸mm در هیپوکامپ راست — confidence ۸۷٪",
     detail:
-      "مدل Deep Learning سه لایه T2/FLAIR/DWI را تحلیل کرد. ضایعه بدون enhancement. پیشنهاد: مقایسه با MRI ۱۴۰۳/۱۱/۱۵.",
+      "مدل یادگیری عمیق سه لایه T2/FLAIR/DWI را تحلیل کرد. ضایعه بدون enhancement. پیشنهاد: مقایسه با MRI ۱۴۰۳/۱۱/۱۵.",
   },
   "ai-report": {
-    preview: "گزارش رادیولوژی NLP آماده است",
+    preview: "گزارش رادیولوژی هوشمند آماده است",
     detail:
       "شامل: Technique، Findings، Impression. یافته اصلی: T2 hyperintensity هیپوکامپ راست ۸mm. آماده ویرایش توسط دکتر رضایی.",
   },

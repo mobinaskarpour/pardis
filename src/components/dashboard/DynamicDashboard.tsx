@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, Search, Sparkles, Zap } from "lucide-react";
+import { Menu, Search, Sparkles, MessageSquare } from "lucide-react";
 import { useWorkflowStore } from "@/store/workflow-store";
 import { useLiveDashboard } from "@/hooks/useLiveDashboard";
 import { buildHeroDashboardCards, parseMetricId } from "@/lib/analytics-metrics";
@@ -54,39 +54,35 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
   }, [workflows]);
 
   return (
-    <div className="flex h-full flex-col bg-bg-layer-2">
-      <header className="relative shrink-0 border-b border-border bg-bg-elevated/80 px-6 py-5 backdrop-blur-xl">
-        <div
-          className="pointer-events-none absolute -top-16 start-1/4 h-40 w-40 rounded-full bg-primary/5 blur-3xl"
-          aria-hidden
-        />
-
+    <div className="flex h-full flex-col bg-bg-layer-1">
+      <header className="relative shrink-0 border-b border-border/70 px-6 py-5 md:px-8">
         <div className="relative flex items-center gap-4">
           {onOpenMenu && (
             <button
               type="button"
               onClick={onOpenMenu}
               className="md:hidden flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-text-secondary hover:bg-bg-subtle transition-colors"
+              aria-label="باز کردن منو"
             >
-              <Menu size={18} />
+              <Menu size={18} strokeWidth={1.75} />
             </button>
           )}
 
-          <div className="shrink-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-[22px] font-bold tracking-tight text-text-primary">
+          <div className="shrink-0 min-w-0">
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-[20px] font-semibold tracking-tight text-text-primary">
                 مرکز فرمان
               </h1>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success">
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-50" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
                 </span>
-                Live
+                زنده
               </span>
             </div>
-            <p className="text-[12px] text-text-muted mt-0.5">
-              پردیس نور · داشبورد خودکار
+            <p className="mt-0.5 text-[12px] text-text-tertiary">
+              پردیس نور · پلتفرم هوشمند تصویربرداری
             </p>
           </div>
 
@@ -94,31 +90,35 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
             type="button"
             onClick={onOpenSearch}
             className={cn(
-              "hidden sm:flex flex-1 max-w-xl mx-auto items-center gap-2.5 rounded-[14px]",
-              "border border-border bg-bg-layer-1 px-4 py-3 text-[13px] text-text-muted",
-              "transition-all hover:bg-bg-elevated hover:border-border-hover hover:shadow-[var(--shadow-sm)]"
+              "hidden sm:flex flex-1 max-w-lg mx-auto items-center gap-2.5 rounded-[12px]",
+              "border border-border bg-bg-elevated px-4 py-2.5 text-[13px] text-text-muted",
+              "transition-all hover:border-border-hover hover:shadow-[var(--shadow-sm)]"
             )}
           >
-            <Search size={16} strokeWidth={1.75} className="shrink-0 opacity-50" />
-            <span className="truncate">
-              برای پرسیدن از هوش مصنوعی روی ویجت کلیک کنید
+            <Search size={15} strokeWidth={1.75} className="shrink-0 opacity-50" />
+            <span className="truncate flex-1 text-right">
+              جستجو یا دستور به THEMACHINE…
             </span>
+            <kbd className="hidden lg:inline-flex rounded-[5px] border border-border px-1.5 py-0.5 text-[10px] text-text-muted">
+              ⌘K
+            </kbd>
           </button>
 
           <Link
             href="/chat"
+            aria-label="گفتگو با ماشین"
             className={cn(
-              "shrink-0 flex h-10 w-10 items-center justify-center rounded-[12px]",
-              "bg-primary text-white shadow-[0_4px_12px_rgba(45,90,123,0.25)]",
+              "shrink-0 flex h-9 w-9 items-center justify-center rounded-[10px]",
+              "bg-primary text-white shadow-[var(--shadow-sm)]",
               "hover:bg-primary-muted transition-colors"
             )}
           >
-            <Sparkles size={17} strokeWidth={1.75} />
+            <Sparkles size={16} strokeWidth={1.75} />
           </Link>
         </div>
 
         <div className="relative mt-5 flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex rounded-[12px] bg-bg-layer-3/80 p-1">
+          <div className="relative inline-flex rounded-[11px] bg-bg-subtle p-1">
             {(
               [
                 { id: "summary" as const, label: "خلاصه روزانه" },
@@ -130,25 +130,32 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
                 type="button"
                 onClick={() => setTab(t.id)}
                 className={cn(
-                  "rounded-[10px] px-5 py-2 text-[13px] font-medium transition-all duration-200",
+                  "relative rounded-[9px] px-4 py-1.5 text-[13px] font-medium transition-colors",
                   tab === t.id
-                    ? "bg-bg-elevated text-text-primary shadow-[var(--shadow-sm)]"
+                    ? "text-text-primary"
                     : "text-text-tertiary hover:text-text-secondary"
                 )}
               >
-                {t.label}
+                {tab === t.id && (
+                  <motion.span
+                    layoutId="dashboard-tab"
+                    className="absolute inset-0 rounded-[9px] bg-bg-elevated shadow-[var(--shadow-sm)]"
+                    transition={spring.soft}
+                  />
+                )}
+                <span className="relative z-10">{t.label}</span>
               </button>
             ))}
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-[12px] text-text-muted">
+          <div className="flex flex-wrap items-center gap-3 text-[12px] text-text-muted">
             <span>
               <span className="font-semibold text-text-primary tabular-nums">
                 {toPersianDigits(pulseStats.active)}
               </span>{" "}
               فرآیند فعال
             </span>
-            <span className="text-border-strong">·</span>
+            <span className="h-1 w-1 rounded-full bg-border-strong" />
             <span>
               <span className="font-semibold text-text-primary tabular-nums">
                 {toPersianDigits(pulseStats.runsToday)}
@@ -157,8 +164,8 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
             </span>
             {pulseStats.alerts > 0 && (
               <>
-                <span className="text-border-strong">·</span>
-                <span className="text-warning font-medium">
+                <span className="h-1 w-1 rounded-full bg-border-strong" />
+                <span className="font-medium text-warning">
                   {toPersianDigits(pulseStats.alerts)} هشدار
                 </span>
               </>
@@ -167,37 +174,36 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto px-6 py-6 md:px-8">
-        <div className="mx-auto max-w-[1440px]">
+      <div className="flex-1 overflow-y-auto px-6 py-6 md:px-8 scrollbar-none">
+        <div className="mx-auto max-w-[1400px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentInsight}
-              initial={{ opacity: 0, y: -6 }}
+              initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.35 }}
+              exit={{ opacity: 0, y: 2 }}
+              transition={spring.gentle}
               className={cn(
-                "mb-6 flex items-start gap-3 rounded-[16px] border border-primary/15 p-5",
-                "bg-gradient-to-l from-primary/[0.08] via-bg-elevated to-bg-elevated",
-                "shadow-[var(--shadow-sm)]"
+                "mb-6 flex items-start gap-3 rounded-[14px] border border-border p-4",
+                "bg-bg-elevated shadow-[var(--shadow-sm)]"
               )}
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[12px] bg-primary/10">
-                <Sparkles size={16} className="text-primary" strokeWidth={1.75} />
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] bg-primary/10">
+                <Sparkles size={15} className="text-primary" strokeWidth={1.75} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-primary mb-1">
-                  THE MACHINE · Insight
+                <p className="text-[10px] font-semibold tracking-[0.08em] text-text-muted mb-1">
+                  بینش هوشمند
                 </p>
-                <p className="text-[14px] leading-relaxed text-text-secondary">
+                <p className="text-[13px] leading-relaxed text-text-secondary">
                   {currentInsight.replace(/^[✦⚠]\s*/, "")}
                 </p>
               </div>
               <Link
                 href="/chat"
-                className="hidden sm:inline-flex shrink-0 items-center gap-1 rounded-[10px] border border-border bg-bg-elevated px-3 py-1.5 text-[11px] font-medium text-text-secondary hover:border-primary/20 hover:text-primary transition-colors"
+                className="hidden sm:inline-flex shrink-0 items-center gap-1.5 rounded-[9px] border border-border bg-bg-layer-1 px-3 py-1.5 text-[11px] font-medium text-text-secondary hover:border-primary/20 hover:text-primary transition-colors"
               >
-                <Zap size={12} />
+                <MessageSquare size={12} strokeWidth={1.75} />
                 پرسیدن
               </Link>
             </motion.div>
@@ -208,7 +214,7 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={spring.soft}
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4"
             >
               {heroWidgets.map((widget, i) => (
                 <DynamicWidgetCard
@@ -225,7 +231,7 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={spring.soft}
-              className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3"
             >
               {allEnabledWidgets.map((widget, i) => (
                 <DynamicWidgetCard
@@ -237,9 +243,9 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
               ))}
               <Link
                 href="/workflows"
-                className="group flex h-[248px] flex-col items-center justify-center gap-2 rounded-[18px] border-2 border-dashed border-border bg-bg-elevated/50 text-[13px] font-medium text-text-muted hover:border-primary/25 hover:bg-bg-elevated hover:text-primary transition-all"
+                className="group flex h-[220px] flex-col items-center justify-center gap-2 rounded-[16px] border border-dashed border-border bg-bg-elevated/40 text-[13px] font-medium text-text-muted hover:border-primary/25 hover:bg-bg-elevated hover:text-primary transition-all"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-bg-subtle text-text-tertiary group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-bg-subtle text-text-tertiary group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                   +
                 </span>
                 مشاهده همه گردش‌کارها
@@ -248,13 +254,13 @@ export function DynamicDashboard({ onOpenMenu, onOpenSearch }: DynamicDashboardP
           )}
 
           {heroWidgets.length === 0 && (
-            <div className="rounded-[18px] border border-dashed border-border bg-bg-elevated/60 p-16 text-center">
+            <div className="rounded-[16px] border border-dashed border-border bg-bg-elevated/50 p-14 text-center">
               <p className="text-[14px] text-text-secondary">
-                هنوز گردش‌کاری فعال نیست. از گفتگو با THE MACHINE شروع کنید.
+                هنوز گردش‌کاری فعال نیست. از گفتگو با THEMACHINE شروع کنید.
               </p>
               <Link
                 href="/chat"
-                className="mt-4 inline-flex items-center gap-2 rounded-[12px] bg-primary px-5 py-2.5 text-[13px] font-semibold text-white shadow-[var(--shadow-sm)]"
+                className="mt-4 inline-flex items-center gap-2 rounded-[11px] bg-primary px-5 py-2.5 text-[13px] font-semibold text-white shadow-[var(--shadow-sm)]"
               >
                 گفتگوی جدید
               </Link>

@@ -27,7 +27,7 @@ function specializedResponse(
     category: base.category ?? "sessions",
     reasoning: base.reasoning ?? ["تحلیل تخصصی AI", "پایگاه داده پزشکی"],
     citations: base.citations ?? [
-      { id: "cs1", source: "ai", label: "THE MACHINE AI Engine" },
+      { id: "cs1", source: "ai", label: "THEMACHINE AI Engine" },
     ],
     suggestedQuestions: base.suggestedQuestions ?? [
       "تحلیل عمیق‌تر",
@@ -333,7 +333,7 @@ function processAIQueryInternal(input: string): AIResponse {
 
   return {
     content:
-      "درخواست شما را دریافت کردم. می‌توانید پرونده بیمار، درآمد، MRIها یا Workflow را بررسی کنید.",
+      "درخواست شما را دریافت کردم. می‌توانید پرونده بیمار، درآمد، MRIها یا ورک‌فلو را بررسی کنید.",
     canvas: "welcome",
     conversationTitle: query.slice(0, 30),
     category: "sessions",

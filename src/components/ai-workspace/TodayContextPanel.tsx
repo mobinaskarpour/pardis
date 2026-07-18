@@ -22,7 +22,7 @@ import { cn } from "@/lib/utils";
 
 export function TodayContextPanel() {
   return (
-    <aside className="hidden xl:flex w-[280px] shrink-0 flex-col border-s border-border/60 bg-[#fafbfc] h-full overflow-y-auto scrollbar-none">
+    <aside className="hidden xl:flex w-[280px] shrink-0 flex-col border-s border-border/60 bg-bg-layer-1 h-full overflow-y-auto scrollbar-none">
       <div className="p-4 border-b border-border/50">
         <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-text-muted">
           Today&apos;s Context

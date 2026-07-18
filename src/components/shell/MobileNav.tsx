@@ -56,7 +56,7 @@ export function MobileNav({ open, onClose, onOpenMore }: MobileNavProps) {
             <header className="flex items-center justify-between border-b border-border/80 px-5 py-4">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-text-muted">
-                  THE MACHINE
+                  THEMACHINE
                 </p>
                 <p className="text-[15px] font-semibold text-text-primary">
                   ناوبری

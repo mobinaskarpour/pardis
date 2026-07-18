@@ -88,7 +88,8 @@ export function useAIWorkspace(initialQuery?: string) {
       const detectionMsg: WorkspaceMessage = {
         id: generateId(),
         role: "assistant",
-        content: "",
+        content:
+          "الگوی تکراری تشخیص داده شد. می‌توانید این فرآیند را به ورک‌فلو تبدیل کنید.",
         workflowSuggestion: patternToSuggestion(pattern, draft),
       };
 

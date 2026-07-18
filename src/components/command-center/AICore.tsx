@@ -69,7 +69,7 @@ export function AICore({ onClick, className }: AICoreProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2, ...spring.soft }}
       >
-        The Machine
+        THEMACHINE
       </motion.span>
     </motion.button>
   );

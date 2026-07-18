@@ -245,7 +245,7 @@ export function WorkflowDetailPage({ id }: WorkflowDetailPageProps) {
             <Card
               variant="insight"
               hero="خلاصه AI"
-              subtitle="THE MACHINE این فرآیند را چگونه می‌بیند"
+              subtitle="THEMACHINE این فرآیند را چگونه می‌بیند"
               hover={false}
               padding="lg"
             >

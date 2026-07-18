@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { spring, interactive, radius, cardHover, cardTap } from "@/lib/motion";
+import { interactive, radius, cardHover, cardTap } from "@/lib/motion";
 import { useReducedMotion } from "@/components/motion";
 
 export type CardVariant =
@@ -33,23 +33,23 @@ interface CardProps {
 }
 
 const variantStyles: Record<CardVariant, string> = {
-  default: "border-border bg-bg-elevated",
-  ai: "border-border-hover bg-bg-elevated/80 backdrop-blur-sm",
-  insight: "border-accent-indigo/20 bg-accent-indigo/5",
-  patient: "border-border bg-bg-elevated",
-  doctor: "border-border bg-bg-elevated",
-  report: "border-border bg-bg-elevated",
-  alert: "border-warning/25 bg-warning/5",
-  medical: "border-accent-cyan/20 bg-bg-elevated",
-  finance: "border-primary/15 bg-bg-elevated",
-  workflow: "border-accent-indigo/15 bg-bg-elevated",
-  status: "border-border bg-bg-subtle/50",
-  timeline: "border-border bg-bg-elevated/60",
-  prediction: "border-primary/20 bg-primary/5",
+  default: "border-border bg-bg-elevated shadow-[var(--shadow-sm)]",
+  ai: "border-primary/15 bg-bg-elevated shadow-[var(--shadow-sm)] ring-1 ring-primary/5",
+  insight: "border-accent-indigo/15 bg-accent-indigo/[0.04] shadow-[var(--shadow-sm)]",
+  patient: "border-border bg-bg-elevated shadow-[var(--shadow-sm)]",
+  doctor: "border-border bg-bg-elevated shadow-[var(--shadow-sm)]",
+  report: "border-border bg-bg-elevated shadow-[var(--shadow-sm)]",
+  alert: "border-warning/20 bg-warning/[0.04] shadow-[var(--shadow-sm)]",
+  medical: "border-accent-cyan/20 bg-bg-elevated shadow-[var(--shadow-sm)]",
+  finance: "border-primary/12 bg-bg-elevated shadow-[var(--shadow-sm)]",
+  workflow: "border-accent-indigo/12 bg-bg-elevated shadow-[var(--shadow-sm)]",
+  status: "border-border bg-bg-subtle/60 shadow-none",
+  timeline: "border-border bg-bg-elevated/80 shadow-none",
+  prediction: "border-primary/15 bg-primary/[0.03] shadow-[var(--shadow-sm)]",
 };
 
 const paddingMap = {
-  sm: "p-3",
+  sm: "p-3.5",
   md: "p-5",
   lg: "p-6",
 };
@@ -70,27 +70,31 @@ export function Card({
   return (
     <motion.article
       whileHover={hover && !reduced ? cardHover : undefined}
-      whileTap={!reduced ? cardTap : undefined}
+      whileTap={onClick && !reduced ? cardTap : undefined}
       onClick={onClick}
       className={cn(
-        "border transition-all duration-[180ms]",
+        "border transition-[border-color,box-shadow,transform] duration-[160ms]",
         radius.lg,
         variantStyles[variant],
-        hover && interactive.hover,
+        hover && "hover:border-border-hover hover:shadow-[var(--shadow-md)]",
+        onClick && "cursor-pointer",
+        interactive.focus,
         paddingMap[padding],
         className
       )}
     >
       {(hero || subtitle || action) && (
-        <header className="mb-4 flex items-start justify-between gap-3">
+        <header className="mb-3.5 flex items-start justify-between gap-3">
           <div className="min-w-0">
             {hero && (
-              <div className="text-[15px] font-semibold text-text-primary leading-snug">
+              <div className="text-[14px] font-semibold text-text-primary leading-snug tracking-tight">
                 {hero}
               </div>
             )}
             {subtitle && (
-              <p className="mt-1 text-[13px] text-text-tertiary">{subtitle}</p>
+              <p className="mt-1 text-[12px] text-text-tertiary leading-relaxed">
+                {subtitle}
+              </p>
             )}
           </div>
           {action && <div className="shrink-0">{action}</div>}

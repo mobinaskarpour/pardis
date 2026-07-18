@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowLeft } from "lucide-react";
 import { moreNavItems } from "@/config/navigation";
-import { spring, drawerSlide, timing } from "@/lib/motion";
+import { spring, timing } from "@/lib/motion";
 import { useReducedMotion } from "@/components/motion";
 import { cn } from "@/lib/utils";
 
@@ -14,49 +14,74 @@ interface MoreDrawerProps {
   onClose: () => void;
 }
 
+const exitEase = [0.32, 0.72, 0, 1] as const;
+
 export function MoreDrawer({ open, onClose }: MoreDrawerProps) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
-  const slide = drawerSlide.right;
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
+    <>
+      <AnimatePresence>
+        {open && (
           <motion.div
+            key="more-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={
-              reduced ? { duration: 0.01 } : { duration: timing.drawer * 0.45 }
+              reduced
+                ? { duration: 0.01 }
+                : { type: "tween", duration: timing.drawer * 0.45, ease: exitEase }
             }
-            className="fixed inset-0 z-[60] bg-[#0f1114]/20 backdrop-blur-[6px]"
+            className="fixed inset-0 z-[60] bg-text-primary/20 backdrop-blur-[2px]"
             onClick={onClose}
             aria-hidden
           />
+        )}
+      </AnimatePresence>
 
+      <AnimatePresence>
+        {open && (
           <motion.aside
+            key="more-panel"
             role="dialog"
             aria-modal="true"
             aria-label="ماژول‌های بیشتر"
-            initial={reduced ? { opacity: 0 } : slide.initial}
-            animate={reduced ? { opacity: 1 } : slide.animate}
-            exit={reduced ? { opacity: 0 } : slide.exit}
-            transition={spring.drawer}
+            initial={reduced ? { opacity: 0 } : { x: "-110%", opacity: 0.85 }}
+            animate={reduced ? { opacity: 1 } : { x: 0, opacity: 1 }}
+            exit={
+              reduced
+                ? { opacity: 0, transition: { duration: 0.01 } }
+                : {
+                    x: "-110%",
+                    opacity: 0,
+                    transition: {
+                      type: "tween",
+                      duration: timing.drawer,
+                      ease: exitEase,
+                    },
+                  }
+            }
+            transition={
+              reduced
+                ? { duration: 0.01 }
+                : { type: "spring", stiffness: 280, damping: 32, mass: 0.9 }
+            }
             className={cn(
-              "fixed top-3 bottom-3 right-3 z-[61] flex w-full max-w-[420px] flex-col overflow-hidden",
-              "rounded-[24px] border border-white/60 bg-white/92 backdrop-blur-2xl",
-              "shadow-[0_24px_80px_rgba(17,19,24,0.14),0_0_0_1px_rgba(17,19,24,0.04)]"
+              "fixed top-3 bottom-3 end-3 z-[61] flex w-full max-w-[400px] flex-col overflow-hidden",
+              "rounded-[var(--radius-xl)] border border-border bg-bg-elevated",
+              "shadow-[var(--shadow-lg)]"
             )}
           >
-            <header className="shrink-0 border-b border-border/80 px-6 pb-5 pt-6">
+            <header className="shrink-0 border-b border-border px-5 pb-4 pt-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-text-muted">
-                    THE MACHINE
+                  <p className="text-[10px] font-semibold tracking-[0.1em] text-text-muted">
+                    THEMACHINE
                   </p>
-                  <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-text-primary">
-                    ⋯ بیشتر
+                  <h2 className="mt-1 text-[18px] font-semibold tracking-tight text-text-primary">
+                    ماژول‌های بیشتر
                   </h2>
                   <p className="mt-1.5 max-w-[280px] text-[13px] leading-relaxed text-text-tertiary">
                     ابزارها و ماژول‌های پشتیبان — همه در خدمت چهار تجربه اصلی
@@ -74,8 +99,8 @@ export function MoreDrawer({ open, onClose }: MoreDrawerProps) {
               </div>
             </header>
 
-            <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-none">
-              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+            <div className="flex-1 overflow-y-auto px-4 py-3 scrollbar-none">
+              <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
                 {moreNavItems.map((item, index) => {
                   const active =
                     pathname === item.href ||
@@ -104,10 +129,10 @@ export function MoreDrawer({ open, onClose }: MoreDrawerProps) {
                       >
                         <span
                           className={cn(
-                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] text-[18px]",
+                            "flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-[16px]",
                             active
-                              ? "bg-white shadow-[0_2px_8px_rgba(17,19,24,0.06)]"
-                              : "bg-bg-subtle/60 group-hover:bg-white group-hover:shadow-[0_2px_8px_rgba(17,19,24,0.05)]"
+                              ? "bg-bg-elevated shadow-[var(--shadow-sm)]"
+                              : "bg-bg-subtle group-hover:bg-bg-elevated group-hover:shadow-[var(--shadow-sm)]"
                           )}
                           aria-hidden
                         >
@@ -140,13 +165,13 @@ export function MoreDrawer({ open, onClose }: MoreDrawerProps) {
             </div>
 
             <footer className="shrink-0 border-t border-border/80 px-6 py-4">
-              <p className="text-center text-[11px] leading-relaxed text-text-muted">
-                مرکز فرمان · AI · ورک‌فلو · اتصالات
+              <p className="text-center text-[11px] leading-relaxed text-text-tertiary">
+                مرکز فرمان · گفتگو · ورک‌فلو · اتصالات
               </p>
             </footer>
           </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

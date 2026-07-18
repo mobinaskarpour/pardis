@@ -39,7 +39,7 @@ export function IntegrationsHero({
         >
           <Plug2 size={14} strokeWidth={1.75} className="text-primary" />
           <span className="text-[12px] font-medium text-text-secondary">
-            THE MACHINE · اتصال به هر سیستم
+            THEMACHINE · اتصال به هر سیستم
           </span>
         </motion.div>
 

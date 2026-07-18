@@ -36,7 +36,7 @@ export function ModuleScaffold({ moduleId, children }: ModuleScaffoldProps) {
             {children ?? (
               <EmptyState
                 title={`${meta.title} — به‌زودی`}
-                description="این ماژول در Demo بعدی تکمیل می‌شود. AI Dock و Quick Actions فعال هستند."
+                description="این ماژول در نسخه بعدی دمو تکمیل می‌شود. میزکار هوش مصنوعی و اقدامات سریع فعال هستند."
                 suggestions={meta.suggestions}
               />
             )}

@@ -23,7 +23,7 @@ export function AIAssistant({ onCommand }: AIAssistantProps) {
   >([
     {
       role: "ai",
-      text: "من THE MACHINE هستم. می‌توانم Workflow شما را ویرایش، بهینه یا گسترش دهم.",
+      text: "من THEMACHINE هستم. می‌توانم Workflow شما را ویرایش، بهینه یا گسترش دهم.",
     },
   ]);
 
@@ -105,7 +105,7 @@ export function AIAssistant({ onCommand }: AIAssistantProps) {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="از THE MACHINE بپرس..."
+              placeholder="از THEMACHINE بپرس..."
               className="flex-1 rounded-[12px] border border-border bg-bg-subtle/50 px-3 py-2 text-[12px] focus:outline-none focus:border-primary/30"
             />
             <button

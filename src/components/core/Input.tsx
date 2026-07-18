@@ -1,9 +1,8 @@
 "use client";
 
 import { forwardRef } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { spring, interactive, radius } from "@/lib/motion";
+import { interactive, radius } from "@/lib/motion";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -14,25 +13,25 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="mb-1.5 block text-[13px] font-medium text-text-tertiary">
+          <label className="mb-1.5 block text-[12px] font-medium text-text-tertiary">
             {label}
           </label>
         )}
-        <motion.div whileFocus={{ scale: 1.005, transition: spring.gentle }}>
-          <input
-            ref={ref}
-            className={cn(
-              "w-full border border-border bg-bg-elevated px-4 py-2.5",
-              "text-[15px] text-text-primary placeholder:text-text-tertiary",
-              "transition-[border-color,box-shadow] duration-[180ms]",
-              "focus:border-border-hover focus:shadow-[0_0_0_3px_var(--primary-soft)] focus:outline-none",
-              radius.md,
-              interactive.disabled,
-              className
-            )}
-            {...props}
-          />
-        </motion.div>
+        <input
+          ref={ref}
+          className={cn(
+            "w-full border border-border bg-bg-elevated px-3.5 py-2.5",
+            "text-[14px] text-text-primary placeholder:text-text-muted",
+            "shadow-[var(--shadow-sm)]",
+            "transition-[border-color,box-shadow] duration-[140ms]",
+            "hover:border-border-strong",
+            "focus:border-border-hover focus:shadow-[0_0_0_3px_var(--primary-soft)] focus:outline-none",
+            radius.md,
+            interactive.disabled,
+            className
+          )}
+          {...props}
+        />
       </div>
     );
   }
@@ -48,25 +47,25 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return (
       <div className="w-full">
         {label && (
-          <label className="mb-1.5 block text-[13px] font-medium text-text-tertiary">
+          <label className="mb-1.5 block text-[12px] font-medium text-text-tertiary">
             {label}
           </label>
         )}
-        <motion.div whileFocus={{ scale: 1.005, transition: spring.gentle }}>
-          <textarea
-            ref={ref}
-            className={cn(
-              "w-full resize-none border border-border bg-bg-elevated px-4 py-2.5",
-              "text-[15px] text-text-primary placeholder:text-text-tertiary",
-              "transition-[border-color,box-shadow] duration-[180ms]",
-              "focus:border-border-hover focus:shadow-[0_0_0_3px_var(--primary-soft)] focus:outline-none",
-              radius.md,
-              interactive.disabled,
-              className
-            )}
-            {...props}
-          />
-        </motion.div>
+        <textarea
+          ref={ref}
+          className={cn(
+            "w-full resize-none border border-border bg-bg-elevated px-3.5 py-2.5",
+            "text-[14px] text-text-primary placeholder:text-text-muted",
+            "shadow-[var(--shadow-sm)]",
+            "transition-[border-color,box-shadow] duration-[140ms]",
+            "hover:border-border-strong",
+            "focus:border-border-hover focus:shadow-[0_0_0_3px_var(--primary-soft)] focus:outline-none",
+            radius.md,
+            interactive.disabled,
+            className
+          )}
+          {...props}
+        />
       </div>
     );
   }

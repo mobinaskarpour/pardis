@@ -59,8 +59,8 @@ export function PremiumChatInput({
       <motion.div
         animate={{
           boxShadow: focused
-            ? "0 12px 40px rgba(45,90,123,0.12), 0 0 0 3px rgba(45,90,123,0.08)"
-            : "0 4px 24px rgba(17,19,24,0.06)",
+            ? "var(--shadow-md), 0 0 0 3px var(--primary-soft)"
+            : "var(--shadow-sm)",
         }}
         transition={spring.soft}
         onDragOver={(e) => {
@@ -74,9 +74,9 @@ export function PremiumChatInput({
           setValue((v) => v + (v ? "\n" : "") + "[فایل پیوست شد]");
         }}
         className={cn(
-          "relative rounded-[20px] overflow-hidden border bg-white transition-colors",
-          dragOver ? "border-primary/40 bg-primary/[0.02]" : "border-border/70",
-          large ? "min-h-[120px]" : ""
+          "relative rounded-[16px] overflow-hidden border bg-bg-elevated transition-colors",
+          dragOver ? "border-primary/40 bg-primary/[0.02]" : "border-border",
+          large ? "min-h-[112px]" : ""
         )}
       >
         <div className="flex items-start gap-3 p-4 md:p-5">
@@ -119,7 +119,7 @@ export function PremiumChatInput({
           </motion.button>
         </div>
 
-        <div className="flex items-center gap-1 border-t border-border/50 px-4 py-2.5 bg-[#fafbfc]/80">
+        <div className="flex items-center gap-1 border-t border-border/50 px-4 py-2.5 bg-bg-layer-1/80">
           {[
             { icon: Paperclip, label: "پیوست" },
             { icon: ImagePlus, label: "تصویر" },
@@ -129,14 +129,14 @@ export function PremiumChatInput({
               key={label}
               type="button"
               disabled={disabled}
-              className="flex items-center gap-1.5 rounded-[8px] px-2.5 py-1.5 text-[11px] text-text-muted hover:text-text-secondary hover:bg-white transition-colors disabled:opacity-40"
+              className="flex items-center gap-1.5 rounded-[8px] px-2.5 py-1.5 text-[11px] text-text-muted hover:text-text-secondary hover:bg-bg-subtle transition-colors disabled:opacity-40"
             >
               <Icon size={14} strokeWidth={1.75} />
               {label}
             </button>
           ))}
-          <span className="ms-auto text-[10px] text-text-muted">
-            Shift+Enter خط جدید
+          <span className="ms-auto text-[10px] text-text-tertiary">
+            خط جدید با Shift و Enter
           </span>
         </div>
       </motion.div>

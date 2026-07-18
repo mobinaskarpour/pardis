@@ -77,7 +77,7 @@ export function AIInsightBlock({ insight }: AIInsightBlockProps) {
           <div className="flex items-center gap-2 mb-4">
             <Sparkles size={16} className="text-accent-cyan" />
             <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/40">
-              THE MACHINE · Insight
+              THEMACHINE · Insight
             </span>
           </div>
           <p className="text-[20px] md:text-[24px] font-medium leading-[1.45] text-white/95">

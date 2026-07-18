@@ -30,7 +30,7 @@ export interface ContextTask {
 export const chatGreeting = {
   timeLabel: "صبح بخیر",
   userName: "دکتر اخلاق‌پور",
-  headline: "امروز دوست دارید چه کاری را به THE MACHINE بسپارید؟",
+  headline: "امروز دوست دارید چه کاری را به THEMACHINE بسپارید؟",
   placeholder:
     "هر سوالی درباره مرکز، بیماران، گزارش‌ها، مالی، دستگاه‌ها یا فرآیندها دارید بپرسید...",
 };
@@ -88,20 +88,20 @@ export const contextualSuggestedActions: ContextualAction[] = [
 ];
 
 export const quickCommands: QuickCommand[] = [
-  { id: "workflow", command: "/workflow", label: "Workflow", query: "ساخت Workflow جدید" },
-  { id: "dashboard", command: "/dashboard", label: "Dashboard", query: "داشبورد عملیاتی امروز" },
-  { id: "report", command: "/report", label: "Report", query: "گزارش‌های باز امروز" },
-  { id: "patient", command: "/patient", label: "Patient", query: "پرونده بیمار احمدی را باز کن" },
-  { id: "device", command: "/device", label: "Device", query: "وضعیت دستگاه‌های تصویربرداری" },
-  { id: "appointment", command: "/appointment", label: "Appointment", query: "نوبت‌های امروز" },
-  { id: "insurance", command: "/insurance", label: "Insurance", query: "وضعیت بیمه بیماران امروز" },
-  { id: "search", command: "/search", label: "Search", query: "جستجو در پرونده‌ها و گزارش‌ها" },
+  { id: "workflow", command: "ورک‌فلو", label: "ورک‌فلو", query: "ساخت ورک‌فلو جدید" },
+  { id: "dashboard", command: "داشبورد", label: "داشبورد", query: "داشبورد عملیاتی امروز" },
+  { id: "report", command: "گزارش", label: "گزارش", query: "گزارش‌های باز امروز" },
+  { id: "patient", command: "بیمار", label: "بیمار", query: "پرونده بیمار احمدی را باز کن" },
+  { id: "device", command: "دستگاه", label: "دستگاه", query: "وضعیت دستگاه‌های تصویربرداری" },
+  { id: "appointment", command: "نوبت", label: "نوبت", query: "نوبت‌های امروز" },
+  { id: "insurance", command: "بیمه", label: "بیمه", query: "وضعیت بیمه بیماران امروز" },
+  { id: "search", command: "جستجو", label: "جستجو", query: "جستجو در پرونده‌ها و گزارش‌ها" },
 ];
 
 export const todayKpis: TodayKpi[] = [
   { label: "بیماران امروز", value: "۴۷", trend: "+۳" },
   { label: "گزارش آماده", value: "۲۴", trend: "+۵" },
-  { label: "درآمد", value: "۴۸.۲M", trend: "+۵٪" },
+  { label: "درآمد", value: "۴۸٫۲ میلیون", trend: "+۵٪" },
   { label: "دستگاه فعال", value: "۵/۶" },
 ];
 

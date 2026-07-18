@@ -65,7 +65,11 @@ export function AIButton({
   }
 
   return (
-    <Link href={href} aria-label={label} className="inline-flex fixed bottom-8 left-8 z-40">
+    <Link
+      href={href}
+      aria-label={label}
+      className="inline-flex fixed bottom-7 start-7 z-40 md:start-[calc(var(--sidebar-width)+1.75rem)]"
+    >
       {content}
     </Link>
   );

@@ -6,8 +6,8 @@ export const timing = {
   click: 0.18,
   cardExpand: 0.25,
   drawer: 0.3,
-  page: 0.45,
-  hero: 0.7,
+  page: 0.32,
+  hero: 0.55,
   background: 1.2,
 } as const;
 
@@ -24,20 +24,18 @@ export const spring = {
 /** Legacy alias map */
 export const duration = timing;
 
-/** Page: Fade + Blur + Translate — no harsh slide */
+/** Page: soft fade + slight rise — fast, premium */
 export const pageTransition: Variants = {
-  initial: { opacity: 0, y: 6, filter: "blur(6px)" },
+  initial: { opacity: 0, y: 4 },
   animate: {
     opacity: 1,
     y: 0,
-    filter: "blur(0px)",
     transition: { ...spring.soft, duration: timing.page },
   },
   exit: {
     opacity: 0,
-    y: -4,
-    filter: "blur(4px)",
-    transition: { ...spring.gentle, duration: timing.page * 0.6 },
+    y: -2,
+    transition: { ...spring.gentle, duration: timing.page * 0.5 },
   },
 };
 

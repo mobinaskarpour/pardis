@@ -44,7 +44,7 @@ export function WorkflowSuggestionNotification({
             <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-indigo" />
           </span>
           <span className="text-[10px] font-bold uppercase tracking-wider text-accent-indigo/80">
-            THE MACHINE
+            THEMACHINE
           </span>
         </div>
         <WorkflowSuggestionCard

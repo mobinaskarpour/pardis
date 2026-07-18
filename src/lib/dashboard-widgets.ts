@@ -198,7 +198,7 @@ const WORKFLOW_WIDGET_TEMPLATES: Record<string, WorkflowDashboardWidget[]> = {
   ],
 
   "wf-daily-analytics": [
-    w("revenue", "درآمد امروز", "۴۸.۲M", "tiny-trend", "performance", {
+    w("revenue", "درآمد امروز", "۴۸٫۲ میلیون", "tiny-trend", "performance", {
       sparkline: [42, 44, 45, 46, 47, 48, 48.2],
       trend: "+۵٪",
     }),
@@ -274,7 +274,7 @@ const WORKFLOW_WIDGET_TEMPLATES: Record<string, WorkflowDashboardWidget[]> = {
     w("waiting", "بیماران منتظر", "۵", "execution-pulse", "execution", {
       numericValue: 5,
     }),
-    w("revenue-today", "درآمد امروز", "۴۸.۲M", "tiny-trend", "performance", {
+    w("revenue-today", "درآمد امروز", "۴۸٫۲ میلیون", "tiny-trend", "performance", {
       sparkline: [40, 42, 44, 46, 48, 48.2],
     }),
     w("delayed-doc", "پزشک تأخیردار", "۱", "relationship", "performance", {

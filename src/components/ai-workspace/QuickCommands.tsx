@@ -18,8 +18,8 @@ export function QuickCommands({ onSelect, disabled }: QuickCommandsProps) {
           disabled={disabled}
           onClick={() => onSelect(cmd.query)}
           className={cn(
-            "rounded-[8px] px-2.5 py-1 text-[11px] font-mono font-medium",
-            "text-text-muted border border-transparent",
+            "rounded-[8px] px-2.5 py-1 text-[11px] font-medium",
+            "text-text-secondary border border-border/80 bg-bg-layer-1/60",
             "hover:text-primary hover:bg-primary/8 hover:border-primary/15",
             "transition-colors disabled:opacity-40"
           )}

@@ -26,7 +26,7 @@ export function WorkflowInsightsPanel() {
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-text-muted">
-            THE MACHINE Learning Loop
+            THEMACHINE Learning Loop
           </p>
           <h2 className="text-[18px] font-semibold text-text-primary">
             بینش‌های گردش‌کار

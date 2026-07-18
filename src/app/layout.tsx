@@ -10,7 +10,7 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata: Metadata = {
-  title: "THE MACHINE — AI Command Center",
+  title: "THEMACHINE — AI Command Center",
   description: "مرکز تصویربرداری پردیس نور — AI Operating System",
 };
 

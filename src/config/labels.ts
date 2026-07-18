@@ -19,7 +19,7 @@ export const pageLabels = {
   users: "کاربران",
   roles: "نقش‌ها و دسترسی",
   settings: "تنظیمات",
-  brand: "THE MACHINE",
+  brand: "THEMACHINE",
 } as const;
 
 export const uiLabels = {

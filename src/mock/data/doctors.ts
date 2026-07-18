@@ -17,7 +17,7 @@ export const doctorsMock: Doctor[] = [
     videoIntroUrl: media.videos.facilityTour,
     recentPatients: ["محمد احمدی", "علی محمدی", "حسین نوری"],
     aiInsight:
-      "زمان گزارش‌دهی ۱۵٪ بهتر از میانگین. پیشنهاد: ۲ بیمار فردا redistribute شود.",
+      "زمان گزارش‌دهی ۱۵٪ بهتر از میانگین. پیشنهاد: ۲ بیمار فردا توزیع مجدد شود.",
   },
   {
     id: "dr-hosseini",

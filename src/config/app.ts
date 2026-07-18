@@ -1,5 +1,5 @@
 /** Application-wide constants — no magic numbers in components */
-export const APP_NAME = "THE MACHINE";
+export const APP_NAME = "THEMACHINE";
 
 export const API_CONFIG = {
   /** Simulated network latency for mock API (ms) */

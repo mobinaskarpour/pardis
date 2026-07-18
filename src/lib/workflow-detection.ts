@@ -84,7 +84,7 @@ export function detectRepeatedTask(
         status: "pending",
         reason:
           total >= 10
-            ? `شما این فرآیند را ${toPersianDigits(total)} بار در ۱۰ روز گذشته تکرار کرده‌اید. آیا می‌خواهید THE MACHINE آن را خودکار کند؟`
+            ? `شما این فرآیند را ${toPersianDigits(total)} بار در ۱۰ روز گذشته تکرار کرده‌اید. آیا می‌خواهید THEMACHINE آن را خودکار کند؟`
             : pattern.reasonTemplate(total),
         workflowId: draft.id,
         workflowName: draft.name,

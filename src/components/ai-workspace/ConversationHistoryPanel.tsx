@@ -123,7 +123,7 @@ export function ConversationHistoryPanel({
   );
 
   return (
-    <aside className="hidden lg:flex w-[280px] shrink-0 flex-col border-s border-border/60 bg-white h-full">
+    <aside className="hidden lg:flex w-[264px] shrink-0 flex-col border-s border-border bg-bg-elevated h-full">
       <div className="p-4 border-b border-border/50">
         <button
           type="button"
@@ -148,7 +148,7 @@ export function ConversationHistoryPanel({
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="جستجو در تاریخچه..."
-            className="w-full rounded-[10px] border border-border/60 bg-[#f6f7f9] py-2.5 ps-9 pe-3 text-[12px] outline-none focus:border-primary/30 focus:bg-white transition-colors"
+            className="w-full rounded-[10px] border border-border bg-bg-layer-1 py-2.5 ps-9 pe-3 text-[12px] outline-none focus:border-border-hover focus:bg-bg-elevated transition-colors"
           />
         </div>
       </div>
@@ -176,7 +176,7 @@ export function ConversationHistoryPanel({
       </div>
 
       <div className="shrink-0 border-t border-border/50 p-4">
-        <div className="rounded-[14px] border border-border/60 bg-[#fafbfc] p-3.5">
+        <div className="rounded-[14px] border border-border/60 bg-bg-layer-1 p-3.5">
           <p className="text-[10px] font-bold text-text-muted mb-2">
             تأییدهای معلق
           </p>

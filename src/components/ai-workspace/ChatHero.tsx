@@ -20,12 +20,12 @@ export function ChatHero() {
         <span className="text-text-primary">{chatGreeting.userName}</span>
       </p>
 
-      <h1 className="mt-3 max-w-lg text-[22px] md:text-[26px] font-bold leading-snug tracking-tight text-text-primary">
+      <h1 className="mt-3 max-w-lg text-[22px] md:text-[24px] font-semibold leading-snug tracking-tight text-text-primary">
         {chatGreeting.headline}
       </h1>
 
-      <p className="mt-3 text-[13px] text-text-tertiary max-w-md leading-relaxed">
-        THE MACHINE سیستم‌عامل مرکز است — نه یک چت‌بات ساده.
+      <p className="mt-2.5 text-[13px] text-text-tertiary max-w-md leading-relaxed">
+        THEMACHINE سیستم‌عامل مرکز است — نه یک چت‌بات ساده.
       </p>
     </motion.div>
   );

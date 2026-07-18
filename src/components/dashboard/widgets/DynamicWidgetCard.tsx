@@ -39,13 +39,13 @@ function CardSparkline({
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
-      className="absolute inset-x-0 bottom-0 h-16 w-full opacity-60 transition-opacity duration-300 group-hover:opacity-90"
+      className="absolute inset-x-0 bottom-0 h-16 w-full opacity-80 transition-opacity duration-300 group-hover:opacity-100"
       preserveAspectRatio="none"
       aria-hidden
     >
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
+          <stop offset="0%" stopColor={color} stopOpacity="0.28" />
           <stop offset="100%" stopColor={color} stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -53,7 +53,7 @@ function CardSparkline({
       <polyline
         fill="none"
         stroke={color}
-        strokeWidth="2"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
         points={coords}
@@ -92,28 +92,23 @@ export function DynamicWidgetCard({
       <Link
         href={href}
         className={cn(
-          "group relative flex flex-col overflow-hidden rounded-[18px]",
-          "border border-border/60 bg-bg-elevated",
+          "group relative flex flex-col overflow-hidden rounded-[16px]",
+          "border border-border-strong bg-bg-elevated",
           "shadow-[var(--shadow-sm)]",
-          "transition-all duration-300",
-          "hover:border-primary/20 hover:shadow-[var(--shadow-float)] hover:-translate-y-0.5",
-          featured ? "h-[248px] p-6 sm:flex-row sm:items-stretch sm:gap-6" : "h-[248px] p-5"
+          "transition-all duration-200",
+          "hover:border-border-hover hover:shadow-[var(--shadow-md)] hover:-translate-y-0.5",
+          featured ? "h-[220px] p-5 sm:flex-row sm:items-stretch sm:gap-5" : "h-[220px] p-5"
         )}
       >
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-primary/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
-          aria-hidden
-        />
-
         {live && (
-          <span className="absolute top-4 end-4 flex h-2 w-2 rounded-full bg-success shadow-[0_0_8px_rgba(77,138,92,0.5)]">
+          <span className="absolute top-3.5 end-3.5 flex h-1.5 w-1.5 rounded-full bg-success">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-40" />
           </span>
         )}
 
         <div className={cn("relative z-10 flex flex-col min-w-0", featured ? "flex-1" : "h-full")}>
           <div className="flex items-start justify-between gap-2 pe-4">
-            <span className="inline-flex items-center rounded-[7px] bg-bg-subtle/80 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-text-muted">
+            <span className="inline-flex items-center rounded-[7px] bg-bg-subtle px-2 py-0.5 text-[10px] font-semibold tracking-wide text-text-secondary">
               {getCategoryLabel(widget.workflowCategory)}
             </span>
           </div>
@@ -132,7 +127,7 @@ export function DynamicWidgetCard({
           </div>
 
           <div className="relative z-10 mt-auto flex items-center justify-between gap-2 pt-3">
-            <p className="text-[10px] font-medium text-text-muted truncate">
+            <p className="text-[11px] font-medium text-text-tertiary truncate">
               {widget.workflowName}
             </p>
             {widget.trend && (
